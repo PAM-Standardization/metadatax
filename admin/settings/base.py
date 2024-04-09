@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'metadatax'
+    'metadatax.apps.MetadataxConfig'
 ]
 
 MIDDLEWARE = [
@@ -69,19 +69,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'admin.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': "django.db.backends.postgresql",
-#         'NAME': "COSS",
-#         'HOST':"localhost",
-#         'PORT': "5432"
-#     }
-# }
 
 
 
