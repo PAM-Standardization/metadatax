@@ -20,6 +20,13 @@ class RecorderAdmin(admin.ModelAdmin):
         "model",
         "number_of_channels"
     ]
+    list_display = [
+        "id",
+        "provider",
+        "model",
+        "serial_number",
+        "number_of_channels",
+    ]
 
 
 class HydrophoneAdmin(admin.ModelAdmin):
@@ -34,6 +41,20 @@ class HydrophoneAdmin(admin.ModelAdmin):
         "provider",
         "model",
         "directivity"
+    ]
+    list_display = [
+        "id",
+        "provider",
+        "model",
+        "serial_number",
+        "sensitivity",
+        "directivity",
+        "bandwidth",
+        "noise_floor",
+        "dynamic_range",
+        "max_operating_depth",
+        "operating_min_temperature",
+        "operating_max_temperature",
     ]
 
 

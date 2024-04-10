@@ -10,13 +10,29 @@ from .acquisition import (
 class File(models.Model):
     """Recorder file"""
 
+    class Meta:
+        unique_together = [
+            ["channel_configuration", "name"]
+        ]
+
     channel_configuration = models.ForeignKey(to=ChannelConfiguration, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    """Name of the audio file"""
+    format = models.CharField(max_length=20, blank=True, null=True)  # Non-exhaustive select
+    """Format of the audio file. Audio files can be stored in a different format from the recording format."""
+
     initial_timestamp = models.DateTimeField(null=True, blank=True)
+    """Date and time at the start of the audio file"""
     duration = models.IntegerField(null=True, blank=True)
-    storage_location = models.TextField(null=True, blank=True)
+    """Duration of the audio file (in second)"""
     sampling_frequency = models.IntegerField()
+    """Sampling of the audio file (in Hertz)."""
+
     sample_depth = models.IntegerField(null=True, blank=True)
-    bit_counts = models.IntegerField(null=True, blank=True)
-    format = models.CharField(max_length=20, null=True, blank=True)  # Non-exhaustive select
-    accessibility = models.TextField(choices=Accessibility.choices, null=True, blank=True)
+    """Number of bits per sample (in bits)"""
+    storage_location = models.TextField(blank=True, null=True)
+    """Path of the folder containing the audio file"""
+    bit_counts = models.BigIntegerField(null=True, blank=True)
+    """Total number of bits of the audio file"""
+
+    accessibility = models.TextField(choices=Accessibility.choices, blank=True, null=True)
