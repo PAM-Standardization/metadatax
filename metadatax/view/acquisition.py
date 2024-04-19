@@ -40,7 +40,7 @@ class CreateProject(APIView):
     @swagger_auto_schema(operation_description='Create new institution',query_serializer=CreateProjectAPIParametersSerializer )
     @action(detail=False, methods=['post'], name='create_institution', url_path='create-institution')
     def post(self, request):
-        return 'Success'#create_item(CreateProjectAPIParametersSerializer,request)
+        return create_item(CreateProjectAPIParametersSerializer,request)
 
 # """Institution"""
 class GetAllInstitution(APIView):
