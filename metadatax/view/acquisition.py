@@ -23,7 +23,7 @@ def create_item(self, request):
 
 # """Data acquisition project"""
 class GetAllProject(APIView):
-    @swagger_auto_schema()
+    @swagger_auto_schema(operation_description="Get all project")
     @staticmethod
     def get(self):
         print("-----------------Getting Project-------------------")
@@ -31,27 +31,27 @@ class GetAllProject(APIView):
 
 
 class GetProjectByName(APIView):
-    @swagger_auto_schema(query_serializer=ProjectAPIParametersSerializer)
+    @swagger_auto_schema(operation_description="Get project by name",query_serializer=ProjectAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting ProjectByName-------------------", request.query_params.get("project_name"))
         return  HttpResponse(sz.serialize("json", Project.objects.filter(name=request.query_params.get("project_name"))), status=status.HTTP_200_OK)
 
 class CreateProject(APIView):
-    @swagger_auto_schema(operation_description='Create new institution',query_serializer=CreateProjectAPIParametersSerializer )
-    @action(detail=False, methods=['post'], name='create_institution', url_path='create-institution')
+    @swagger_auto_schema(operation_description='Create new Project',query_serializer=CreateProjectAPIParametersSerializer )
+    @action(detail=False, methods=['post'], name='create_project', url_path='create-project')
     def post(self, request):
         return create_item(CreateProjectAPIParametersSerializer,request)
 
 # """Institution"""
 class GetAllInstitution(APIView):
-        @swagger_auto_schema()
+        @swagger_auto_schema(operation_description="Get All Institution")
         @staticmethod
         def get(self):
             print("-----------------Getting Institution-------------------")
             return HttpResponse(sz.serialize("json", Institution.objects.all()), status=status.HTTP_200_OK)
 
 class GetInstitutionByName(APIView):
-    @swagger_auto_schema(query_serializer=InstitutionAPIParametersSerializer)
+    @swagger_auto_schema(operation_description="Get InsitutionByName",query_serializer=InstitutionAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting InstitutionByName-------------------", request.query_params.get("institution_name"))
         return HttpResponse(sz.serialize("json", Institution.objects.get(request.query_params.get("institution_name"))), status=status.HTTP_200_OK)
@@ -65,40 +65,40 @@ class CreateInstitution(APIView):
 
 # """Material deployment for data acquisition"""
 class GetAllDeployment(APIView):
-    @swagger_auto_schema()
+    @swagger_auto_schema(operation_description= "Get all deployment")
     @staticmethod
     def get(self):
         print("-----------------Getting Deployment-------------------")
         return  HttpResponse(sz.serialize("json", Deployment.objects.all()), status=status.HTTP_200_OK)
 
 class GetDeploymentByName(APIView):
-    @swagger_auto_schema(query_serializer=DeploymentAPIParametersSerializer)
+    @swagger_auto_schema(operation_description="Get DeploymentByName", query_serializer=DeploymentAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting DeploymentByName-------------------", request.query_params.get("deployment_name"))
         return HttpResponse(sz.serialize("json",Deployment.objects.get(request.query_params.get("deployment_name"))), status=status.HTTP_200_OK)
 
 class CreateDeployment(APIView):
-    @swagger_auto_schema(operation_description='Create new institution',query_serializer=CreateDeploymentAPIParametersSerializer )
-    @action(detail=False, methods=['post'], name='create_institution', url_path='create-institution')
+    @swagger_auto_schema(operation_description='Create new deployment',query_serializer=CreateDeploymentAPIParametersSerializer )
+    @action(detail=False, methods=['post'], name='create_deployment', url_path='create-deployment')
     def post(self, request):
        return create_item(CreateDeploymentAPIParametersSerializer,request)
 
 # """Configuration of a recorded channel for a Hydrophone on a Recorder in a deployment"""
 class GetAllChannelConfigurationAPI(APIView):
-    @swagger_auto_schema()
+    @swagger_auto_schema(operation_description='Get ALL ChannelConfiguration')
     @staticmethod
     def get(self):
         print("-----------------Getting ChannelConfiguration-------------------")
         return  HttpResponse(sz.serialize("json", ChannelConfiguration.objects.all()), status=status.HTTP_200_OK)
 
 class GetChannelConfigurationAPIByChannelName(APIView):
-    @swagger_auto_schema(query_serializer=ChannelConfigurationAPIParametersSerializer)
+    @swagger_auto_schema(operation_description='Get ChannelConfigurationByName',query_serializer=ChannelConfigurationAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting ChannelConfigurationByName-------------------", request.query_params.get("channel_name"))
         return  HttpResponse(sz.serialize("json", ChannelConfiguration.objects.get(request.query_params.get("channel_name"))), status=status.HTTP_200_OK)
 
 class CreateChannelConfiguration(APIView):
-    @swagger_auto_schema(operation_description='Create new institution',query_serializer=CreateChannelConfigurationAPIParametersSerializer )
-    @action(detail=False, methods=['post'], name='create_institution', url_path='create-institution')
+    @swagger_auto_schema(operation_description='Create new Channel Configuration',query_serializer=CreateChannelConfigurationAPIParametersSerializer )
+    @action(detail=False, methods=['post'], name='create_channel_configuration', url_path='create-channel-configuration')
     def post(self, request):
        return create_item(CreateChannelConfigurationAPIParametersSerializer,request)

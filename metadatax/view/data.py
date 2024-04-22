@@ -1,17 +1,18 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import parsers, serializers
 from rest_framework.decorators import action
-from rest_framework.response import Response
+from django.http import HttpResponse, JsonResponse
 from rest_framework.views import APIView
 from metadatax.models.data import File
 from metadatax.serializers.data import DataAPIParametersSerializer
 from django.shortcuts import HttpResponse
 from django.core import serializers as sz
+from rest_framework import status
 
 
 
 class GetAllData(APIView):
-        @swagger_auto_schema(query_serializer=DataAPIParametersSerializer)
+        @swagger_auto_schema(operation_description="Get all file data ",query_serializer=DataAPIParametersSerializer)
         @staticmethod
         def get(self):
             print("-----------------Getting Data-------------------")
@@ -20,11 +21,11 @@ class GetAllData(APIView):
 
 class SaveDataAPI(APIView):
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
-    @swagger_auto_schema(operation_description='Upload Audio file...', )
-    @action(detail=False, methods=['post'], name='file', url_path='upload-audio-file')
+    @swagger_auto_schema(operation_description='create Audio file', )
+    @action(detail=False, methods=['post'], name='file', url_path='create-audio-file')
     def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            print(serializer.validated_data["file"])
-            return Response("Success")
-        return Response("Failed")
+        serializer = self(data=request.query_params)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

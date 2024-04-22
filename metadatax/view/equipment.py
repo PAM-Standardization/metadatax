@@ -23,42 +23,42 @@ def create_item(self, request):
 
 # """Recorder"""
 class GetAllRecorder(APIView):
-        @swagger_auto_schema()
+        @swagger_auto_schema(operation_description="Get all recorder")
         @staticmethod
         def get(self ):
             print("-----------------Getting Recorder-------------------")
             return HttpResponse(sz.serialize("json", Recorder.objects.all()))
 
 class GetRecorderByName(APIView):
-    @swagger_auto_schema(query_serializer=RecorderAPIParametersSerializer)
+    @swagger_auto_schema(operation_description="Get recroder by name", query_serializer=RecorderAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting RecroderByName-------------------", request.query_params.get("recorder_provider_name"))
         return HttpResponse(sz.serialize("json", Recorder.objects.get(request.query_params.get("recorder_provider_name"))))
 
 class CreateRecorder(APIView):
-    @swagger_auto_schema(operation_description='Create new institution',query_serializer=CreateRecorderAPIParametersSerializer )
-    @action(detail=False, methods=['post'], name='create_institution', url_path='create-institution')
+    @swagger_auto_schema(operation_description='Create new Recorder',query_serializer=CreateRecorderAPIParametersSerializer )
+    @action(detail=False, methods=['post'], name='create_recorder', url_path='create-recorder')
     def post(self, request):
        return create_item(CreateRecorderAPIParametersSerializer,request)
 
 
 # """Hydrophone"""
 class GetAllHydrophone(APIView):
-    @swagger_auto_schema()
+    @swagger_auto_schema(operation_description="Get all hydrophone")
     @staticmethod
     def get(self):
         print("-----------------Getting Hydrophone-------------------")
         return HttpResponse(sz.serialize("json", Hydrophone.objects.all()))
 
 class GetHydrophoneByName(APIView):
-    @swagger_auto_schema(query_serializer=HydrophoneAPIParametersSerializer)
+    @swagger_auto_schema(operation_description="Get hydrophone by Name",query_serializer=HydrophoneAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting HydrophoneByName-------------------", request.query_params.get("hydrophone_provider_name"))
         return HttpResponse(sz.serialize("json", Hydrophone.objects.get(request.query_params.get("hydrophone_provider_name"))))
 
 
 class CreateHydrophone(APIView):
-    @swagger_auto_schema(operation_description='Create new institution',query_serializer=CreateHydrophoneAPIParametersSerializer )
-    @action(detail=False, methods=['post'], name='create_institution', url_path='create-institution')
+    @swagger_auto_schema(operation_description='Create new hydrophone',query_serializer=CreateHydrophoneAPIParametersSerializer )
+    @action(detail=False, methods=['post'], name='create_hydrophone', url_path='create-hydrophone')
     def post(self, request):
        return create_item(CreateHydrophoneAPIParametersSerializer,request)
