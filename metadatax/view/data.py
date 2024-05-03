@@ -8,10 +8,10 @@ from metadatax.serializers.data import DataAPIParametersSerializer
 from django.shortcuts import HttpResponse
 from django.core import serializers as sz
 from rest_framework import status
+from rest_framework.generics import GenericAPIView
 
 
-
-class GetAllData(APIView):
+class GetAllData(GenericAPIView):
         @swagger_auto_schema(operation_description="Get all file data ",query_serializer=DataAPIParametersSerializer)
         @staticmethod
         def get(self):
@@ -19,7 +19,7 @@ class GetAllData(APIView):
             return HttpResponse(sz.serialize("json", File.objects.all()))
 
 
-class SaveDataAPI(APIView):
+class SaveDataAPI(GenericAPIView):
     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
     @swagger_auto_schema(operation_description='create Audio file', )
     @action(detail=False, methods=['post'], name='file', url_path='create-audio-file')

@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, filters
 from metadatax.models.equipment import Recorder, Hydrophone
 
 RecorderFields = [
@@ -22,7 +22,8 @@ HydrophoneFields = [
 ]
 
 class RecorderAPIParametersSerializer(serializers.Serializer):
-    recorder_provider_name = serializers.CharField(help_text="Provider of recorder")
+        recorder_provider_name = serializers.CharField(help_text="Provider of recorder")
+
 
 class CreateRecorderAPIParametersSerializer(serializers.ModelSerializer):
     class Meta:

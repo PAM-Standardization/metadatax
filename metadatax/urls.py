@@ -1,28 +1,36 @@
 from metadatax.view.data import GetAllData, SaveDataAPI
 from metadatax.view.acquisition import GetAllProject, GetProjectByName,GetAllDeployment,GetDeploymentByName,GetAllChannelConfigurationAPI,\
     GetChannelConfigurationAPIByChannelName, GetAllInstitution, GetInstitutionByName, CreateInstitution, CreateProject, CreateChannelConfiguration, CreateDeployment
-from metadatax.view.equipment import GetAllRecorder, GetRecorderByName, GetAllHydrophone,GetHydrophoneByName, CreateRecorder, CreateHydrophone
+from metadatax.view.equipment import  GetAllRecorder, GetRecorderByName, GetAllHydrophone,GetHydrophoneByName, CreateRecorder, CreateHydrophone
 
 
 from .views import Metadatax
 from django.urls import path, include
-
+from rest_framework import permissions,authentication
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Metadatax API",
-        default_version='v1',
-        description="Metadatax endpoint API"
-    )
-)
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+# schema_view = SpectacularSwaggerView(
+#     openapi.Info(
+#         title="Metadatax API",
+#         default_version='v1',
+#         description="Metadatax endpoint API"
+#     )
+#     # authentication_classes=[authentication.SessionAuthentication ]
+# )
 
 
 urlpatterns = [
     path("", Metadatax.metadatax, name="metadatax"),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    path(
+        "docs/",
+        SpectacularSwaggerView.as_view(
+            template_name="swagger-ui.html", url_name="schema"
+        ),
+        name="swagger-ui",
+    ),
     path('project/', include([
         path('get_all/',GetAllProject.as_view(), name='get_all_project'),
         path('get_name/',GetProjectByName.as_view(), name='get_name_project'),
@@ -49,7 +57,7 @@ urlpatterns = [
         path('create_recorder/', CreateRecorder.as_view(), name='create-recorder')
     ])),
     path('hydrophone/', include([
-        path('get_all/', GetAllHydrophone.as_view(), name='get_all_hydrophone'),
+        path('get_all/', GetAllHydrophone.as_view(), name='get_all_hydrophone' ),
         path('get_name/', GetHydrophoneByName.as_view(), name='get_hydrophone_by_name'),
         path('create_hydrophone/', CreateHydrophone.as_view(), name='create-hydrophone')
     ])),
