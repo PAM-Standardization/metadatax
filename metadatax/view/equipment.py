@@ -33,7 +33,7 @@ class GetRecorderByName(APIView):
     @swagger_auto_schema(operation_description="Get recroder by name", query_serializer=RecorderAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting RecroderByName-------------------", request.query_params.get("recorder_provider_name"))
-        return HttpResponse(sz.serialize("json", Recorder.objects.get(request.query_params.get("recorder_provider_name"))))
+        return HttpResponse(sz.serialize("json", Recorder.objects.filter(name=request.query_params.get("recorder_provider_name"))))
 
 class CreateRecorder(APIView):
     @swagger_auto_schema(operation_description='Create new Recorder',query_serializer=CreateRecorderAPIParametersSerializer )
@@ -54,7 +54,7 @@ class GetHydrophoneByName(APIView):
     @swagger_auto_schema(operation_description="Get hydrophone by Name",query_serializer=HydrophoneAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting HydrophoneByName-------------------", request.query_params.get("hydrophone_provider_name"))
-        return HttpResponse(sz.serialize("json", Hydrophone.objects.get(request.query_params.get("hydrophone_provider_name"))))
+        return HttpResponse(sz.serialize("json", Hydrophone.objects.filter(name=request.query_params.get("hydrophone_provider_name"))))
 
 
 class CreateHydrophone(APIView):

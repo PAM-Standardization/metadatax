@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+           <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="     crossorigin=""></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+    <title>Title</title>
+    <style>
+                #map_1dea15c3069b3654b29095868deb647b {    height: 1000px;  }
+ #map {    height: 1000px;  }
+ ._3Mf63GgMd5rp8uGE5eQohc {
+display: flex;
+z-index: 800;
+position: absolute;
+transition: left .15s,opacity .15s;
+user-select: none;
+cursor: pointer;
+bottom:40px;
+}
+
+
+    </style>
+</head>
+<body style="font-family: Helvetica Neue,Helvetica,Arial,Tahoma,sans-serif; font-size:14px">
+<div style="text-align:center">
+
+    </div>
+<div class="_3Mf63GgMd5rp8uGE5eQohc">
+ </div>  <div  id="map"></div>
+
+</body>
+<script>
+console.log("{{data}}")
+data = "{{data}}".replaceAll('&#x27;','"')
+
+console.log(data)
+console.log("{{deployment}}".replaceAll('&#x27;','"'))
+const obj = JSON.parse(data);
+console.log(obj)
+window.onload = function () {
+var map = L.map('map',   {minZoom:2,  zoom:3,
+                    zoomControl: true,
+                    preferCanvas: true,
+                     }).setView([48.400002 , -4.48333], 4.5);
+map.setMaxBounds([[-230,-230], [230,230]]);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+
+function onEachFeature(feature, layer) {
+    if (feature.properties && feature.properties.popupContent) {
+        layer.bindPopup(feature.properties.popupContent);
+    }
+}
+function pointToLayer(geoJsonPoint, latlng) {
+     return L.circleMarker(latlng , {
+     color:'black',
+     fillColor:'#f03',
+     fillOpacity:1,
+     radius:10
+     });
+}
+var geojsonValue = new  Array();
+for(var k in obj){
+    geojsonValue.push(
+    {
+        "type": "Feature",
+        "properties": {
+            "popupContent": '<div><b> Name: </b>'+obj[k].campaign +' <br><b> Institution: </b>'+obj[k].provider+'<br><b> Period of deployment: </b>'+obj[k].period+'<br></div>'
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [obj[k].longitude, obj[k].latitude]
+        }
+    })
+}
+
+
+L.geoJSON(geojsonValue, {
+    onEachFeature: onEachFeature,
+    pointToLayer: pointToLayer
+}).addTo(map);
+
+}
+
+</script>

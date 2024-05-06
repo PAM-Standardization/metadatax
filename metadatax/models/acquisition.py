@@ -57,12 +57,13 @@ class Project(models.Model):
 
 class Deployment(models.Model):
     """Material deployment for data acquisition"""
+    #
+    # def __str__(self):
+    #     return str(self.name)
 
-    def __str__(self):
-        return str(self.name)
 
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE, related_name="deployments")
-    provider = models.ForeignKey(to=Institution, on_delete=models.CASCADE, blank=True, null=True)
+    provider = models.ForeignKey(to=Institution, on_delete=models.CASCADE, blank=True, null=True, related_name="deployments")
     """Name company that collected the data"""
 
     campaign = models.CharField(max_length=255, blank=True, null=True)
@@ -100,6 +101,7 @@ class Deployment(models.Model):
     bathymetric_depth = models.IntegerField(null=True, blank=True)
     """Depth at which data is collected on the platform"""
 
+    objects = models.Manager
 
 class ChannelConfiguration(models.Model):
     """Configuration of a recorded channel for a Hydrophone on a Recorder in a deployment"""

@@ -61,7 +61,12 @@ class CreateChannelConfigurationAPIParametersSerializer(serializers.ModelSeriali
 class DeploymentAPIParametersSerializer(serializers.Serializer):
     deployment_name = serializers.CharField(help_text="Name of the deployment")
 
+    class Meta:
+        model = Deployment
+        fields = DeploymentFields
+
 class CreateDeploymentAPIParametersSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Deployment
         fields = DeploymentFields
@@ -71,7 +76,6 @@ class ProjectAPIParametersSerializer(serializers.Serializer):
 
 
 class CreateProjectAPIParametersSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Project
         fields = ProjectFields
@@ -86,5 +90,14 @@ class CreateInstitutionAPIParametersSerializer(serializers.ModelSerializer):
         fields = InstitutionFields
 
 
+#################################################################
+class DeploymentSerializer(serializers.ModelSerializer):
+    provider = serializers.CharField(source='provider.name')
+    class Meta:
+        model = Deployment
+        fields = DeploymentFields
 
-
+class InstitutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Institution
+        fields = ('name','contact')

@@ -27,14 +27,14 @@ class GetAllProject(APIView):
     @staticmethod
     def get(self):
         print("-----------------Getting Project-------------------")
-        return HttpResponse(sz.serialize("json", Project.objects.all()), status=status.HTTP_200_OK)
+        return HttpResponse(sz.serialize("json", Project.objects.all()), content_type='application/json', status=status.HTTP_200_OK)
 
 
 class GetProjectByName(APIView):
     @swagger_auto_schema(operation_description="Get project by name",query_serializer=ProjectAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting ProjectByName-------------------", request.query_params.get("project_name"))
-        return  HttpResponse(sz.serialize("json", Project.objects.filter(name=request.query_params.get("project_name"))), status=status.HTTP_200_OK)
+        return  HttpResponse(sz.serialize("json", Project.objects.filter(name=request.query_params.get("project_name"))), content_type='application/json', status=status.HTTP_200_OK)
 
 class CreateProject(APIView):
     @swagger_auto_schema(operation_description='Create new Project',query_serializer=CreateProjectAPIParametersSerializer )
@@ -48,13 +48,13 @@ class GetAllInstitution(APIView):
         @staticmethod
         def get(self):
             print("-----------------Getting Institution-------------------")
-            return HttpResponse(sz.serialize("json", Institution.objects.all()), status=status.HTTP_200_OK)
+            return HttpResponse(sz.serialize("json", Institution.objects.all()), content_type='application/json', status=status.HTTP_200_OK)
 
 class GetInstitutionByName(APIView):
     @swagger_auto_schema(operation_description="Get InsitutionByName",query_serializer=InstitutionAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting InstitutionByName-------------------", request.query_params.get("institution_name"))
-        return HttpResponse(sz.serialize("json", Institution.objects.get(request.query_params.get("institution_name"))), status=status.HTTP_200_OK)
+        return HttpResponse(sz.serialize("json", Institution.objects.filter(name=request.query_params.get("institution_name"))), content_type='application/json', status=status.HTTP_200_OK)
 
 class CreateInstitution(APIView):
     @swagger_auto_schema(operation_description='Create new institution',query_serializer=CreateInstitutionAPIParametersSerializer )
@@ -69,13 +69,13 @@ class GetAllDeployment(APIView):
     @staticmethod
     def get(self):
         print("-----------------Getting Deployment-------------------")
-        return  HttpResponse(sz.serialize("json", Deployment.objects.all()), status=status.HTTP_200_OK)
+        return  HttpResponse(sz.serialize("json", Deployment.objects.all()),content_type='application/json',  status=status.HTTP_200_OK)
 
 class GetDeploymentByName(APIView):
     @swagger_auto_schema(operation_description="Get DeploymentByName", query_serializer=DeploymentAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting DeploymentByName-------------------", request.query_params.get("deployment_name"))
-        return HttpResponse(sz.serialize("json",Deployment.objects.get(request.query_params.get("deployment_name"))), status=status.HTTP_200_OK)
+        return HttpResponse(sz.serialize("json",Deployment.objects.filter(name=request.query_params.get("deployment_name"))), content_type='application/json', status=status.HTTP_200_OK)
 
 class CreateDeployment(APIView):
     @swagger_auto_schema(operation_description='Create new deployment',query_serializer=CreateDeploymentAPIParametersSerializer )
@@ -89,13 +89,13 @@ class GetAllChannelConfigurationAPI(APIView):
     @staticmethod
     def get(self):
         print("-----------------Getting ChannelConfiguration-------------------")
-        return  HttpResponse(sz.serialize("json", ChannelConfiguration.objects.all()), status=status.HTTP_200_OK)
+        return  HttpResponse(sz.serialize("json", ChannelConfiguration.objects.all()), content_type='application/json', status=status.HTTP_200_OK)
 
 class GetChannelConfigurationAPIByChannelName(APIView):
     @swagger_auto_schema(operation_description='Get ChannelConfigurationByName',query_serializer=ChannelConfigurationAPIParametersSerializer)
     def get(self, request):
         print("-----------------Getting ChannelConfigurationByName-------------------", request.query_params.get("channel_name"))
-        return  HttpResponse(sz.serialize("json", ChannelConfiguration.objects.get(request.query_params.get("channel_name"))), status=status.HTTP_200_OK)
+        return  HttpResponse(sz.serialize("json", ChannelConfiguration.objects.filter(name=request.query_params.get("channel_name"))), content_type='application/json', status=status.HTTP_200_OK)
 
 class CreateChannelConfiguration(APIView):
     @swagger_auto_schema(operation_description='Create new Channel Configuration',query_serializer=CreateChannelConfigurationAPIParametersSerializer )
