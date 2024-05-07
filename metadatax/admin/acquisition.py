@@ -50,8 +50,6 @@ class DeploymentAdmin(admin.ModelAdmin):
     """Deployment presentation in DjangoAdmin"""
 
     search_fields = [
-        "project",
-        "provider",
         "name"
     ]
     list_filter = [
