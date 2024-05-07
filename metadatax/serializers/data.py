@@ -1,10 +1,10 @@
 """File Serializers for metadata app"""
 
 from rest_framework import serializers
-
-class AudioSerializer(serializers.Serializer):
-    file = serializers.FileField()
+from metadatax.models.data import File
 
 
-class DataAPIParametersSerializer(serializers.Serializer):
-    name = serializers.CharField(help_text="Name of the sample")
+class FileSerializer(serializers.Serializer):
+    class Meta:
+        model = File
+        fields = '__all__'
