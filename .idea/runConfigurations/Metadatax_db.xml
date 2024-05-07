@@ -10,6 +10,10 @@
               <option name="name" value="POSTGRES_PASSWORD" />
               <option name="value" value="postgres" />
             </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="POSTGRES_DB" />
+              <option name="value" value="metadatax" />
+            </DockerEnvVarImpl>
           </list>
         </option>
         <option name="portBindings">
