@@ -40,9 +40,6 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'rest_framework',
-    # 'oauth2_provider',
-    # 'drf_spectacular'
-
 ]
 
 MIDDLEWARE = [
@@ -124,17 +121,14 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
 }
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-    # ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 
 }
-

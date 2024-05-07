@@ -57,4 +57,3 @@ class ChannelConfigurationViewSet(mixins.CreateModelMixin,
     filter_fields = [
         "channel_name",
     ]
-

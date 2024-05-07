@@ -14,6 +14,7 @@ class ChannelConfigurationSerializer(serializers.ModelSerializer):
 
 
 class DeploymentSerializer(serializers.ModelSerializer):
+     provider = serializers.CharField(source='provider.name')
     class Meta:
         model = Deployment
         fields = '__all__'
@@ -47,3 +48,4 @@ class CreateProjectAPIParametersSerializer(serializers.ModelSerializer):
             "project_type",
             "project_goal"
         ]
+
