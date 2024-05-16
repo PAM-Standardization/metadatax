@@ -1,0 +1,31 @@
+body, * {
+    font-family: "Exo 2", Roboto, sans-serif;
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+body > #links {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 1rem;
+}
+
+body > #links a {
+    background: teal;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none
+}

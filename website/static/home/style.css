@@ -1,0 +1,181 @@
+#background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+body, * {
+    color: white;
+    font-family: "Exo 2", Roboto, sans-serif;
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+
+#head {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    padding: 2rem 6rem;
+    gap: 2rem;
+    align-items: center;
+}
+
+#head form {
+    grid-auto-flow: column;
+    padding: 0;
+    background: none;
+}
+
+h1 {
+    letter-spacing: 0.2rem;
+}
+
+h1 small {
+    font-weight: normal;
+    font-size: 1rem;
+    letter-spacing: 0;
+}
+
+button {
+    background: white;
+    color: black;
+    padding: 0.4rem 0.8rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: 300ms;
+    outline: none;
+    border: none;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+
+#content {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 1fr;
+    justify-items: stretch;
+    overflow: auto;
+    padding: 2rem 6rem;
+    gap: 2rem;
+}
+
+@media (max-width: 800px) {
+    #content {
+        grid-template-columns: 1fr;
+    }
+
+    #content #video {
+        justify-self: stretch;
+        order: 1;
+        height: min-content;
+    }
+}
+
+#content #video {
+    border-radius: 2rem;
+    max-height: 100%;
+    max-width: 100%;
+    justify-self: center;
+    overflow: hidden;
+}
+
+form {
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(1rem);
+    padding: 2rem;
+    display: grid;
+    gap: 2rem 1rem;
+    justify-self: center;
+}
+
+form h2 {
+    font-weight: normal;
+    text-align: center;
+}
+
+form button {
+    justify-self: end;
+}
+
+form .input,
+form > p{
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+form > p label{
+    position: absolute;
+    left: 1rem;
+    top: -0.75rem;
+    z-index: 1;
+}
+
+form > p input{
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    transition: 300ms;
+}
+
+form > p input::placeholder{
+    color: rgba(255, 255, 255, 0.5);
+}
+
+form > p input:hover{
+    background: rgba(255, 255, 255, 0.05);
+}
+
+form > p input:focus{
+    background: rgba(255, 255, 255, 0.25);
+}
+
+form > p label[for=id_accept_mailing] {
+    position: unset;
+}
+form > p input#id_accept_mailing {
+    order: -1;
+    height: 1rem;
+    width: 1rem;
+}
+
+#footer {
+    padding: 1rem 6rem;
+    justify-self: center;
+}
+
+ul.errorlist {
+    background: rgba(191, 51, 4, 0.75);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem 0.5rem 2rem;
+}
+
+#footer p {
+    color: lightgrey;
+}
+
+#footer p a {
+    letter-spacing: 0.2rem;
+    padding: 0 0.2rem;
+    text-decoration: none;
+}
