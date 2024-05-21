@@ -14,7 +14,6 @@ from metadatax.view.equipment import (
     RecorderViewSet,
 )
 from metadatax.view.data import FileViewSet
-from .views import Metadatax
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -34,7 +33,6 @@ router.register(r"recorder", RecorderViewSet, basename="recorder")
 router.register(r"file", FileViewSet, basename="file")
 
 urlpatterns = [
-    path("", Metadatax.metadatax, name="metadatax"),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path(r"", include(router.urls)),
