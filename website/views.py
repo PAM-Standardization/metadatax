@@ -31,4 +31,5 @@ class WebsiteView(viewsets.ViewSet):
                 d[key] = str(k[1])
             d['period'] = d['recovery_date'].split('T')[0] + ' to ' + d['deployment_date'].split('T')[0]
             data.append(d)
-        return render(self, 'map.html', {"data": data, "deployment": deployment})
+        print(deployment_serialized)
+        return render(self, 'map.html', {"data": data})

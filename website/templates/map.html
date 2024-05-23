@@ -22,8 +22,9 @@
 </div>
 
 </body>
+
+{{ data|json_script:"deployments" }}
 <script>
-    const DATA = "{{data}}".replaceAll('&#x27;', '"');
-    const obj = JSON.parse(DATA);
+    const obj = JSON.parse(document.getElementById("deployments").textContent)
 </script>
 <script src="{% static 'map/script.js' %}"></script>
