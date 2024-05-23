@@ -1,22 +1,12 @@
 """Acquisition metadata administration"""
 from django.contrib import admin
 
-from metadatax.models.data import (
-    File, FileFormat,
-)
+from metadatax.models.data import File
 from .__util__ import custom_titled_filter
+from ..models import Accessibility
 
 
-class FileFormatAdmin(admin.ModelAdmin):
-    """File format presentation in DjangoAdmin"""
-    search_fields = [
-        "name"
-    ]
-    list_display = [
-        "name"
-    ]
-
-
+@admin.register(File)
 class FileAdmin(admin.ModelAdmin):
     """File presentation in DjangoAdmin"""
 
@@ -34,6 +24,7 @@ class FileAdmin(admin.ModelAdmin):
         "name",
         "format",
         "channel_configuration",
+        "get_accessibility",
         "initial_timestamp",
         "duration",
         "sampling_frequency",
@@ -42,6 +33,13 @@ class FileAdmin(admin.ModelAdmin):
         "bit_counts",
     ]
 
-
-admin.site.register(File, FileAdmin)
-admin.site.register(FileFormat, FileFormatAdmin)
+    @admin.display(description="Accessibility")
+    def get_accessibility(self, obj):
+        if obj.accessibility is not None:
+            accessibility = obj.accessibility
+        else:
+            accessibility = obj.channel_configuration.deployment.project.accessibility
+        for choices in Accessibility.choices:
+            if choices[0] == accessibility:
+                return choices[1]
+        return accessibility

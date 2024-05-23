@@ -8,9 +8,10 @@ from metadatax.models.acquisition import (
     ProjectType, Site, Project, PlatformType, Deployment, ChannelConfiguration, Platform,
 )
 from .__util__ import custom_titled_filter
+from ..models.data import FileFormat
 
 
-@admin.register(ProjectType, PlatformType, Site, Campaign, Platform)
+@admin.register(ProjectType, PlatformType, Site, Campaign, Platform, FileFormat)
 class CommonAcquisitionAdmin(admin.ModelAdmin):
     list_display = [
         "name",
