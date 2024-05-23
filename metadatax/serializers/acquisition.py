@@ -14,7 +14,7 @@ class ChannelConfigurationSerializer(serializers.ModelSerializer):
 
 
 class DeploymentSerializer(serializers.ModelSerializer):
-    provider = serializers.CharField(source='provider.name')
+    provider = serializers.CharField(source='provider.name', allow_null=True)
     class Meta:
         model = Deployment
         fields = '__all__'

@@ -5,7 +5,11 @@ from metadatax.models.acquisition import (
     Project,
     Institution,
     Deployment,
-    ChannelConfiguration
+    ChannelConfiguration,
+    ProjectType,
+    PlatformType,
+    Platform,
+    Campaign, Site
 )
 from .__util__ import custom_titled_filter
 
@@ -20,6 +24,17 @@ class InstitutionAdmin(admin.ModelAdmin):
     search_fields = [
         "name",
         "contact"
+    ]
+
+
+class ProjectTypeAdmin(admin.ModelAdmin):
+    """Project type presentation in DjangoAdmin"""
+
+    list_display = [
+        "name",
+    ]
+    search_fields = [
+        "name",
     ]
 
 
@@ -50,11 +65,12 @@ class DeploymentAdmin(admin.ModelAdmin):
     """Deployment presentation in DjangoAdmin"""
 
     search_fields = [
-        "name"
+        "name",
+        "project__name",
     ]
     list_filter = [
         "project__accessibility",
-        "platform_type",
+        "platform__type__name",
         "provider"
     ]
     list_display = [
@@ -65,8 +81,8 @@ class DeploymentAdmin(admin.ModelAdmin):
         "deployment_vessel",
         "recovery_date",
         "recovery_vessel",
-        "platform_type",
-        "platform_name",
+        "platform",
+        "site",
         "longitude",
         "latitude",
         "bathymetric_depth",
@@ -99,7 +115,65 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
     ]
 
 
+class PlatformTypeAdmin(admin.ModelAdmin):
+    """Platform type presentation in DjangoAdmin"""
+
+    list_display = [
+        "name",
+    ]
+    search_fields = [
+        "name",
+    ]
+
+
+class PlatformAdmin(admin.ModelAdmin):
+    """Platform presentation in DjangoAdmin"""
+
+    list_display = [
+        "name",
+        "type",
+        "description"
+    ]
+    search_fields = [
+        "name",
+    ]
+    list_filter = [
+        "type",
+    ]
+
+
+class CampaignAdmin(admin.ModelAdmin):
+    """Campaign presentation in DjangoAdmin"""
+
+    list_display = [
+        "name",
+        "project",
+    ]
+    search_fields = [
+        "name",
+        "project",
+    ]
+
+
+class SiteAdmin(admin.ModelAdmin):
+    """Campaign presentation in DjangoAdmin"""
+
+    list_display = [
+        "name",
+        "project",
+    ]
+    search_fields = [
+        "name",
+        "project",
+    ]
+
+
 admin.site.register(Institution, InstitutionAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Deployment, DeploymentAdmin)
 admin.site.register(ChannelConfiguration, ChannelConfigurationAdmin)
+admin.site.register(ProjectType, ProjectTypeAdmin)
+admin.site.register(PlatformType, PlatformTypeAdmin)
+admin.site.register(Platform, PlatformAdmin)
+admin.site.register(Campaign, CampaignAdmin)
+admin.site.register(Site, SiteAdmin)

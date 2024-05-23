@@ -15,7 +15,8 @@ class Institution(models.Model):
         return str(self.name)
 
     name = models.CharField(max_length=255, unique=True)
-    contact = models.TextField(blank=True, null=True)
+    contact = models.EmailField()
+    website = models.URLField(blank=True, null=True)
 
 
 class Accessibility(models.TextChoices):
@@ -24,6 +25,20 @@ class Accessibility(models.TextChoices):
     CONFIDENTIAL = ("C", "Confidential")
     REQUEST = ("R", "Upon request")
     OPEN = ("O", "Open access")
+
+
+class ProjectType(models.Model):
+    """Indicates the type of the project. (research, marine renewable energies, long monitoring).
+     Can contain multiple values"""
+
+    class Meta:
+        verbose_name="Project - Type"
+
+    def __str__(self):
+        return str(self.name)
+
+    name = models.CharField(max_length=255, unique=True)
+    """Project type"""
 
 
 class Project(models.Model):
@@ -43,9 +58,11 @@ class Project(models.Model):
     doi = models.CharField(max_length=255, blank=True, null=True)
     """Digital Object Identifier of the data, if existing"""
 
-    project_type = models.TextField(blank=True, null=True)  # Non-exhaustive select
-    """Indicates the type of the project. (research, marine renewable energies, long monitoring).
-     Can contain multiple values"""
+    project_type = models.ForeignKey(
+        to=ProjectType,
+        blank=True, null=True, on_delete=models.SET_NULL,
+        related_name="projects"
+    )
 
     project_goal = models.TextField(blank=True, null=True)
     """Goal of the project"""
@@ -55,22 +72,106 @@ class Project(models.Model):
         return ", ".join([p.name for p in self.responsible_parties.all()])
 
 
+class Campaign(models.Model):
+    """Name of the campaign during which the deployment was done"""
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_campaign_in_project",
+                fields=["name", "project_id"],
+            ),
+        ]
+        verbose_name="Project - Campaign"
+
+    def __str__(self):
+        return self.project.name + " " + str(self.name)
+
+    name = models.CharField(max_length=255)
+    project = models.ForeignKey(to=Project, related_name="campaigns", on_delete=models.CASCADE)
+
+
+class Site(models.Model):
+    """Name of the site where the deployment was done"""
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_site_in_project",
+                fields=["name", "project_id"],
+            ),
+        ]
+        verbose_name="Project - Site"
+
+    def __str__(self):
+        return self.project.name + " " + str(self.name)
+
+    name = models.CharField(max_length=255)
+    """Name of the generic location"""
+    project = models.ForeignKey(to=Project, related_name="sites", on_delete=models.CASCADE)
+
+
+class PlatformType(models.Model):
+
+    class Meta:
+        verbose_name = "Deployment - Platform - Type"
+
+    def __str__(self):
+        return str(self.name)
+
+    name = models.CharField(max_length=255, unique=True)
+    """Type of platform, i.e. the support of the measurement systems. 
+    Multiple choices are offered : bouy, cage, mooring line with acoustic release, fishing net, glider, whale
+    Can contain multiple values"""
+
+
+class Platform(models.Model):
+
+    class Meta:
+        verbose_name = "Deployment - Platform"
+
+    def __str__(self):
+        return str(self.name)
+
+    name = models.CharField(max_length=255)
+    type = models.ForeignKey(
+        to=PlatformType,
+        on_delete=models.SET_NULL, blank=True, null=True,
+        related_name="platforms"
+    )
+    description = models.TextField(blank=True, null=True)
+    """Short description of the platform"""
+
+
 class Deployment(models.Model):
     """Material deployment for data acquisition"""
-    #
+
+    # TODO: include project name (and campaign/site?)
     # def __str__(self):
     #     return str(self.name)
 
+    name = models.CharField(max_length=255)
+    """Name of the deployment (eg deployment 1)"""
 
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE, related_name="deployments")
-    provider = models.ForeignKey(to=Institution, on_delete=models.CASCADE, blank=True, null=True, related_name="deployments")
-    """Name company that collected the data"""
+    provider = models.ForeignKey(to=Institution, on_delete=models.SET_NULL, blank=True, null=True,
+                                 related_name="deployments")
+    """Company that collected the data"""
 
-    campaign = models.CharField(max_length=255, blank=True, null=True)
+    campaign = models.ForeignKey(to=Campaign,
+                                 on_delete=models.SET_NULL, blank=True, null=True,
+                                 related_name="deployments")
     """Name of the campaign during which the deployment was done"""
 
-    name = models.CharField(max_length=255, blank=True, null=True)
-    """Name of the deployment (eg deployment 1)"""
+    site = models.ForeignKey(to=Site,
+                             on_delete=models.SET_NULL, blank=True, null=True,
+                             related_name="deployments")
+    """Name of the generic location"""
+
+    platform = models.ForeignKey(to=Platform,
+                                 on_delete=models.SET_NULL, blank=True, null=True,
+                                 related_name="deployments")
+    """Name of the generic location"""
 
     deployment_date = models.DateTimeField(null=True, blank=True)
     """Date and time at which the measurement system was deployed"""
@@ -85,15 +186,6 @@ class Deployment(models.Model):
     description = models.TextField(blank=True, null=True)
     """Optional description of how the deployment and recovery went"""
 
-    platform_type = models.TextField()  # Non-exhaustive select
-    """Type of platform, i.e. the support of the measurement systems. 
-    Multiple choices are offered : bouy, cage, mooring line with acoustic release, fishing net, glider, whale
-    Can contain multiple values"""
-    platform_description = models.TextField(blank=True, null=True)
-    """Short description of the platform"""
-    platform_name = models.CharField(max_length=255, blank=True, null=True)
-    """Name of the generic location"""
-
     longitude = models.FloatField()
     """Longitude where data is collected on the platform"""
     latitude = models.FloatField()
@@ -103,8 +195,17 @@ class Deployment(models.Model):
 
     objects = models.Manager
 
+
 class ChannelConfiguration(models.Model):
     """Configuration of a recorded channel for a Hydrophone on a Recorder in a deployment"""
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_name_in_deployment_with_recorder",
+                fields=["channel_name", "deployment_id", "recorder_id"],
+            ),
+        ]
 
     def __str__(self):
         return f"{self.deployment} ({self.recorder} | {self.hydrophone}"
