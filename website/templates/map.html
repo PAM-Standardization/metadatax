@@ -10,8 +10,10 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <title>World map of deployments position</title>
+
 </head>
 <body>
 <div id="map"></div>
@@ -19,12 +21,32 @@
 <div id="links">
     <a href="/">Home</a>
     <a href="/admin/">Access administration</a>
-</div>
 
+</div>
+<div id="mysidepanel">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+<table class="table" id="table">
+
+</table>
+</div>
 </body>
 
 {{ data|json_script:"deployments" }}
 <script>
+
     const obj = JSON.parse(document.getElementById("deployments").textContent)
+    console.log(obj)
+
+    const DATA = "{{data}}".replaceAll('&#x27;', '"');
+    const TOOLTIP = "{{tooltip}}".replaceAll('&#x27;', '"');
+   console.log(TOOLTIP)
+
+
+    const tooltip_obj = JSON.parse(TOOLTIP);
+   console.log(tooltip_obj)
+    function closeNav() {
+     document.getElementById("mysidepanel").style.width = "0";
+    }
+
 </script>
 <script src="{% static 'map/script.js' %}"></script>
