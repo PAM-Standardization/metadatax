@@ -11,6 +11,9 @@ from .equipment import (
 class Institution(models.Model):
     """Institution"""
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self):
         return str(self.name)
 
@@ -33,6 +36,7 @@ class ProjectType(models.Model):
 
     class Meta:
         verbose_name = "Project - Type"
+        ordering = ["name"]
 
     def __str__(self):
         return str(self.name)
@@ -43,6 +47,9 @@ class ProjectType(models.Model):
 
 class Project(models.Model):
     """Data acquisition project"""
+
+    class Meta:
+        ordering = ["name"]
 
     def __str__(self):
         return str(self.name)
@@ -68,8 +75,6 @@ class Project(models.Model):
     """Goal of the project"""
 
 
-
-
 class Campaign(models.Model):
     """Name of the campaign during which the deployment was done"""
 
@@ -81,6 +86,7 @@ class Campaign(models.Model):
             ),
         ]
         verbose_name = "Project - Campaign"
+        ordering = ["project", "name"]
 
     def __str__(self):
         return self.project.name + " " + str(self.name)
@@ -100,6 +106,7 @@ class Site(models.Model):
             ),
         ]
         verbose_name = "Project - Site"
+        ordering = ["project", "name"]
 
     def __str__(self):
         return self.project.name + " " + str(self.name)
@@ -112,6 +119,7 @@ class Site(models.Model):
 class PlatformType(models.Model):
     class Meta:
         verbose_name = "Deployment - Platform - Type"
+        ordering = ["name"]
 
     def __str__(self):
         return str(self.name)
@@ -125,6 +133,7 @@ class PlatformType(models.Model):
 class Platform(models.Model):
     class Meta:
         verbose_name = "Deployment - Platform"
+        ordering = ["name"]
 
     def __str__(self):
         return str(self.name)
@@ -141,6 +150,9 @@ class Platform(models.Model):
 
 class Deployment(models.Model):
     """Material deployment for data acquisition"""
+
+    class Meta:
+        ordering = ["project", "name"]
 
     def __str__(self):
         if self.name is not None:
@@ -212,9 +224,11 @@ class ChannelConfiguration(models.Model):
                 fields=["channel_name", "deployment_id", "recorder_id"],
             ),
         ]
+        ordering = ["deployment", "channel_name"]
 
     def __str__(self):
-        return f"{self.deployment} ({self.recorder} | {self.hydrophone}"
+        return f"{self.deployment} ({self.recorder.model.provider} {self.recorder.model.name} &" \
+               f" {self.hydrophone.model.provider} {self.hydrophone.model.name})"
 
     deployment = models.ForeignKey(to=Deployment, on_delete=models.CASCADE)
     hydrophone = models.ForeignKey(to=Hydrophone, on_delete=models.CASCADE)
