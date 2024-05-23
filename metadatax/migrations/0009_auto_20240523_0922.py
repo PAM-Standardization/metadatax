@@ -11,15 +11,15 @@ def forward_migrate_equipments(apps, _):
     hydrophone_model_model = apps.get_model("metadatax", "HydrophoneModel")
     hydrophone_model = apps.get_model("metadatax", "Hydrophone")
 
-    for recorder_model in recorder_model.objects.all():
-        provider_model, _ = provider_model.objects.get_or_create(name=recorder_model.provider)
+    for recorder in recorder_model.objects.all():
+        provider_model, _ = provider_model.objects.get_or_create(name=recorder.provider)
         model, _ = recorder_model_model.objects.get_or_create(
             provider=provider_model,
-            name=recorder_model.model,
-            number_of_channels=recorder_model.number_of_channels
+            name=recorder.model,
+            number_of_channels=recorder.number_of_channels
         )
-        recorder_model.model_class = model
-        recorder_model.save()
+        recorder.model_class = model
+        recorder.save()
 
     for hydrophone in hydrophone_model.objects.all():
         provider_model, _ = provider_model.objects.get_or_create(name=hydrophone.provider)
@@ -169,7 +169,6 @@ class Migration(migrations.Migration):
             model_name='hydrophone',
             name='model_class',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hydrophone_items',
-                                    blank=True, null=True,
                                     to='metadatax.hydrophonemodel'),
         ),
         migrations.RenameField(

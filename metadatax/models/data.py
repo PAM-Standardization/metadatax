@@ -7,6 +7,14 @@ from .acquisition import (
 )
 
 
+class FileFormat(models.Model):
+
+    def __str__(self):
+        return self.name
+    
+    name = models.CharField(max_length=20)
+
+
 class File(models.Model):
     """Recorder file"""
 
@@ -18,7 +26,7 @@ class File(models.Model):
     channel_configuration = models.ForeignKey(to=ChannelConfiguration, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     """Name of the audio file"""
-    format = models.CharField(max_length=20, blank=True, null=True)  # Non-exhaustive select
+    format = models.ForeignKey(to=FileFormat, blank=True, null=True, on_delete=models.SET_NULL)
     """Format of the audio file. Audio files can be stored in a different format from the recording format."""
 
     initial_timestamp = models.DateTimeField(null=True, blank=True)

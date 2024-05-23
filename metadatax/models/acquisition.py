@@ -1,6 +1,6 @@
 """Acquisition models for metadata app"""
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Min, Max, Count
 
 from .equipment import (
     Hydrophone,
@@ -32,7 +32,7 @@ class ProjectType(models.Model):
      Can contain multiple values"""
 
     class Meta:
-        verbose_name="Project - Type"
+        verbose_name = "Project - Type"
 
     def __str__(self):
         return str(self.name)
@@ -82,7 +82,7 @@ class Campaign(models.Model):
                 fields=["name", "project_id"],
             ),
         ]
-        verbose_name="Project - Campaign"
+        verbose_name = "Project - Campaign"
 
     def __str__(self):
         return self.project.name + " " + str(self.name)
@@ -101,7 +101,7 @@ class Site(models.Model):
                 fields=["name", "project_id"],
             ),
         ]
-        verbose_name="Project - Site"
+        verbose_name = "Project - Site"
 
     def __str__(self):
         return self.project.name + " " + str(self.name)
@@ -112,7 +112,6 @@ class Site(models.Model):
 
 
 class PlatformType(models.Model):
-
     class Meta:
         verbose_name = "Deployment - Platform - Type"
 
@@ -126,7 +125,6 @@ class PlatformType(models.Model):
 
 
 class Platform(models.Model):
-
     class Meta:
         verbose_name = "Deployment - Platform"
 
@@ -146,11 +144,21 @@ class Platform(models.Model):
 class Deployment(models.Model):
     """Material deployment for data acquisition"""
 
-    # TODO: include project name (and campaign/site?)
-    # def __str__(self):
-    #     return str(self.name)
+    def __str__(self):
+        if self.name is not None:
+            return str(self.name)
+        else:
+            return f"{self.project}: {self.campaign.name if self.campaign else '-'} | {self.site.name if self.site else '-'}"
 
-    name = models.CharField(max_length=255)
+    def clean(self):
+        if self.campaign and self.campaign.project != self.project:
+            raise ValidationError('Campaign must belong to the Deployment project')
+        if self.site and self.site.project != self.project:
+            raise ValidationError('Site must belong to the Deployment project')
+        if self.name is None and self.site is None and self.campaign is None:
+            raise ValidationError('Your deployment must be identified by either a name, campaign and/or site')
+
+    name = models.CharField(max_length=255, blank=True, null=True)
     """Name of the deployment (eg deployment 1)"""
 
     project = models.ForeignKey(to=Project, on_delete=models.CASCADE, related_name="deployments")
@@ -217,7 +225,7 @@ class ChannelConfiguration(models.Model):
     channel_name = models.CharField(max_length=5, blank=True, null=True)
     """Name of the channel used for recording"""
 
-    gain = models.IntegerField()
+    gain = models.FloatField()
     """Gain of the channel (recorder), with correction factors if applicable, without hydrophone sensibility (in dB). 
     If end-to-end calibration with hydrophone sensibility, set it in Sensitivity and set Gain to 0 dB."""
 
@@ -234,7 +242,7 @@ class ChannelConfiguration(models.Model):
     sampling_frequency = models.IntegerField()
     """Sampling frequency of the recorder"""
 
-    recording_format = models.CharField(max_length=20, blank=True, null=True)  # Non-exhaustive select
+    recording_format = models.ForeignKey(to="FileFormat", blank=True, null=True, on_delete=models.SET_NULL)
     """Format of the audio files (Multiple choices are offered : wav, flac"""
     sample_depth = models.IntegerField()
     """Number of bits per sample"""

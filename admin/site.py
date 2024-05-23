@@ -11,7 +11,9 @@ class MetadataxAdminSite(admin.AdminSite):
         """
         app_ordering = {
             "metadatax": 1,
-            "auth": 2
+            "meta_auth": 2,
+            "auth": 2,
+            "authtoken": 2
         }
         metadatax_ordering = {
             "Institutions": 1,

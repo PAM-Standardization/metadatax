@@ -2,9 +2,19 @@
 from django.contrib import admin
 
 from metadatax.models.data import (
-    File,
+    File, FileFormat,
 )
 from .__util__ import custom_titled_filter
+
+
+class FileFormatAdmin(admin.ModelAdmin):
+    """File format presentation in DjangoAdmin"""
+    search_fields = [
+        "name"
+    ]
+    list_display = [
+        "name"
+    ]
 
 
 class FileAdmin(admin.ModelAdmin):
@@ -34,3 +44,4 @@ class FileAdmin(admin.ModelAdmin):
 
 
 admin.site.register(File, FileAdmin)
+admin.site.register(FileFormat, FileFormatAdmin)

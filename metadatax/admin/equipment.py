@@ -41,13 +41,17 @@ class RecorderAdmin(admin.ModelAdmin):
         "serial_number",
     ]
     list_filter = [
-        "model",
+        "model__provider",
         "model__number_of_channels",
     ]
     list_display = [
         "serial_number",
         "model",
+        "number_of_channels",
     ]
+
+    def number_of_channels(self, obj):
+        return obj.model.number_of_channels
 
 
 class HydrophoneModelAdmin(admin.ModelAdmin):
@@ -74,7 +78,7 @@ class HydrophoneAdmin(admin.ModelAdmin):
         "serial_number",
     ]
     list_filter = [
-        "model",
+        "model__provider",
     ]
     list_display = [
         "serial_number",
@@ -84,7 +88,11 @@ class HydrophoneAdmin(admin.ModelAdmin):
         "noise_floor",
         "dynamic_range",
         "max_operating_depth",
+        "operating_temperature",
     ]
+
+    def operating_temperature(self, obj):
+        return obj.model.operating_temperature()
 
 
 admin.site.register(EquipmentProvider, EquipmentProviderAdmin)

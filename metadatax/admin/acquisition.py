@@ -48,8 +48,8 @@ class ProjectAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         "accessibility",
-        "responsible_parties",
         "project_type",
+        "responsible_parties",
     ]
     list_display = [
         "name",
@@ -67,14 +67,16 @@ class DeploymentAdmin(admin.ModelAdmin):
     search_fields = [
         "name",
         "project__name",
+        "provider__name",
     ]
     list_filter = [
         "project__accessibility",
         "platform__type__name",
-        "provider"
+        "provider",
     ]
     list_display = [
         "name",
+        "project",
         "provider",
         "campaign",
         "deployment_date",
@@ -97,6 +99,7 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         "deployment__project__accessibility",
+        ("deployment__project__name", custom_titled_filter("project")),
         "continuous",
         "recording_format",
         ("hydrophone__model", custom_titled_filter("hydrophone model")),
