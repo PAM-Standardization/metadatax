@@ -67,9 +67,7 @@ class Project(models.Model):
     project_goal = models.TextField(blank=True, null=True)
     """Goal of the project"""
 
-    def list_responsible_parties(self) -> str:
-        """Display readable list of responsible_parties"""
-        return ", ".join([p.name for p in self.responsible_parties.all()])
+
 
 
 class Campaign(models.Model):

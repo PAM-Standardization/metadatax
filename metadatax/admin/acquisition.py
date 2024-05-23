@@ -43,6 +43,16 @@ class ProjectTypeAdmin(admin.ModelAdmin):
 class ProjectAdmin(admin.ModelAdmin):
     """Project presentation in DjangoAdmin"""
 
+    list_display = [
+        "name",
+        "list_responsible_parties",
+        "accessibility",
+        "project_type",
+        "project_goal",
+        "doi",
+        "campaigns",
+        "sites",
+    ]
     search_fields = [
         "name",
         "project_goal",
@@ -53,14 +63,16 @@ class ProjectAdmin(admin.ModelAdmin):
         "project_type",
         "responsible_parties",
     ]
-    list_display = [
-        "name",
-        "list_responsible_parties",
-        "accessibility",
-        "project_type",
-        "project_goal",
-        "doi",
-    ]
+
+    def list_responsible_parties(self, obj) -> str:
+        """Display readable list of responsible_parties"""
+        return ", ".join([p.name for p in obj.responsible_parties.all()])
+
+    def campaigns(self, obj) -> int:
+        return obj.campaigns.count()
+
+    def sites(self, obj) -> int:
+        return obj.sites.count()
 
 
 class DeploymentAdmin(admin.ModelAdmin):
