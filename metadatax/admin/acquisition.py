@@ -19,11 +19,13 @@ class InstitutionAdmin(admin.ModelAdmin):
 
     list_display = [
         "name",
-        "contact"
+        "contact",
+        "website",
     ]
     search_fields = [
         "name",
-        "contact"
+        "contact",
+        "website",
     ]
 
 
