@@ -3,10 +3,11 @@ from django.contrib import admin
 
 from metadatax.models.equipment import (
     Recorder,
-    Hydrophone, EquipmentProvider, RecorderModel, HydrophoneModel
+    Hydrophone, EquipmentProvider, RecorderModel, HydrophoneModel, HydrophoneDirectivity
 )
 
 
+@admin.register(EquipmentProvider)
 class EquipmentProviderAdmin(admin.ModelAdmin):
     search_fields = [
         "name",
@@ -18,6 +19,7 @@ class EquipmentProviderAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(RecorderModel)
 class RecorderModelAdmin(admin.ModelAdmin):
     search_fields = [
         "name",
@@ -33,6 +35,7 @@ class RecorderModelAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Recorder)
 class RecorderAdmin(admin.ModelAdmin):
     """Recorder presentation in DjangoAdmin"""
 
@@ -54,6 +57,7 @@ class RecorderAdmin(admin.ModelAdmin):
         return obj.model.number_of_channels
 
 
+@admin.register(HydrophoneModel)
 class HydrophoneModelAdmin(admin.ModelAdmin):
     search_fields = [
         "name",
@@ -70,6 +74,7 @@ class HydrophoneModelAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Hydrophone)
 class HydrophoneAdmin(admin.ModelAdmin):
     """Hydrophone presentation in DjangoAdmin"""
 
@@ -79,6 +84,7 @@ class HydrophoneAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         "model__provider",
+        "model__directivity",
     ]
     list_display = [
         "serial_number",
@@ -89,14 +95,14 @@ class HydrophoneAdmin(admin.ModelAdmin):
         "dynamic_range",
         "max_operating_depth",
         "operating_temperature",
+        "directivity",
     ]
 
     def operating_temperature(self, obj):
         return obj.model.operating_temperature()
 
-
-admin.site.register(EquipmentProvider, EquipmentProviderAdmin)
-admin.site.register(RecorderModel, RecorderModelAdmin)
-admin.site.register(Recorder, RecorderAdmin)
-admin.site.register(HydrophoneModel, HydrophoneModelAdmin)
-admin.site.register(Hydrophone, HydrophoneAdmin)
+    def directivity(self, obj):
+        for choices in HydrophoneDirectivity.choices:
+            if choices[0] == obj.model.directivity:
+                return choices[1]
+        return obj.model.directivity
