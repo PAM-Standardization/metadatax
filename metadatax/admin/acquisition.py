@@ -145,7 +145,7 @@ class DeploymentAdmin(admin.ModelAdmin):
         (
             "Deployment & Recovery",
             {
-                "classes": ["collapse", ],
+                "classes": ["wide", ],
                 "fields": [
                     "campaign",
                     ("deployment_date", "deployment_vessel"),
@@ -224,7 +224,7 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
         ), (
             "Duty cycle",
             {
-                "classes": ["collapse",],
+                "classes": ["wide",],
                 "fields": [
                     "continuous",
                     "duty_cycle_on",

@@ -30,7 +30,7 @@ class FileAdmin(admin.ModelAdmin):
         "sampling_frequency",
         "sample_depth",
         "storage_location",
-        "bit_counts",
+        "file_size",
     ]
 
     @admin.display(description="Accessibility")
