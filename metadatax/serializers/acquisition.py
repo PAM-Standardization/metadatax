@@ -26,11 +26,7 @@ class DeploymentLightSerializer(serializers.ModelSerializer):
         model = Deployment
         fields = '__all__'
 
-class DeploymentGlobalSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Deployment
-        fields = '__all__'
-        depth = 2
+
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -60,5 +56,22 @@ class CreateProjectAPIParametersSerializer(serializers.ModelSerializer):
             "project_type",
             "project_goal"
         ]
+class ProjectGlobalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        exclude = ['id']
+        extra_kwargs = {'new': 'name'}
+        depth = 2
 
+class InstitutionGlobalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Institution
+        exclude = ['id']
 
+class DeploymentGlobalSerializer(serializers.ModelSerializer):
+    # provider= InstitutionGlobalSerializer()
+    # project= ProjectGlobalSerializer()
+    class Meta:
+        model = Deployment
+        exclude = ['id']
+        depth = 2
