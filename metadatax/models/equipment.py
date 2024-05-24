@@ -5,6 +5,7 @@ from django.db import models
 class EquipmentProvider(models.Model):
     class Meta:
         verbose_name = "Equipment - Provider"
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -39,6 +40,7 @@ class Recorder(models.Model):
             ["model", "serial_number"]
         ]
         verbose_name = "Equipment - Recorder"
+        ordering = ["model"]
 
     def __str__(self):
         return f"{self.model}: {self.serial_number}"
@@ -95,6 +97,7 @@ class Hydrophone(models.Model):
             ["model", "serial_number"]
         ]
         verbose_name = "Equipment - Hydrophone"
+        ordering = ["model"]
 
     def __str__(self):
         return f"{self.model}: {self.serial_number}"
