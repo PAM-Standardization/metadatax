@@ -28,16 +28,17 @@ class WebsiteView(viewsets.ViewSet):
 
     def map(self):
         data = []
+        tooltip = []
+        popup = []
         deployment = Deployment.objects.all().order_by("project__name")
         deployment_serialized = DeploymentSerializer(deployment, many=True).data
         #Dict for tooltip on deployment point: Need project name ; responsible parties, campaing/deployment name, platform type, Latitude, Longitude, , period color
-        tooltip =[]
         r = lambda: random.randint(0, 255)
         last_project = ""
-        print(deployment_serialized)
         for x in deployment_serialized:
             d = {}
             tooltip_dict = {}
+            popup_dict = {}
             for k in x.items():
                 key = k[0]
                 d[key] = str(k[1])
@@ -46,7 +47,6 @@ class WebsiteView(viewsets.ViewSet):
             tooltip_dict['Responsible parties'] =d['provider']
             tooltip_dict['Campaign name'] =d['campaign']
             tooltip_dict['Deployment name'] =d['name']
-            tooltip_dict['Platform type'] =d['platform_type']
             tooltip_dict['Period'] = d['recovery_date'].split('T')[0] + ' to ' + d['deployment_date'].split('T')[0]
             tooltip_dict['Latitude'] =d['latitude']
             tooltip_dict['Longitude'] =d['longitude']
@@ -58,23 +58,11 @@ class WebsiteView(viewsets.ViewSet):
             last_color = tooltip_dict['Color']
             last_project = d['project']
             ####
+
             data.append(d)
-
             tooltip.append(tooltip_dict)
-        # print(data)
-        import json
-        deployment_view = Deployment.objects.all()
-        institution_view = Institution.objects.all()
-        project_view = Project.objects.all()
 
-        from django.core import serializers
-        leads_as_json =DeploymentGlobalSerializer(deployment, many=True ).data
-        # data = serializers.serialize("json", Deployment.objects.all())
-        print(leads_as_json)
-        # print((leads_as_json))
-      #  global_view_serialized = [x.__dict__ for x in (Deployment.objects.raw("SELECT id,* from metadatax_view;"))]
-        # print((global_view_serialized))
+        popup_as_json =DeploymentGlobalSerializer(deployment, many=True).data
 
-
-        return render(self, 'map.html', {"data": data,  "tooltip":tooltip})
+        return render(self, 'map.html', {"data": data,  "tooltip":tooltip,"popup_as_json":popup_as_json})
 

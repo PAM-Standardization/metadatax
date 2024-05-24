@@ -1,3 +1,4 @@
+//Create Cluster for close up deployments. Clustering depends on distance between points and zoom level.
 var markers = L.markerClusterGroup({
 maxClusterRadius: function (mapZoom) {
    if (mapZoom >5) {return 5;} else {return 40;}
@@ -5,40 +6,38 @@ maxClusterRadius: function (mapZoom) {
 });
 
 
-
 function showContent(e) {
-
-
-
  if (!e.length) {
-
     var tbl= document.getElementById('table')
     for (var row =0; row <tbl.rows.length;){
      tbl.deleteRow(row);
     }
-    for (var index =0 ; index < tooltip_obj.length; index++) {
-        if (tooltip_obj[index].Latitude == e.latlng.lat && tooltip_obj[index].Longitude == e.latlng.lng) {
-                document.getElementById("mysidepanel").style.width = "500px";
-               for (var line =0; line<Object.keys(tooltip_obj[index]).length; line++) {
+
+    for (var index =0 ; index < popup_obj.length; index++) {
+        document.getElementById("title_panel").innerText ="Project: "+popup_obj[index].project.name;
+        if (popup_obj[index].latitude == e.latlng.lat && popup_obj[index].longitude == e.latlng.lng) {
+               document.getElementById("mysidepanel").style.width = "500px";
+               for (var line =0; line<Object.keys(popup_obj[index]).length; line++) {
                     let tr = tbl.insertRow();
-                    tr.setAttribute("id",Object.keys(tooltip_obj[index])[line]);
+                    tr.setAttribute("id",Object.keys(popup_obj[index])[line]);
                      let th = tr.insertCell();
-                     th.appendChild(document.createTextNode(Object.keys(tooltip_obj[index])[line]));
+                     th.appendChild(document.createTextNode(Object.keys(popup_obj[index])[line]));
                      let td = tr.insertCell();
-                     try {
-                        td.appendChild(document.createTextNode(JSON.parse(view[index][Object.keys(tooltip_obj[index])[line]])));
-                        console.log(tooltip_obj[index][Object.keys(tooltip_obj[index])[line]]);
-                        }
-                        catch(err) {
-                        td.appendChild(document.createTextNode(tooltip_obj[index][Object.keys(tooltip_obj[index])[line]]));
-                        }
+
+                      td.appendChild(document.createTextNode(popup_obj[index][Object.keys(popup_obj[index])[line]]));
+
                  }
           }
+
     }
+    if (tbl.rows.length == 0) {
+     document.getElementById("mysidepanel").style.width = "0px";
+  }
   }
   else {
   return e;
   }
+
 }
 function onEachFeature(feature, layer) {
     if (feature.properties && feature.properties.popupContent) {
@@ -107,7 +106,6 @@ map.addLayer(markers);
 
 function generateTooltip(key, value) {
 var text = '<div> ';
-console.log(key)
     for (let index = 0; index <key.length-3; index ++ ) {
         text+=  '<b> '+key[index]+' : </b>' + value[key[index]]+ '<br>';
     }

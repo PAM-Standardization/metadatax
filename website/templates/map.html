@@ -24,7 +24,10 @@
 
 </div>
 <div id="mysidepanel">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    <div><label id="title_panel" class="closebtn" style="right: auto;"></label></div>
+    <div>
+  <a href="javascript:void(0)"  class="closebtn" onclick="closeNav()" aria-label="Fermer">×</a>
+        </div>
 <table class="table" id="table">
 
 </table>
@@ -32,18 +35,14 @@
 </body>
 
 {{ data|json_script:"deployments" }}
+{{ tooltip|json_script:"tooltipContent" }}
+{{ popup_as_json|json_script:"popupContent" }}
+
 <script>
 
     const obj = JSON.parse(document.getElementById("deployments").textContent)
-    console.log(obj)
-
-    const DATA = "{{data}}".replaceAll('&#x27;', '"');
-    const TOOLTIP = "{{tooltip}}".replaceAll('&#x27;', '"');
-   console.log(TOOLTIP)
-
-
-    const tooltip_obj = JSON.parse(TOOLTIP);
-   console.log(tooltip_obj)
+    const tooltip_obj = JSON.parse(document.getElementById("tooltipContent").textContent)
+    const popup_obj = JSON.parse(document.getElementById("popupContent").textContent)
     function closeNav() {
      document.getElementById("mysidepanel").style.width = "0";
     }
