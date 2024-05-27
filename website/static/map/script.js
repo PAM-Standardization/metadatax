@@ -1,44 +1,90 @@
-//Create Cluster for close up deployments. Clustering depends on distance between points and zoom level.
-var markers = L.markerClusterGroup({
-maxClusterRadius: function (mapZoom) {
-   if (mapZoom >5) {return 5;} else {return 40;}
-}
+/**
+ * Create Cluster for close up deployments.
+ * Clustering depends on distance between points and zoom level.
+ */
+const markers = L.markerClusterGroup({
+    maxClusterRadius: (maxZoom) => 5 ? 5 : 40,
 });
 
 
-function showContent(e) {
- if (!e.length) {
-    var tbl= document.getElementById('table')
-    for (var row =0; row <tbl.rows.length;){
-     tbl.deleteRow(row);
+/**
+ * Labels for the popup content lines
+ * @type {Array<string>}
+ */
+const KEYS = [
+    "name",
+    "provider",
+    "campaign",
+    "site",
+    "deployment_date",
+    "deployment_vessel",
+    "recovery_date",
+    "recovery_vessel",
+    "description",
+    "coordinates",
+    "bathymetric_depth",
+    "platform",
+]
+
+const EMPTY_VALUE = "-"
+
+function getCellInnerText(deployment, key) {
+    switch (key) {
+        case "campaign":
+        case "site":
+        case "provider":
+        case "platform":
+            return deployment[key]?.name ?? EMPTY_VALUE;
+        case "deployment_date":
+        case "recovery_date":
+            return deployment[key] ? (new Date(deployment[key])).toISOString() : EMPTY_VALUE;
+        case "coordinates":
+            return `${deployment.latitude}, ${deployment.longitude}`;
+        default:
+            return deployment[key] ?? EMPTY_VALUE;
     }
-
-    for (var index =0 ; index < popup_obj.length; index++) {
-        document.getElementById("title_panel").innerText ="Project: "+popup_obj[index].project.name;
-        if (popup_obj[index].latitude == e.latlng.lat && popup_obj[index].longitude == e.latlng.lng) {
-               document.getElementById("mysidepanel").style.width = "500px";
-               for (var line =0; line<Object.keys(popup_obj[index]).length; line++) {
-                    let tr = tbl.insertRow();
-                    tr.setAttribute("id",Object.keys(popup_obj[index])[line]);
-                     let th = tr.insertCell();
-                     th.appendChild(document.createTextNode(Object.keys(popup_obj[index])[line]));
-                     let td = tr.insertCell();
-
-                      td.appendChild(document.createTextNode(popup_obj[index][Object.keys(popup_obj[index])[line]]));
-
-                 }
-          }
-
-    }
-    if (tbl.rows.length == 0) {
-     document.getElementById("mysidepanel").style.width = "0px";
-  }
-  }
-  else {
-  return e;
-  }
-
 }
+
+
+/**
+ * Create popup content
+ * @param e {any}
+ * @returns {any|*}
+ */
+function showContent(e) {
+    console.debug(e)
+    if (!e) return;
+    if (!e.length) {
+        let table = document.getElementById('table')
+        for (let row = 0; row < table.rows.length;) {
+            table.deleteRow(row);
+        }
+
+        const deployment = DATA.find(d => d.latitude === e.latlng.lat && d.longitude === e.latlng.lng);
+        if (!deployment) return;
+
+        document.getElementById("title_panel").innerText = `Project: ${deployment.project.name}`;
+        for (const key of KEYS) {
+            const row = table.insertRow();
+            row.setAttribute("id", key);
+            const labelCell = row.insertCell();
+            labelCell.className = "label"
+            labelCell.innerText = key.replaceAll('_', ' ');
+            const valueCell = row.insertCell();
+            valueCell.innerText = getCellInnerText(deployment, key)
+        }
+        document.getElementById("mysidepanel").scrollTop = 0;
+        document.getElementById("mysidepanel").style.width = "500px";
+
+        if (table.rows.length === 0) {
+            document.getElementById("mysidepanel").style.width = "0px";
+        }
+    } else {
+        return e;
+    }
+}
+
+
 function onEachFeature(feature, layer) {
     if (feature.properties && feature.properties.popupContent) {
         layer.bindTooltip(feature.properties.tooltipContent);
@@ -49,15 +95,24 @@ function onEachFeature(feature, layer) {
 }
 
 function pointToLayer(geoJsonPoint, latlng) {
+    const deployment = DATA.find(d => d.latitude === latlng.lat && d.longitude === latlng.lng);
     return L.circleMarker(latlng, {
         color: 'black',
-        fillColor: geoJsonPoint.properties.popupContent,
+        fillColor: ProjectColor.get(deployment?.project.id),
         fillOpacity: 1,
         radius: 10
     });
 }
 
+const getRandomColor = () => "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0");
+const ProjectColor = new Map();
+
 window.onload = function () {
+    for (const deployment of DATA) {
+        if (ProjectColor.has(deployment.project.id)) continue;
+        ProjectColor.set(deployment.project.id, getRandomColor())
+    }
+
     const map = L.map('map', {
         minZoom: 2, zoom: 3,
         zoomControl: true,
@@ -73,44 +128,38 @@ window.onload = function () {
             "transparent": true,
             "version": "1.3.0",
             "noWrap": true,
-            "bounds": [   [-90, -180],   [90, 180] ]        }
-).addTo(map);
+            "bounds": [[-90, -180], [90, 180]]
+        }
+    ).addTo(map);
 
 
-    const geojsonValue = [];
-    for (const k in tooltip_obj) {
-        geojsonValue.push(
-            {
-                "type": "Feature",
-                "properties": {
-                    "tooltipContent": generateTooltip(Object.keys(tooltip_obj[k]),tooltip_obj[k]),
-                    "popupContent":showContent(tooltip_obj[k]["Color"])//'<a href =/admin/metadatax/deployment/?q=' + obj[k].name + '> See deployment metadata </a>',
-           //      "popupContent": generatePopupContent(obj[k])
-                },
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [tooltip_obj[k].Longitude, tooltip_obj[k].Latitude]
-                }
-            })
-    }
+    const geojsonValue = DATA.map(deployment => ({
+        "type": "Feature",
+        "properties": {
+            "tooltipContent": getTooltipContent(deployment),
+            "popupContent": showContent()
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [deployment.longitude, deployment.latitude]
+        }
+    }))
 
 
-   var geoJsonPoint = L.geoJSON(geojsonValue, {
-        onEachFeature: onEachFeature,
-        pointToLayer: pointToLayer
-    })
-markers.on('clusterclick', function(e) {showContent(e)});
-markers.addLayer(geoJsonPoint);
-map.addLayer(markers);
+    const geoJsonPoint = L.geoJSON(geojsonValue, {onEachFeature, pointToLayer})
+    markers.on('clusterclick', showContent);
+    markers.addLayer(geoJsonPoint);
+    map.addLayer(markers);
 }
 
-function generateTooltip(key, value) {
-var text = '<div> ';
-    for (let index = 0; index <key.length-3; index ++ ) {
-        text+=  '<b> '+key[index]+' : </b>' + value[key[index]]+ '<br>';
-    }
-return text+'<br><b> Click on the circle to see the associated metadata</div>'
+function getTooltipContent(deployment) {
+    return `
+            <div>
+               <b>Deployment:</b> ${deployment.name}<br>
+               <b>Responsible parties:</b> ${deployment.project.responsible_parties.map(i => i.name).join(', ')}<br>
+               <b>Period:</b> ${new Date(deployment.deployment_date).toDateString()} to ${new Date(deployment.recovery_date).toDateString()}<br>
+            </div>
+            <br>
+            <b> Click on the circle to see the associated metadata</div>
+          `;
 }
-//function generatePopupContent(k) {
-// document.getElementById("mysidepanel").style.width = "250px";
-//}

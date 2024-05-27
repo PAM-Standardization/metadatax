@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="{% static "map/style.css" %}"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
-      <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
     <title>World map of deployments position</title>
 
 </head>
@@ -24,27 +24,75 @@
 
 </div>
 <div id="mysidepanel">
-    <div><label id="title_panel" class="closebtn" style="right: auto;"></label></div>
-    <div>
-  <a href="javascript:void(0)"  class="closebtn" onclick="closeNav()" aria-label="Fermer">×</a>
-        </div>
-<table class="table" id="table">
-
-</table>
+    <div id="head">
+        <label id="title_panel"></label>
+        <a class="closebtn" onclick="closeNav()" aria-label="Fermer">×</a>
+    </div>
+    <table class="table" id="table"></table>
 </div>
 </body>
 
-{{ data|json_script:"deployments" }}
-{{ tooltip|json_script:"tooltipContent" }}
-{{ popup_as_json|json_script:"popupContent" }}
+{{ deployments |json_script:"deployments" }}
 
 <script>
+    /**
+     * @type {Array<{
+     *     bathymetric_depth: number | null;
+     *     campaign: {
+     *         id: number;
+     *         name: string;
+     *     };
+     *     deployment_date: string;
+     *     deployment_vessel: string;
+     *     description: string;
+     *     id: number;
+     *     latitude: number;
+     *     longitude: number;
+     *     name: number | null;
+     *     platform: {
+     *         description: string | null;
+     *         id: number;
+     *         name: string;
+     *         type: {
+     *             id: number;
+     *             name: string;
+     *         };
+     *     };
+     *     project: {
+     *         accessibility: string;
+     *         doi: string | null;
+     *         id: number;
+     *         name: string;
+     *         project_goal: string | null;
+     *         project_type: {
+     *             id: number;
+     *             name: string;
+     *         };
+     *         responsible_parties: Array<{
+     *             id: number;
+     *             name: string;
+     *             contact: string;
+     *             website: contact | null;
+     *         }>;
+     *     };
+     *     provider: {
+     *         id: number;
+     *         name: string;
+     *         contact: string;
+     *         website: contact | null;
+     *     };
+     *     recovery_date: string;
+     *     recovery_vessel: string;
+     *     campaign: {
+     *         id: number;
+     *         name: string;
+     *     }
+     * }>}
+     */
+    const DATA = JSON.parse(document.getElementById("deployments").textContent);
 
-    const obj = JSON.parse(document.getElementById("deployments").textContent)
-    const tooltip_obj = JSON.parse(document.getElementById("tooltipContent").textContent)
-    const popup_obj = JSON.parse(document.getElementById("popupContent").textContent)
     function closeNav() {
-     document.getElementById("mysidepanel").style.width = "0";
+        document.getElementById("mysidepanel").style.width = "0";
     }
 
 </script>
