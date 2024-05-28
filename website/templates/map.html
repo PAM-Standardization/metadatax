@@ -26,7 +26,7 @@
 <div id="mysidepanel">
     <div id="head">
         <label id="title_panel"></label>
-        <a class="closebtn" onclick="closeNav()" aria-label="Fermer">×</a>
+        <a class="closebtn" onclick="closePanel()" aria-label="Fermer">×</a>
     </div>
     <table class="table" id="table"></table>
 </div>
@@ -90,10 +90,5 @@
      * }>}
      */
     const DATA = JSON.parse(document.getElementById("deployments").textContent);
-
-    function closeNav() {
-        document.getElementById("mysidepanel").style.width = "0";
-    }
-
 </script>
 <script src="{% static 'map/script.js' %}"></script>

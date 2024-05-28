@@ -45,6 +45,13 @@ function getCellInnerText(deployment, key) {
     }
 }
 
+function closePanel() {
+    document.getElementById("title_panel").innerText = ""
+    document.getElementById("mysidepanel").style.transition = "none";
+    document.getElementById("mysidepanel").style.width = "0";
+    document.getElementById("mysidepanel").style.transition = "0.5s";
+}
+
 
 /**
  * Create popup content
@@ -52,60 +59,36 @@ function getCellInnerText(deployment, key) {
  * @returns {any|*}
  */
 function showContent(e) {
-    console.debug(e)
-    if (!e) return;
-    if (!e.length) {
-        let table = document.getElementById('table')
-        for (let row = 0; row < table.rows.length;) {
-            table.deleteRow(row);
-        }
+    // Empty table
+    const table = document.getElementById('table');
+    table.innerHTML = "";
 
-        const deployment = DATA.find(d => d.latitude === e.latlng.lat && d.longitude === e.latlng.lng);
-        if (!deployment) return;
-
-        document.getElementById("title_panel").innerText = `Project: ${deployment.project.name}`;
-        for (const key of KEYS) {
-            const row = table.insertRow();
-            row.setAttribute("id", key);
-            const labelCell = row.insertCell();
-            labelCell.className = "label"
-            labelCell.innerText = key.replaceAll('_', ' ');
-            const valueCell = row.insertCell();
-            valueCell.innerText = getCellInnerText(deployment, key)
-        }
-        document.getElementById("mysidepanel").scrollTop = 0;
-        document.getElementById("mysidepanel").style.width = "500px";
-
-        if (table.rows.length === 0) {
-            document.getElementById("mysidepanel").style.width = "0px";
-        }
-    } else {
-        return e;
+    if (!e?.sourceTarget?.feature?.properties?.deployment) {
+        closePanel();
+        return;
     }
-}
 
+    const deployment = e.sourceTarget.feature.properties.deployment;
 
-function onEachFeature(feature, layer) {
-    if (feature.properties && feature.properties.popupContent) {
-        layer.bindTooltip(feature.properties.tooltipContent);
+    document.getElementById("title_panel").innerText = `Project: ${deployment.project.name}`;
+    for (const key of KEYS) {
+        const row = table.insertRow();
+        row.setAttribute("id", key);
+        const labelCell = row.insertCell();
+        labelCell.className = "label"
+        labelCell.innerText = key.replaceAll('_', ' ');
+        const valueCell = row.insertCell();
+        valueCell.innerText = getCellInnerText(deployment, key)
     }
-    layer.on({
-        click: showContent
-    });
-}
-
-function pointToLayer(geoJsonPoint, latlng) {
-    const deployment = DATA.find(d => d.latitude === latlng.lat && d.longitude === latlng.lng);
-    return L.circleMarker(latlng, {
-        color: 'black',
-        fillColor: ProjectColor.get(deployment?.project.id),
-        fillOpacity: 1,
-        radius: 10
-    });
+    const panel = document.getElementById("mysidepanel");
+    panel.scrollTop = 0;
+    panel.style.width = "500px";
 }
 
 const getRandomColor = () => "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0");
 const ProjectColor = new Map();
+
+let map;
 
 window.onload = function () {
     for (const deployment of DATA) {
@@ -113,12 +96,11 @@ window.onload = function () {
         ProjectColor.set(deployment.project.id, getRandomColor())
     }
 
-    const map = L.map('map', {
+    map = L.map('map', {
         minZoom: 2, zoom: 3,
         zoomControl: true,
         preferCanvas: true,
     }).setView([48.400002, -4.48333], 4.5);
-    map.setMaxBounds([[-230, -230], [230, 230]]);
     L.tileLayer.wms("https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?",
         {
             "attribution": "",
@@ -134,19 +116,41 @@ window.onload = function () {
 
 
     const geojsonValue = DATA.map(deployment => ({
-        "type": "Feature",
-        "properties": {
-            "tooltipContent": getTooltipContent(deployment),
-            "popupContent": showContent()
+        type: "Feature",
+        properties: {
+            deployment,
+            // "tooltipContent": getTooltipContent(deployment),
+            // "popupContent": showContent()
         },
-        "geometry": {
+        geometry: {
             "type": "Point",
             "coordinates": [deployment.longitude, deployment.latitude]
         }
     }))
 
 
-    const geoJsonPoint = L.geoJSON(geojsonValue, {onEachFeature, pointToLayer})
+    const geoJsonPoint = L.geoJSON(geojsonValue, {
+        pointToLayer: (feature, coordinates) => {
+            return L.circleMarker(coordinates, {
+                color: 'black',
+                fillColor: ProjectColor.get(feature.properties.deployment.project.id),
+                fillOpacity: 1,
+                radius: 10,
+            })
+        },
+        onEachFeature: (feature, layer) => {
+            layer.bindTooltip(`
+                    <div>
+                       <b>Deployment:</b> ${feature.properties.deployment.name}<br>
+                       <b>Responsible parties:</b> ${feature.properties.deployment.project.responsible_parties.map(i => i.name).join(', ')}<br>
+                       <b>Period:</b> ${new Date(feature.properties.deployment.deployment_date).toDateString()} to ${new Date(feature.properties.deployment.recovery_date).toDateString()}<br>
+                    </div>
+                    <br>
+                    <b> Click on the circle to see the associated metadata</div>
+          `)
+            layer.on({click: showContent,});
+        },
+    })
     markers.on('clusterclick', showContent);
     markers.addLayer(geoJsonPoint);
     map.addLayer(markers);

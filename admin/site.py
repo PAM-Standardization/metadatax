@@ -19,7 +19,6 @@ class MetadataxAdminSite(admin.AdminSite):
         "Deployments": 3,
         "Channel configurations": 4,
         "Files": 5,
-        "Campaign": 6,
         "Equipment - Recorders": 10,
         "Equipment - Hydrophones": 11,
     }
