@@ -21,6 +21,10 @@ class User(AbstractUser):
             Permission.objects.get(codename="change_project"),
             Permission.objects.get(codename="view_project"),
 
+            Permission.objects.get(codename="add_projecttype"),
+            Permission.objects.get(codename="change_projecttype"),
+            Permission.objects.get(codename="view_projecttype"),
+
             Permission.objects.get(codename="add_institution"),
             Permission.objects.get(codename="change_institution"),
             Permission.objects.get(codename="view_institution"),
@@ -28,6 +32,22 @@ class User(AbstractUser):
             Permission.objects.get(codename="add_deployment"),
             Permission.objects.get(codename="change_deployment"),
             Permission.objects.get(codename="view_deployment"),
+
+            Permission.objects.get(codename="add_site"),
+            Permission.objects.get(codename="change_site"),
+            Permission.objects.get(codename="view_site"),
+
+            Permission.objects.get(codename="add_campaign"),
+            Permission.objects.get(codename="change_campaign"),
+            Permission.objects.get(codename="view_campaign"),
+
+            Permission.objects.get(codename="add_platform"),
+            Permission.objects.get(codename="change_platform"),
+            Permission.objects.get(codename="view_platform"),
+
+            Permission.objects.get(codename="add_platformtype"),
+            Permission.objects.get(codename="change_platformtype"),
+            Permission.objects.get(codename="view_platformtype"),
 
             Permission.objects.get(codename="add_channelconfiguration"),
             Permission.objects.get(codename="change_channelconfiguration"),
@@ -41,7 +61,23 @@ class User(AbstractUser):
             Permission.objects.get(codename="change_recorder"),
             Permission.objects.get(codename="view_recorder"),
 
+            Permission.objects.get(codename="add_hydrophonemodel"),
+            Permission.objects.get(codename="change_hydrophonemodel"),
+            Permission.objects.get(codename="view_hydrophonemodel"),
+
+            Permission.objects.get(codename="add_recordermodel"),
+            Permission.objects.get(codename="change_recordermodel"),
+            Permission.objects.get(codename="view_recordermodel"),
+
+            Permission.objects.get(codename="add_equipmentprovider"),
+            Permission.objects.get(codename="change_equipmentprovider"),
+            Permission.objects.get(codename="view_equipmentprovider"),
+
             Permission.objects.get(codename="add_file"),
             Permission.objects.get(codename="change_file"),
             Permission.objects.get(codename="view_file"),
+
+            Permission.objects.get(codename="add_fileformat"),
+            Permission.objects.get(codename="change_fileformat"),
+            Permission.objects.get(codename="view_fileformat"),
         )
