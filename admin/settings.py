@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,13 +23,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5aw47ol+qg@^43cys*-@#7en6i-)9-n=+l3vm(p1+#l+(3lma+'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG").lower() == "True".lower()
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get("SECRET_KEY") or "django-insecure-5aw47ol+qg@^43cys*-@#7en6i-)9-n=+l3vm(p1+#l+(3lma+"
+
+ALLOWED_HOSTS = ["localhost"]
+HOST = os.environ.get("HOST")
+if HOST:
+    ALLOWED_HOSTS.append(HOST)
 
 # Application definition
 
@@ -80,14 +87,13 @@ TEMPLATES = [
     },
 ]
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'website', 'static'),
 )
+STATIC_ROOT = os.environ.get("STATIC_ROOT")
 
 WSGI_APPLICATION = 'admin.wsgi.application'
 
@@ -140,3 +146,18 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = "meta_auth.User"
 AUTHENTICATION_BACKENDS = ['meta_auth.backend.EmailBackend']
+
+
+# Database
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "metadatax",
+        "USER": os.environ.get("DB_USERNAME"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": "127.0.0.1",
+        "PORT": os.environ.get("DB_PORT") or 5432,
+    }
+}

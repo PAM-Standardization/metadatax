@@ -26,3 +26,19 @@ This will give full access to metadatax in your project and it will see every ch
 3. Run `python manage.py migrate` to create the models.
 
 4. Visit the `/metadatax/` URL to access the metadatax.
+
+
+### Deployment
+#### Environment
+Create a `.env` file at the root of the project with the following content:
+```.env
+DEBUG=TRUE
+SECRET_KEY=
+
+HOST=                           ## Needed only if DEBUG=False
+STATIC_ROOT=                    ## Needed only if DEBUG=False
+
+DB_USERNAME=
+DB_PASSWORD=
+DB_PORT=                        ## Default used is 5432
+```
