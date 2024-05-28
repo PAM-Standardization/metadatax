@@ -3,8 +3,9 @@ from metadatax.models.acquisition import (
     Institution,
     Project,
     Deployment,
-    ChannelConfiguration
+    ChannelConfiguration, Platform, Accessibility
 )
+from metadatax.serializers.utils import EnumField
 
 
 class ChannelConfigurationSerializer(serializers.ModelSerializer):
@@ -13,16 +14,36 @@ class ChannelConfigurationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DeploymentSerializer(serializers.ModelSerializer):
-    provider = serializers.CharField(source='provider.name', allow_null=True)
+class PlatformSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Deployment
+        model = Platform
         fields = '__all__'
+        depth = 1
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    accessibility = EnumField(enum=Accessibility)
+
     class Meta:
         model = Project
+        fields = '__all__'
+        depth = 1
+
+
+class DeploymentSerializer(serializers.ModelSerializer):
+    platform = PlatformSerializer()
+    project = ProjectSerializer()
+    name = serializers.CharField(source="__str__")
+
+    class Meta:
+        model = Deployment
+        fields = '__all__'
+        depth = 1
+
+
+class DeploymentLightSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Deployment
         fields = '__all__'
 
 
@@ -30,22 +51,3 @@ class InstitutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Institution
         fields = '__all__'
-
-
-class ProjectAPIParametersSerializer(serializers.Serializer):
-    project_name = serializers.CharField(help_text="Name of the project")
-
-
-class CreateProjectAPIParametersSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Project
-        fields = [
-            "name",
-            "responsible_parties" ,
-            "accessibility" ,
-            "doi",
-            "project_type",
-            "project_goal"
-        ]
-

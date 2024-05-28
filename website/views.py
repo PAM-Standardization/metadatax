@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from rest_framework import viewsets
 
 from meta_auth.form import SignupForm
-from metadatax.models import Deployment
+from metadatax.models.acquisition import Deployment
 from metadatax.serializers.acquisition import DeploymentSerializer
 
 
@@ -21,15 +21,8 @@ class WebsiteView(viewsets.ViewSet):
         })
 
     def map(self):
-        data = []
         deployment = Deployment.objects.all()
-        deployment_serialized = DeploymentSerializer(deployment, many=True).data
-        for x in deployment_serialized:
-            d = {}
-            for k in x.items():
-                key = k[0]
-                d[key] = str(k[1])
-            d['period'] = d['recovery_date'].split('T')[0] + ' to ' + d['deployment_date'].split('T')[0]
-            data.append(d)
-        print(deployment_serialized)
-        return render(self, 'map.html', {"data": data})
+        return render(self, 'map.html', {
+            "deployments": DeploymentSerializer(deployment, many=True).data
+        })
+

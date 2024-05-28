@@ -9,9 +9,11 @@
     <link rel="stylesheet" href="{% static "map/style.css" %}"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
     <title>World map of deployments position</title>
+
 </head>
 <body>
 <div id="map"></div>
@@ -19,12 +21,79 @@
 <div id="links">
     <a href="/">Home</a>
     <a href="/admin/">Access administration</a>
-</div>
 
+</div>
+<div id="mysidepanel">
+    <div id="head">
+        <label id="title_panel"></label>
+        <a class="closebtn" onclick="closeNav()" aria-label="Fermer">×</a>
+    </div>
+    <table class="table" id="table"></table>
+</div>
 </body>
 
-{{ data|json_script:"deployments" }}
+{{ deployments |json_script:"deployments" }}
+
 <script>
-    const obj = JSON.parse(document.getElementById("deployments").textContent)
+    /**
+     * @type {Array<{
+     *     bathymetric_depth: number | null;
+     *     campaign: {
+     *         id: number;
+     *         name: string;
+     *     };
+     *     deployment_date: string;
+     *     deployment_vessel: string;
+     *     description: string;
+     *     id: number;
+     *     latitude: number;
+     *     longitude: number;
+     *     name: number | null;
+     *     platform: {
+     *         description: string | null;
+     *         id: number;
+     *         name: string;
+     *         type: {
+     *             id: number;
+     *             name: string;
+     *         };
+     *     };
+     *     project: {
+     *         accessibility: string;
+     *         doi: string | null;
+     *         id: number;
+     *         name: string;
+     *         project_goal: string | null;
+     *         project_type: {
+     *             id: number;
+     *             name: string;
+     *         };
+     *         responsible_parties: Array<{
+     *             id: number;
+     *             name: string;
+     *             contact: string;
+     *             website: contact | null;
+     *         }>;
+     *     };
+     *     provider: {
+     *         id: number;
+     *         name: string;
+     *         contact: string;
+     *         website: contact | null;
+     *     };
+     *     recovery_date: string;
+     *     recovery_vessel: string;
+     *     campaign: {
+     *         id: number;
+     *         name: string;
+     *     }
+     * }>}
+     */
+    const DATA = JSON.parse(document.getElementById("deployments").textContent);
+
+    function closeNav() {
+        document.getElementById("mysidepanel").style.width = "0";
+    }
+
 </script>
 <script src="{% static 'map/script.js' %}"></script>
