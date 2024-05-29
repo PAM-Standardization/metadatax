@@ -71,6 +71,10 @@ class HydrophoneModelAdmin(admin.ModelAdmin):
         "provider",
         "directivity",
         "operating_temperature",
+        "bandwidth",
+        "noise_floor",
+        "dynamic_range",
+        "max_operating_depth"
     ]
 
 
@@ -90,12 +94,6 @@ class HydrophoneAdmin(admin.ModelAdmin):
         "serial_number",
         "model",
         "sensitivity",
-        "bandwidth",
-        "noise_floor",
-        "dynamic_range",
-        "max_operating_depth",
-        "operating_temperature",
-        "directivity",
     ]
 
     def operating_temperature(self, obj):

@@ -95,12 +95,12 @@ window.onload = function () {
         if (ProjectColor.has(deployment.project.id)) continue;
         ProjectColor.set(deployment.project.id, getRandomColor())
     }
-
+  const bounds= [[-200, -200], [200, 200]]
     map = L.map('map', {
         minZoom: 2, zoom: 3,
         zoomControl: true,
         preferCanvas: true,
-    }).setView([48.400002, -4.48333], 4.5);
+    }).setView([48.400002, -4.48333], 4.5).setMaxBounds(bounds);;
     L.tileLayer.wms("https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?",
         {
             "attribution": "",
@@ -110,24 +110,20 @@ window.onload = function () {
             "transparent": true,
             "version": "1.3.0",
             "noWrap": true,
-            "bounds": [[-90, -180], [90, 180]]
+            "bounds": [[-90, -180], [90, 180]],
         }
     ).addTo(map);
-
 
     const geojsonValue = DATA.map(deployment => ({
         type: "Feature",
         properties: {
             deployment,
-            // "tooltipContent": getTooltipContent(deployment),
-            // "popupContent": showContent()
         },
         geometry: {
             "type": "Point",
             "coordinates": [deployment.longitude, deployment.latitude]
         }
     }))
-
 
     const geoJsonPoint = L.geoJSON(geojsonValue, {
         pointToLayer: (feature, coordinates) => {
@@ -141,6 +137,7 @@ window.onload = function () {
         onEachFeature: (feature, layer) => {
             layer.bindTooltip(`
                     <div>
+                       <b>Project:</b> ${feature.properties.deployment.project.name}<br>
                        <b>Deployment:</b> ${feature.properties.deployment.name}<br>
                        <b>Responsible parties:</b> ${feature.properties.deployment.project.responsible_parties.map(i => i.name).join(', ')}<br>
                        <b>Period:</b> ${new Date(feature.properties.deployment.deployment_date).toDateString()} to ${new Date(feature.properties.deployment.recovery_date).toDateString()}<br>
@@ -156,14 +153,3 @@ window.onload = function () {
     map.addLayer(markers);
 }
 
-function getTooltipContent(deployment) {
-    return `
-            <div>
-               <b>Deployment:</b> ${deployment.name}<br>
-               <b>Responsible parties:</b> ${deployment.project.responsible_parties.map(i => i.name).join(', ')}<br>
-               <b>Period:</b> ${new Date(deployment.deployment_date).toDateString()} to ${new Date(deployment.recovery_date).toDateString()}<br>
-            </div>
-            <br>
-            <b> Click on the circle to see the associated metadata</div>
-          `;
-}

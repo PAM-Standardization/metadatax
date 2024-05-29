@@ -164,6 +164,8 @@ class DeploymentAdmin(admin.ModelAdmin):
     def site_name(self, obj) -> str:
         return obj.site.name if obj.site else None
 
+    def campaign(self, obj):
+       print("re-------------------")
 
 @admin.register(ChannelConfiguration)
 class ChannelConfigurationAdmin(admin.ModelAdmin):
@@ -209,6 +211,7 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
                     "channel_name",
                     "recording_format",
                     "sample_depth",
+                    "sampling_frequency",
                     "gain",
                 ]
             }
@@ -218,7 +221,6 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
                 "fields": [
                     "hydrophone",
                     "hydrophone_depth",
-                    "sampling_frequency",
                 ]
             }
         ), (
