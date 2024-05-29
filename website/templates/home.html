@@ -24,7 +24,7 @@
 
     <a href="/map/">Map</a>
 
-    <a href="/admin/metadatax/">
+    <a href="/admin/">
         {% if isConnected %}
             Access administration
         {% else %}
@@ -42,9 +42,16 @@
 
         <h2>Try Metadatax now!</h2>
 
-        {{ register_form.as_p }}
+        {% if isConnected %}
+            <a href="/admin/">
+                Access administration
+            </a>
+        {% else %}
+            {{ register_form.as_p }}
 
-        <button type="submit">Register</button>
+            <button type="submit">Register</button>
+        {% endif %}
+
     </form>
 </div>
 
