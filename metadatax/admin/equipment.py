@@ -91,8 +91,8 @@ class HydrophoneAdmin(admin.ModelAdmin):
         "model__directivity",
     ]
     list_display = [
-        "serial_number",
         "model",
+        "serial_number",
         "sensitivity",
         "directivity",
         "operating_temperature",

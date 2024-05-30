@@ -192,8 +192,7 @@ class Platform(models.Model):
     def __str__(self):
         if self.name:
             return str(self.name)
-        else:
-            return f"{self.type}[{self.id}]"
+        return f"{self.type}[{self.id}]"
 
     name = models.CharField(
         max_length=255,

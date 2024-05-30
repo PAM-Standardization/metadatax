@@ -60,7 +60,7 @@ class Recorder(models.Model):
             ["model", "serial_number"]
         ]
         verbose_name = "Equipment - Recorder"
-        ordering = ["model"]
+        ordering = ["model", "serial_number"]
 
     def __str__(self):
         return f"{self.model}: {self.serial_number}"
