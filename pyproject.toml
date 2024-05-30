@@ -12,7 +12,7 @@ Django = "^3.2"
 django-filter = "^21"
 djangorestframework = "^3.15.1"
 python-dotenv = "^1.0.1"
-psycopg2 = "^2.9.9"
+psycopg2-binary = "^2.8.6"
 
 [tool.poetry.group.dev.dependencies]
 drf-yasg = "^1.21.7"
