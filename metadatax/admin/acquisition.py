@@ -1,7 +1,6 @@
 """Acquisition metadata administration"""
 from django.contrib import admin
 from django.contrib.admin import TabularInline
-from django.db.models import Q
 from metadatax.models.acquisition import (
     Institution,
     Campaign,
@@ -183,6 +182,14 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
     ]
     search_fields = [
         "channel_name",
+        "recorder__model__name",
+        "recorder__model__provider__name",
+        "hydrophone__model__name",
+        "hydrophone__model__provider__name",
+        "deployment__name",
+        "deployment__project__name",
+        "deployment__campaign__name",
+        "deployment__site__name",
     ]
     list_filter = [
         "deployment__project__accessibility",
@@ -232,10 +239,3 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
             }
         )
     ]
-    def get_search_results(self, request, queryset, search_term):
-        queryset = ChannelConfiguration.objects.filter(Q(recorder__model__name__contains=search_term)
-                                                    | Q(recorder__model__provider__name__contains=search_term)
-                                                    | Q(hydrophone__model__name__contains=search_term)
-                                                    | Q(hydrophone__model__provider__name__contains=search_term)
-                                                    | Q(deployment__name__contains=search_term))
-        return queryset, False
