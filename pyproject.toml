@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "metadatax"
-version = "0.1.0"
+version = "0.2.0"
 description = "PAM acquisition metadata"
 authors = ["Your Name <you@example.com>"]
 license = "GPL-3.0"
@@ -12,6 +12,7 @@ Django = "^3.2"
 django-filter = "^21"
 djangorestframework = "^3.15.1"
 python-dotenv = "^1.0.1"
+psycopg2 = "^2.9.9"
 
 [tool.poetry.group.dev.dependencies]
 drf-yasg = "^1.21.7"

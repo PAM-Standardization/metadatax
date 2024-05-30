@@ -43,7 +43,8 @@ class File(models.Model):
 
     initial_timestamp = models.DateTimeField(
         null=True, blank=True,
-        help_text="Date and time of the audio file start (in UTC)."
+        help_text="Date and time of the audio file start (in UTC).",
+        verbose_name="Initial timestamp (UTC)"
     )
     duration = models.IntegerField(
         null=True, blank=True,

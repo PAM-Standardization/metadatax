@@ -10,6 +10,7 @@ from .equipment import (
 )
 import datetime
 
+
 class Institution(models.Model):
     """Institution"""
 
@@ -189,7 +190,10 @@ class Platform(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return str(self.name)
+        if self.name:
+            return str(self.name)
+        else:
+            return f"{self.type}[{self.id}]"
 
     name = models.CharField(
         max_length=255,
@@ -265,11 +269,11 @@ class Deployment(models.Model):
         help_text="Support of the deployed instruments"
     )
 
-
     deployment_date = models.DateTimeField(
         null=True, blank=True,
-        default=datetime.datetime(1970 ,1 ,1),
-        help_text="Date and time at which the measurement system was deployed in UTC."
+        default=datetime.datetime(1970, 1, 1),
+        help_text="Date and time at which the measurement system was deployed in UTC.",
+        verbose_name="Deployment date (UTC)"
     )
 
     deployment_vessel = models.CharField(
@@ -280,8 +284,9 @@ class Deployment(models.Model):
 
     recovery_date = models.DateTimeField(
         null=True, blank=True,
-        default=datetime.datetime(1970 ,1 ,1),
-        help_text="Date and time at which the measurement system was recovered in UTC."
+        default=datetime.datetime(1970, 1, 1),
+        help_text="Date and time at which the measurement system was recovered in UTC.",
+        verbose_name="Recovery date (UTC)"
     )
     recovery_vessel = models.CharField(
         max_length=255,
