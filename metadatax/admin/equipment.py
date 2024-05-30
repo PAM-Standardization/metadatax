@@ -71,6 +71,10 @@ class HydrophoneModelAdmin(admin.ModelAdmin):
         "provider",
         "directivity",
         "operating_temperature",
+        "bandwidth",
+        "noise_floor",
+        "dynamic_range",
+        "max_operating_depth"
     ]
 
 
@@ -87,22 +91,34 @@ class HydrophoneAdmin(admin.ModelAdmin):
         "model__directivity",
     ]
     list_display = [
-        "serial_number",
         "model",
+        "serial_number",
         "sensitivity",
+        "directivity",
+        "operating_temperature",
         "bandwidth",
         "noise_floor",
         "dynamic_range",
-        "max_operating_depth",
-        "operating_temperature",
-        "directivity",
+        "max_operating_depth"
     ]
-
-    def operating_temperature(self, obj):
-        return obj.model.operating_temperature()
 
     def directivity(self, obj):
         for choices in HydrophoneDirectivity.choices:
             if choices[0] == obj.model.directivity:
                 return choices[1]
         return obj.model.directivity
+
+    def operating_temperature(self, obj):
+        return obj.model.operating_temperature()
+
+    def bandwidth(self, obj):
+        return obj.model.bandwidth()
+
+    def dynamic_range(self, obj):
+        return obj.model.dynamic_range()
+
+    def noise_floor(self, obj):
+        return obj.model.noise_floor
+
+    def max_operating_depth(self, obj):
+        return obj.model.max_operating_depth

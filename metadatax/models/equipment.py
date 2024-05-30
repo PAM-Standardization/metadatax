@@ -60,7 +60,7 @@ class Recorder(models.Model):
             ["model", "serial_number"]
         ]
         verbose_name = "Equipment - Recorder"
-        ordering = ["model"]
+        ordering = ["model", "serial_number"]
 
     def __str__(self):
         return f"{self.model}: {self.serial_number}"
@@ -120,43 +120,6 @@ class HydrophoneModel(models.Model):
         null=True, blank=True,
         help_text="Maximal temperature where the hydrophone operates (in degree Celsius)"
     )
-
-    def operating_temperature(self) -> str:
-        """Temperature range where the hydrophone operates (in degree Celsius)"""
-        if self.operating_max_temperature is not None and self.operating_min_temperature is not None:
-            return f"{self.operating_min_temperature}°C < {self.operating_max_temperature}°C"
-        return "-"
-
-
-class Hydrophone(models.Model):
-    """Hydrophone"""
-
-    class Meta:
-        unique_together = [
-            ["model", "serial_number"]
-        ]
-        verbose_name = "Equipment - Hydrophone"
-        ordering = ["model"]
-
-    def __str__(self):
-        return f"{self.model}: {self.serial_number}"
-
-    model = models.ForeignKey(
-        to=HydrophoneModel, related_name="hydrophone_items",
-        on_delete=models.CASCADE,
-        help_text="Model of the hydrophone"
-    )
-    serial_number = models.CharField(
-        max_length=255,
-        help_text="Serial number of the hydrophone"
-    )
-
-    sensitivity = models.FloatField(
-        help_text="Average sensitivity of the hydrophone (dB re 1V/µPa), pre-amplification included if applicable. "
-                  "Sensitivity Sh of the hydrophone such that : data(uPa) = data(volt)*10^((-Sh-G)/20). "
-                  "See Recorder Gain for definition of G."
-    )
-
     min_bandwidth = models.FloatField(
         null=True, blank=True,
         help_text="Lower limiting frequency for a more or less flat response of the hydrophone, "
@@ -193,6 +156,12 @@ class Hydrophone(models.Model):
         help_text="Maximum depth at which hydrophone operates (in positive meters)."
     )
 
+    def operating_temperature(self) -> str:
+        """Temperature range where the hydrophone operates (in degree Celsius)"""
+        if self.operating_max_temperature is not None and self.operating_min_temperature is not None:
+            return f"{self.operating_min_temperature}°C < {self.operating_max_temperature}°C"
+        return "-"
+
     def bandwidth(self) -> str:
         """Interval between the lower limiting frequency and the upper limiting frequency within a more or less flat
          response of the hydrophone, comprising the pre-amplifier if applicable"""
@@ -206,3 +175,33 @@ class Hydrophone(models.Model):
         if self.min_dynamic_range is not None and self.max_dynamic_range is not None:
             return f"{self.min_dynamic_range} < {self.max_dynamic_range}"
         return "-"
+
+
+class Hydrophone(models.Model):
+    """Hydrophone"""
+
+    class Meta:
+        unique_together = [
+            ["model", "serial_number"]
+        ]
+        verbose_name = "Equipment - Hydrophone"
+        ordering = ["model"]
+
+    def __str__(self):
+        return f"{self.model}: {self.serial_number}"
+
+    model = models.ForeignKey(
+        to=HydrophoneModel, related_name="hydrophone_items",
+        on_delete=models.CASCADE,
+        help_text="Model of the hydrophone"
+    )
+    serial_number = models.CharField(
+        max_length=255,
+        help_text="Serial number of the hydrophone"
+    )
+
+    sensitivity = models.FloatField(
+        help_text="Average sensitivity of the hydrophone (dB re 1V/µPa), pre-amplification included if applicable. "
+                  "Sensitivity Sh of the hydrophone such that : data(uPa) = data(volt)*10^((-Sh-G)/20). "
+                  "See Recorder Gain for definition of G."
+    )

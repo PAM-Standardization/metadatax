@@ -1,7 +1,7 @@
 """Acquisition metadata administration"""
 from django.contrib import admin
 from django.contrib.admin import TabularInline
-
+from django.db.models import Q
 from metadatax.models.acquisition import (
     Institution,
     Campaign,
@@ -164,7 +164,6 @@ class DeploymentAdmin(admin.ModelAdmin):
     def site_name(self, obj) -> str:
         return obj.site.name if obj.site else None
 
-
 @admin.register(ChannelConfiguration)
 class ChannelConfigurationAdmin(admin.ModelAdmin):
     """ChannelConfiguration presentation in DjangoAdmin"""
@@ -209,6 +208,7 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
                     "channel_name",
                     "recording_format",
                     "sample_depth",
+                    "sampling_frequency",
                     "gain",
                 ]
             }
@@ -218,7 +218,6 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
                 "fields": [
                     "hydrophone",
                     "hydrophone_depth",
-                    "sampling_frequency",
                 ]
             }
         ), (
@@ -233,3 +232,10 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
             }
         )
     ]
+    def get_search_results(self, request, queryset, search_term):
+        queryset = ChannelConfiguration.objects.filter(Q(recorder__model__name__contains=search_term)
+                                                    | Q(recorder__model__provider__name__contains=search_term)
+                                                    | Q(hydrophone__model__name__contains=search_term)
+                                                    | Q(hydrophone__model__provider__name__contains=search_term)
+                                                    | Q(deployment__name__contains=search_term))
+        return queryset, False

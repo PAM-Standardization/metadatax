@@ -8,6 +8,7 @@ from .equipment import (
     Hydrophone,
     Recorder
 )
+import datetime
 
 
 class Institution(models.Model):
@@ -189,10 +190,13 @@ class Platform(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return str(self.name)
+        if self.name:
+            return str(self.name)
+        return f"{self.type}[{self.id}]"
 
     name = models.CharField(
         max_length=255,
+        blank=True, null=True,
         help_text="Name of the specific support of the deployed instruments"
     )
     type = models.ForeignKey(
@@ -266,8 +270,11 @@ class Deployment(models.Model):
 
     deployment_date = models.DateTimeField(
         null=True, blank=True,
-        help_text="Date and time at which the measurement system was deployed in UTC."
+        default=datetime.datetime(1970, 1, 1),
+        help_text="Date and time at which the measurement system was deployed in UTC.",
+        verbose_name="Deployment date (UTC)"
     )
+
     deployment_vessel = models.CharField(
         max_length=255,
         blank=True, null=True,
@@ -276,7 +283,9 @@ class Deployment(models.Model):
 
     recovery_date = models.DateTimeField(
         null=True, blank=True,
-        help_text="Date and time at which the measurement system was recovered in UTC."
+        default=datetime.datetime(1970, 1, 1),
+        help_text="Date and time at which the measurement system was recovered in UTC.",
+        verbose_name="Recovery date (UTC)"
     )
     recovery_vessel = models.CharField(
         max_length=255,
