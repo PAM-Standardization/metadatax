@@ -35,7 +35,11 @@
 </div>
 
 <div id="content">
-    <img id="video" alt="Black and white whale underwater" src="{% static "home/background.jpg" %}"/>
+    <iframe id="video"
+            src="https://www.youtube.com/embed/01ePb8YitZc?si=3Ywi3iSG7OM6oz18"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
     <form id="register-form" method="post" action="/auth/user/register/">
         {% csrf_token %}

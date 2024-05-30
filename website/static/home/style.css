@@ -84,11 +84,12 @@ button:hover {
 }
 
 #content #video {
-    border-radius: 2rem;
+    /*border-radius: 2rem;*/
     max-height: 100%;
     max-width: 100%;
     justify-self: center;
     overflow: hidden;
+    border: none;
 }
 
 form {
