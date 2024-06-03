@@ -6,12 +6,13 @@ const markers = L.markerClusterGroup({
     maxClusterRadius: (maxZoom) => 5 ? 5 : 40,
 });
 
-
+console.log(DATA)
+console.log(CHAN)
 /**
  * Labels for the popup content lines
  * @type {Array<string>}
  */
-const KEYS = [
+const DEPLOYMENT_KEYS = [
     "name",
     "provider",
     "campaign",
@@ -24,6 +25,48 @@ const KEYS = [
     "coordinates",
     "bathymetric_depth",
     "platform",
+]
+const HYDROPHONE_MODEL_KEYS = [
+    "directivity",
+    "max_bandwidth",
+    "max_dynamic_range",
+    "max_operating_depth",
+    "min_bandwidth",
+    "min_dynamic_range",
+    "name",
+    "noise_floor",
+    "operating_max_temperature",
+    "operating_min_temperature"
+]
+const RECORDER_MODEL_KEYS = [
+    "name",
+    "number_of_channels",
+]
+
+const HYDROPHONE_KEYS = [
+    "serial_number",
+    "sensitivity",
+    "model",
+]
+const RECORDER_KEYS = [
+    "serial_number",
+    "model",
+]
+const MENU_KEYS = [
+    "deployment",
+    "channel",
+    "hydrophone",
+    "recorder",
+]
+const CHAN_KEYS = [
+    "channel_name",
+    "continuous",
+    "duty_cycle_off",
+    "duty_cycle_on",
+    "gain (dB)",
+    "hydrophone_depth (m)",
+    "sample_depth",
+    "sampling_frequency",
 ]
 
 const EMPTY_VALUE = "-"
@@ -63,23 +106,82 @@ function showContent(e) {
     const table = document.getElementById('table');
     table.innerHTML = "";
 
-    if (!e?.sourceTarget?.feature?.properties?.deployment) {
+    if (!e?.sourceTarget?.feature?.properties?.channel) {
         closePanel();
         return;
     }
 
-    const deployment = e.sourceTarget.feature.properties.deployment;
+    const channel = e.sourceTarget.feature.properties.channel;
+    document.getElementById("title_panel").innerText = `Project: ${channel.deployment.project.name}`;
+    displayElement(MENU_KEYS, channel, "channel")
 
-    document.getElementById("title_panel").innerText = `Project: ${deployment.project.name}`;
-    for (const key of KEYS) {
+function hide(element, type) {
+  for (const e of element) {
+       document.getElementById(type+e).style.display="none";
+}
+}
+function hideElement(element, type){
+    for (const e of element) {
+        document.getElementById(type+e).style.display= (document.getElementById(type+e)?.style?.display == "none")  ? "": "none";
+    }
+
+}
+function displayElement(element, attribute, type) {
+    for (const key of element) {
         const row = table.insertRow();
-        row.setAttribute("id", key);
+        row.setAttribute("id", type+key);
         const labelCell = row.insertCell();
-        labelCell.className = "label"
+        labelCell.className = "popuptitle"
         labelCell.innerText = key.replaceAll('_', ' ');
         const valueCell = row.insertCell();
-        valueCell.innerText = getCellInnerText(deployment, key)
+        if (key == "hydrophone") {
+                  btn = document.createElement("BUTTON");
+                  btn.innerHTML = "Show "+key;
+                  btn.onclick = function() { hideElement(HYDROPHONE_KEYS,  key); hide(HYDROPHONE_MODEL_KEYS,  key); };
+                  valueCell.appendChild(btn);
+                  displayElement(HYDROPHONE_KEYS, channel[key], key)
+                  hideElement(HYDROPHONE_KEYS, key)
+
+        }
+        else if (key == "recorder") {
+                  btn = document.createElement("BUTTON");
+                  btn.innerHTML = "Show "+key;
+                  btn.onclick = function() { hideElement(RECORDER_KEYS,  key); hide(RECORDER_MODEL_KEYS,  key);  };
+                  valueCell.appendChild(btn);
+                  displayElement(RECORDER_KEYS,channel[key], key)
+                  hideElement(RECORDER_KEYS, key)
+
+        }
+        else if (key == "channel") {
+             valueCell.appendChild(generateButton(key, CHAN_KEYS,channel));
+        }
+        else if (key == "model") {
+          if ( attribute[key].directivity != undefined ) {
+               valueCell.appendChild(generateButton("hydrophone", HYDROPHONE_MODEL_KEYS,channel.hydrophone[key]));
+               }
+           else {
+               valueCell.appendChild(generateButton( "recorder", RECORDER_MODEL_KEYS, channel.recorder[key]));
+           }
+
+        }
+        else if (key == "deployment") {
+             displayElement(DEPLOYMENT_KEYS, channel[key], key)
+        }
+        else {
+           labelCell.className = "label"
+           valueCell.innerText = getCellInnerText(attribute, key);
+        }
     }
+}
+function generateButton(key, array, attribute) {
+                  btn = document.createElement("BUTTON");
+                  btn.innerHTML = "Show "+key;
+                  btn.onclick = function() { hideElement(array,  key) };
+                  displayElement(array,attribute, key)
+                  hideElement(array, key)
+                  return btn
+}
+
     const panel = document.getElementById("mysidepanel");
     panel.scrollTop = 0;
     panel.style.width = "500px";
@@ -95,12 +197,13 @@ window.onload = function () {
         if (ProjectColor.has(deployment.project.id)) continue;
         ProjectColor.set(deployment.project.id, getRandomColor())
     }
+
   const bounds= [[-200, -200], [200, 200]]
     map = L.map('map', {
         minZoom: 2, zoom: 3,
         zoomControl: true,
         preferCanvas: true,
-    }).setView([48.400002, -4.48333], 4.5).setMaxBounds(bounds);;
+    }).setView([48.400002, -4.48333], 4.5).setMaxBounds(bounds);
     L.tileLayer.wms("https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?",
         {
             "attribution": "",
@@ -114,14 +217,14 @@ window.onload = function () {
         }
     ).addTo(map);
 
-    const geojsonValue = DATA.map(deployment => ({
+    const geojsonValue = CHAN.map(channel => ({
         type: "Feature",
         properties: {
-            deployment,
+            channel,
         },
         geometry: {
             "type": "Point",
-            "coordinates": [deployment.longitude, deployment.latitude]
+            "coordinates": [channel.deployment.longitude, channel.deployment.latitude]
         }
     }))
 
@@ -129,7 +232,7 @@ window.onload = function () {
         pointToLayer: (feature, coordinates) => {
             return L.circleMarker(coordinates, {
                 color: 'black',
-                fillColor: ProjectColor.get(feature.properties.deployment.project.id),
+                fillColor: ProjectColor.get(feature.properties.channel.deployment.project.id),
                 fillOpacity: 1,
                 radius: 10,
             })
@@ -137,10 +240,10 @@ window.onload = function () {
         onEachFeature: (feature, layer) => {
             layer.bindTooltip(`
                     <div>
-                       <b>Project:</b> ${feature.properties.deployment.project.name}<br>
-                       <b>Deployment:</b> ${feature.properties.deployment.name}<br>
-                       <b>Responsible parties:</b> ${feature.properties.deployment.project.responsible_parties.map(i => i.name).join(', ')}<br>
-                       <b>Period:</b> ${new Date(feature.properties.deployment.deployment_date).toDateString()} to ${new Date(feature.properties.deployment.recovery_date).toDateString()}<br>
+                       <b>Project:</b> ${feature.properties.channel.deployment.project.name}<br>
+                       <b>Deployment:</b> ${feature.properties.channel.deployment.name}<br>
+                       <b>Responsible parties:</b> ${feature.properties.channel.deployment.project.responsible_parties.map(i => i.name).join(', ')}<br>
+                       <b>Period:</b> ${new Date(feature.properties.channel.deployment.deployment_date).toDateString()} to ${new Date(feature.properties.channel.deployment.recovery_date).toDateString()}<br>
                     </div>
                     <br>
                     <b> Click on the circle to see the associated metadata</div>

@@ -33,6 +33,7 @@
 </body>
 
 {{ deployments |json_script:"deployments" }}
+{{ channels |json_script:"channels" }}
 
 <script>
     /**
@@ -90,5 +91,6 @@
      * }>}
      */
     const DATA = JSON.parse(document.getElementById("deployments").textContent);
+    const CHAN = JSON.parse(document.getElementById("channels").textContent);
 </script>
 <script src="{% static 'map/script.js' %}"></script>

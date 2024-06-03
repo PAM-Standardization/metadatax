@@ -85,7 +85,13 @@ table {
 table .label::first-letter {
     text-transform: capitalize;
 }
-
+table .popuptitle::first-letter {
+    text-transform: capitalize;
+    font-weight: bold;
+}
+table .popuptitle {
+    font-weight: bold;
+}
 th, td {
     text-align: left;
     padding: 16px;
