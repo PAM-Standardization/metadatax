@@ -1,5 +1,0 @@
-CREATE OR REPLACE VIEW metadatax_view as
-SELECT d.id,i.name as provider_name, i.contact, p.name as project_name, p.accessibility, p.doi, p.project_type, p.project_goal,
- d.campaign, d.name, d.deployment_date, d.deployment_vessel, d.recovery_date, d.recovery_vessel,d.description,d.platform_type, d.platform_name, d.longitude, d.latitude,
-  d.bathymetric_depth from metadatax_deployment d LEFT JOIN metadatax_project p  on d.project_id = p.id
-  LEFT JOIN metadatax_institution i on d.provider_id = i.id;

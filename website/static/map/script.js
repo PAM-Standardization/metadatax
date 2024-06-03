@@ -6,8 +6,6 @@ const markers = L.markerClusterGroup({
     maxClusterRadius: (maxZoom) => 5 ? 5 : 40,
 });
 
-console.log(DATA)
-console.log(CHAN)
 /**
  * Labels for the popup content lines
  * @type {Array<string>}
@@ -58,7 +56,7 @@ const MENU_KEYS = [
     "hydrophone",
     "recorder",
 ]
-const CHAN_KEYS = [
+const CHANNEL_KEYS = [
     "channel_name",
     "continuous",
     "duty_cycle_off",
@@ -114,13 +112,18 @@ function showContent(e) {
     const channel = e.sourceTarget.feature.properties.channel;
     document.getElementById("title_panel").innerText = `Project: ${channel.deployment.project.name}`;
     displayElement(MENU_KEYS, channel, "channel")
+    const panel = document.getElementById("mysidepanel");
+    panel.scrollTop = 0;
+    panel.style.width = "500px";
+
+
 
 function hide(element, type) {
   for (const e of element) {
        document.getElementById(type+e).style.display="none";
 }
 }
-function hideElement(element, type){
+function showOrHideElement(element, type){
     for (const e of element) {
         document.getElementById(type+e).style.display= (document.getElementById(type+e)?.style?.display == "none")  ? "": "none";
     }
@@ -133,69 +136,53 @@ function displayElement(element, attribute, type) {
         const labelCell = row.insertCell();
         labelCell.className = "popuptitle"
         labelCell.innerText = key.replaceAll('_', ' ');
-        const valueCell = row.insertCell();
         if (key == "hydrophone") {
-                  btn = document.createElement("BUTTON");
-                  btn.innerHTML = "Show "+key;
-                  btn.onclick = function() { hideElement(HYDROPHONE_KEYS,  key); hide(HYDROPHONE_MODEL_KEYS,  key); };
-                  valueCell.appendChild(btn);
-                  displayElement(HYDROPHONE_KEYS, channel[key], key)
-                  hideElement(HYDROPHONE_KEYS, key)
-
+                   generateCollapse(key, HYDROPHONE_KEYS,channel[key], labelCell);
+                  labelCell.onclick = function() { showOrHideElement(HYDROPHONE_KEYS,  key); hide(HYDROPHONE_MODEL_KEYS,  key); };
         }
         else if (key == "recorder") {
-                  btn = document.createElement("BUTTON");
-                  btn.innerHTML = "Show "+key;
-                  btn.onclick = function() { hideElement(RECORDER_KEYS,  key); hide(RECORDER_MODEL_KEYS,  key);  };
-                  valueCell.appendChild(btn);
-                  displayElement(RECORDER_KEYS,channel[key], key)
-                  hideElement(RECORDER_KEYS, key)
-
+                    generateCollapse(key, RECORDER_KEYS,channel[key], labelCell);
+                    labelCell.onclick = function() { showOrHideElement(RECORDER_KEYS,  key); hide(RECORDER_MODEL_KEYS,  key);  };
         }
         else if (key == "channel") {
-             valueCell.appendChild(generateButton(key, CHAN_KEYS,channel));
+             generateCollapse(key, CHANNEL_KEYS,channel, labelCell);
         }
         else if (key == "model") {
           if ( attribute[key].directivity != undefined ) {
-               valueCell.appendChild(generateButton("hydrophone", HYDROPHONE_MODEL_KEYS,channel.hydrophone[key]));
-               }
+              generateCollapse("hydrophone", HYDROPHONE_MODEL_KEYS,channel.hydrophone[key], labelCell);
+              }
            else {
-               valueCell.appendChild(generateButton( "recorder", RECORDER_MODEL_KEYS, channel.recorder[key]));
+               generateCollapse( "recorder", RECORDER_MODEL_KEYS, channel.recorder[key], labelCell);
            }
-
         }
         else if (key == "deployment") {
              displayElement(DEPLOYMENT_KEYS, channel[key], key)
+             labelCell.colSpan = 2
         }
         else {
            labelCell.className = "label"
+           const valueCell = row.insertCell();
            valueCell.innerText = getCellInnerText(attribute, key);
         }
     }
 }
-function generateButton(key, array, attribute) {
-                  btn = document.createElement("BUTTON");
-                  btn.innerHTML = "Show "+key;
-                  btn.onclick = function() { hideElement(array,  key) };
+
+function generateCollapse(key, array, attribute, labelCell) {
+                  labelCell.onclick = function() { showOrHideElement(array,  key) };
                   displayElement(array,attribute, key)
-                  hideElement(array, key)
-                  return btn
+                  hide(array, key)
+                  labelCell.colSpan = 2
 }
-
-    const panel = document.getElementById("mysidepanel");
-    panel.scrollTop = 0;
-    panel.style.width = "500px";
 }
-
 const getRandomColor = () => "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0");
 const ProjectColor = new Map();
 
 let map;
 
 window.onload = function () {
-    for (const deployment of DATA) {
-        if (ProjectColor.has(deployment.project.id)) continue;
-        ProjectColor.set(deployment.project.id, getRandomColor())
+    for (const channel of DATA) {
+        if (ProjectColor.has(channel.deployment.project.id)) continue;
+        ProjectColor.set(channel.deployment.project.id, getRandomColor())
     }
 
   const bounds= [[-200, -200], [200, 200]]
@@ -217,7 +204,7 @@ window.onload = function () {
         }
     ).addTo(map);
 
-    const geojsonValue = CHAN.map(channel => ({
+    const geojsonValue = DATA.map(channel => ({
         type: "Feature",
         properties: {
             channel,
@@ -254,5 +241,6 @@ window.onload = function () {
     markers.on('clusterclick', showContent);
     markers.addLayer(geoJsonPoint);
     map.addLayer(markers);
+    L.control.scale().addTo(map);
 }
 

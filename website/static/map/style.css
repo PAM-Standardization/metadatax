@@ -91,6 +91,10 @@ table .popuptitle::first-letter {
 }
 table .popuptitle {
     font-weight: bold;
+    background-color: darkseagreen
+}
+table .popuptitle:hover {
+    opacity:0.7
 }
 th, td {
     text-align: left;
