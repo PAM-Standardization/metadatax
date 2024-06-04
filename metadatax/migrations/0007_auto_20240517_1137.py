@@ -8,12 +8,16 @@ def forward_migrate_deployment(apps, _):
     platform_model = apps.get_model("metadatax", "Platform")
     platform_type_model = apps.get_model("metadatax", "PlatformType")
     deployment_model = apps.get_model("metadatax", "Deployment")
+    campaign_model = apps.get_model("metadatax", "Campaign")
+    project_type_model = apps.get_model("metadatax", "ProjectType")
     site_model = apps.get_model("metadatax", "Site")
+    project_model = apps.get_model("metadatax", "Project")
     for deployment in deployment_model.objects.all():
-        platform_type = platform_type_model.objects.create(
+        print(f">>> {deployment}")
+        platform_type, _ = platform_type_model.objects.get_or_create(
             name=deployment.platform_type
         )
-        platform = platform_model.objects.create(
+        platform, _ = platform_model.objects.get_or_create(
             name=deployment.platform_type,
             type=platform_type,
             description=deployment.platform_description
@@ -21,21 +25,43 @@ def forward_migrate_deployment(apps, _):
         deployment.platform = platform
 
         if deployment.platform_name:
-            site = site_model.objects.create(
-                name=deployment.platform_name
+            site, _ = site_model.objects.get_or_create(
+                name=deployment.platform_name,
+                project=deployment.project
             )
             deployment.site = site
 
+        if deployment.campaign:
+            campaign, _ = campaign_model.objects.get_or_create(
+                name=deployment.campaign,
+                project=deployment.project
+            )
+            deployment.campaign_model = campaign
         deployment.save()
+
+    for project in project_model.objects.all():
+        if project.project_type:
+            project_type, _ = project_type_model.objects.get_or_create(
+                name=project.project_type
+            )
+            project.project_type_model = project_type
 
 
 def reverse_migrate_deployment(apps, _):
     deployment_model = apps.get_model("metadatax", "Deployment")
+    project_model = apps.get_model("metadatax", "Project")
     for deployment in deployment_model.objects.all():
         deployment.platform_type = deployment.platform.type.name
-        deployment.platform_name = deployment.site
+        deployment.platform_name = deployment.site.name
+        deployment.campaign = deployment.campaign_model.name
         deployment.platform_description = deployment.platform.description
         deployment.save()
+    for project in project_model.objects.all():
+        project.project_type = project.project_type_model.name
+
+
+def log(apps, _):
+    print('\n> Ok')
 
 
 class Migration(migrations.Migration):
@@ -58,9 +84,9 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='campaigns',
                                     to='metadatax.project'),
         ),
-        migrations.AlterField(
+        migrations.AddField(
             model_name='deployment',
-            name='campaign',
+            name='campaign_model',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
                                     related_name='deployments', to='metadatax.campaign'),
         ),
@@ -133,12 +159,14 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255, unique=True)),
             ],
         ),
-        migrations.AlterField(
+        migrations.RunPython(code=log, reverse_code=log),
+        migrations.AddField(
             model_name='project',
-            name='project_type',
+            name='project_type_model',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
                                     related_name='projects', to='metadatax.projecttype'),
         ),
+        migrations.RunPython(code=log, reverse_code=log),
 
         # Institution
         migrations.AddField(
@@ -196,6 +224,24 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='deployment',
             name='platform_type',
+        ),
+        migrations.RemoveField(
+            model_name='deployment',
+            name='campaign',
+        ),
+        migrations.RenameField(
+            model_name='deployment',
+            old_name='campaign_model',
+            new_name='campaign'
+        ),
+        migrations.RemoveField(
+            model_name='project',
+            name='project_type',
+        ),
+        migrations.RenameField(
+            model_name='project',
+            old_name='project_type_model',
+            new_name='project_type'
         ),
         migrations.RemoveField(
             model_name='deployment',
