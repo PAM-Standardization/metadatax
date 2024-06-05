@@ -12,9 +12,9 @@ def forward_migrate_equipments(apps, _):
     hydrophone_model = apps.get_model("metadatax", "Hydrophone")
 
     for recorder in recorder_model.objects.all():
-        provider_model, _ = provider_model.objects.get_or_create(name=recorder.provider)
+        provider, _ = provider_model.objects.get_or_create(name=recorder.provider)
         model, _ = recorder_model_model.objects.get_or_create(
-            provider=provider_model,
+            provider=provider,
             name=recorder.model,
             number_of_channels=recorder.number_of_channels
         )
@@ -22,9 +22,9 @@ def forward_migrate_equipments(apps, _):
         recorder.save()
 
     for hydrophone in hydrophone_model.objects.all():
-        provider_model, _ = provider_model.objects.get_or_create(name=hydrophone.provider)
+        provider, _ = provider_model.objects.get_or_create(name=hydrophone.provider)
         model, _ = hydrophone_model_model.objects.get_or_create(
-            provider=provider_model,
+            provider=provider,
             name=hydrophone.model,
             directivity=hydrophone.directivity,
             operating_min_temperature=hydrophone.operating_min_temperature,

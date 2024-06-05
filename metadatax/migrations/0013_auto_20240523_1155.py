@@ -15,7 +15,7 @@ def forward_migrate_format(apps, _):
         file.save()
 
     for config in channel_configuration_model.objects.all():
-        rec_format, _ = file_format_model.objects.get_or_create(name=config.format)
+        rec_format, _ = file_format_model.objects.get_or_create(name=config.recording_format)
         config.recording_format_class = rec_format
         config.save()
 
@@ -28,7 +28,7 @@ def reverse_migrate_format(apps, _):
         file.format = file.format_class.name
 
     for config in channel_configuration_model.objects.all():
-        config.format = config.recording_format_class.name
+        config.recording_format = config.recording_format_class.name
 
 
 class Migration(migrations.Migration):
