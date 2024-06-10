@@ -163,6 +163,10 @@ form > p input#id_accept_mailing {
 #footer {
     padding: 1rem 6rem;
     justify-self: center;
+    gap: 0.25rem;
+    display: grid;
+    grid-auto-flow: row;
+    justify-items: center;
 }
 
 ul.errorlist {
