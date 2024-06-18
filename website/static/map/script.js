@@ -11,7 +11,7 @@ const markers = L.markerClusterGroup({
  * Labels for the popup content lines
  * @type {Array<string>}
  */
-const KEYS = [
+const DEPLOYMENT_KEYS = [
     "name",
     "provider",
     "campaign",
@@ -24,10 +24,58 @@ const KEYS = [
     "coordinates",
     "bathymetric_depth",
     "platform",
+    "channel_configuration"
+]
+const HYDROPHONE_MODEL_KEYS = [
+    "directivity",
+    "max_bandwidth",
+    "max_dynamic_range",
+    "max_operating_depth",
+    "min_bandwidth",
+    "min_dynamic_range",
+    "name",
+    "noise_floor",
+    "operating_max_temperature",
+    "operating_min_temperature"
+]
+const RECORDER_MODEL_KEYS = [
+    "name",
+    "number_of_channels",
+]
+
+const HYDROPHONE_KEYS = [
+    "serial_number",
+    "sensitivity",
+    "model",
+]
+const RECORDER_KEYS = [
+    "serial_number",
+    "model",
+]
+const MENU_KEYS = [
+    "deployment",
+    "channel",
+    "hydrophone",
+    "recorder",
+]
+const CHANNEL_KEYS = [
+    "channel_name",
+    "continuous",
+    "duty_cycle_off",
+    "duty_cycle_on",
+    "gain (dB)",
+    "hydrophone_depth (m)",
+    "sample_depth",
+    "sampling_frequency",
+    "hydrophone",
+    "recorder"
 ]
 
 const EMPTY_VALUE = "-"
 
+/**
+ * Populate table cell
+ */
 function getCellInnerText(deployment, key) {
     switch (key) {
         case "campaign":
@@ -44,15 +92,66 @@ function getCellInnerText(deployment, key) {
             return deployment[key] ?? EMPTY_VALUE;
     }
 }
-
-function closePanel() {
+/**
+*closePanel of bottom panel
+*/
+function closePanel(table_length) {
     document.getElementById("title_panel").innerText = ""
     document.getElementById("mysidepanel").style.transition = "none";
     document.getElementById("mysidepanel").style.width = "0";
     document.getElementById("mysidepanel").style.transition = "0.5s";
+    closeMetadataPanel(length-1);
 }
-
-
+/**
+*closeMetadataPanel of channel configuration panel and go back to deployment panel
+*/
+function closeMetadataPanel(length) {
+    document.getElementById('deployment').style.display = '';
+    if (length>1)  {
+      document.getElementById("bottom_right_arrow").innerText = ">";
+    }
+    document.getElementById("bottom_left_arrow").innerText = "";
+    document.getElementById("bottom_pagination").innerText = "";
+    document.getElementById("bottom_right_arrow").onclick = function() { showAndHideElement(CHANNEL_KEYS,  0, length-1) };
+    for (var l = 0 ; l< length-1; l++) {
+           document.getElementById("channel_configuration"+l).style.display = 'none';
+    }
+}
+/**
+*showAndHideElement of bottom panel
+*/
+function showAndHideElement (array, index, length) {
+    document.getElementById('deployment').style.display = 'none';
+   for (var c = 0 ; c< length; c++) {
+        if (index == c) {
+           document.getElementById("channel_configuration"+c).style.display = '';
+            document.getElementById("bottom_pagination").innerText = index+1+" / "+length
+            document.getElementById("bottom_right_arrow").onclick = function() {
+             document.getElementById("bottom_pagination").innerText = index+" / "+length;
+           showAndHideElement (array, index+1, length)};
+            document.getElementById("bottom_left_arrow").onclick = function() {
+                       document.getElementById("bottom_pagination").innerText = index+" / "+length;
+                        showAndHideElement (array, index-1, length)};
+        }
+        else {
+            document.getElementById("channel_configuration"+c).style.display = 'none';
+        }
+    }
+     showArrow(index, 0 ,"bottom_left_arrow", "<" )
+     showArrow(index,  length-1 ,"bottom_right_arrow", ">" )
+}
+/**
+* Show  bottom panel with navigation
+*/
+function showArrow(index,value, id , text) {
+    if (index == value) {
+       document.getElementById(id).onclick = function() {};
+       document.getElementById(id).innerText = ""
+    }
+    else {
+      document.getElementById(id).innerText = text
+      }
+}
 /**
  * Create popup content
  * @param e {any}
@@ -64,26 +163,111 @@ function showContent(e) {
     table.innerHTML = "";
 
     if (!e?.sourceTarget?.feature?.properties?.deployment) {
-        closePanel();
+        closePanel(table.tBodies.length);
         return;
     }
-
     const deployment = e.sourceTarget.feature.properties.deployment;
-
     document.getElementById("title_panel").innerText = `Project: ${deployment.project.name}`;
-    for (const key of KEYS) {
-        const row = table.insertRow();
-        row.setAttribute("id", key);
-        const labelCell = row.insertCell();
-        labelCell.className = "label"
-        labelCell.innerText = key.replaceAll('_', ' ');
-        const valueCell = row.insertCell();
-        valueCell.innerText = getCellInnerText(deployment, key)
+    document.getElementById("bottom_panel").innerText = ` ${deployment.channel.length} Channel configuration`;
+    if (`${deployment.channel.length}` !=0) {
+        document.getElementById("bottom_right_arrow").innerText = ">";
+        document.getElementById("bottom_right_arrow").onclick = function() { showAndHideElement(CHANNEL_KEYS,  0, deployment.channel.length) };
     }
+    else {
+            document.getElementById("bottom_right_arrow").innerText = "";
+    }
+    tbody= table.appendChild(document.createElement('tbody'))
+    tbody.id="deployment"
+    displayElement(DEPLOYMENT_KEYS, deployment, "deployment")
     const panel = document.getElementById("mysidepanel");
     panel.scrollTop = 0;
     panel.style.width = "500px";
+
+/**
+ * Hide element
+ */
+function hide(element, type) {
+    for (const e of element) {
+       document.getElementById(type+e).style.display="none";
+    }
 }
+/**
+ * Show or hide element
+ */
+function showOrHideElement(element, type){
+    for (const e of element) {
+        document.getElementById(type+e).style.display= (document.getElementById(type+e)?.style?.display == "none")  ? "": "none";
+    }
+}
+
+/**
+ * Create and populate table
+ */
+function displayElement(element, attribute, type) {
+    for (const key of element) {
+        if (key == "hydrophone") {
+                labelCell = populateTable(table, type, key )
+               generateCollapse(attribute.hydrophone, HYDROPHONE_KEYS,HYDROPHONE_MODEL_KEYS,type+key, labelCell);
+        }
+        else if (key == "recorder") {
+                labelCell = populateTable(table, type, key )
+                generateCollapse(attribute.recorder, RECORDER_KEYS,RECORDER_MODEL_KEYS,type+key, labelCell);
+        }
+        else if (key == "channel_configuration") {
+          for (const c in deployment.channel) {
+            tbody= table.appendChild(document.createElement('tbody'))
+            tbody.id=key+c
+            labelCell = populateTable(tbody, c, key)
+            displayElement(CHANNEL_KEYS,deployment.channel[c], tbody.id)
+            document.getElementById(tbody.id).style.display = 'none';
+           }
+        }
+        else if (key == "model") {
+            labelCell = populateTable(table, type, key)
+            index = type.split("channel_configuration")[1].substring(0,1)
+            if ( attribute[key].directivity != undefined ) {
+               generateCollapse( deployment.channel[index].hydrophone[key], HYDROPHONE_MODEL_KEYS, [], type+key, labelCell);
+            }
+            else {
+                generateCollapse( deployment.channel[index].recorder[key], RECORDER_MODEL_KEYS, [], type+key, labelCell);
+           }
+        }
+        else {
+            const row = table.insertRow();
+            row.setAttribute("id", type+key);
+            const labelCell = row.insertCell();
+            labelCell.innerText = key.replaceAll('_', ' ');
+            labelCell.className = "label"
+            const valueCell = row.insertCell();
+             valueCell.innerText = getCellInnerText(attribute, key);
+        }
+    }
+}
+/**
+ * Collapse optionnal element
+ */
+function generateCollapse(attribute, array,sub_array,  id, labelCell) {
+                labelCell.onclick = function() {
+                                showOrHideElement(array,  id);
+                                if (sub_array) {  hide(sub_array,  id+"model"); }
+                                };
+                displayElement(array,attribute, id)
+                hide(array, id)
+}
+/**
+ * populate row element of table, return new labelCell
+ */
+function populateTable(table, type, key) {
+                const row = table.insertRow();
+                row.setAttribute("id", type+key);
+                const labelCell = row.insertCell();
+                labelCell.innerText = key.replaceAll('_', ' ');
+                labelCell.className = "popuptitle"
+                labelCell.colSpan = 2
+                return labelCell
+    }
+}
+
 
 const getRandomColor = () => "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0");
 const ProjectColor = new Map();
@@ -95,12 +279,13 @@ window.onload = function () {
         if (ProjectColor.has(deployment.project.id)) continue;
         ProjectColor.set(deployment.project.id, getRandomColor())
     }
+
   const bounds= [[-200, -200], [200, 200]]
     map = L.map('map', {
         minZoom: 2, zoom: 3,
         zoomControl: true,
         preferCanvas: true,
-    }).setView([48.400002, -4.48333], 4.5).setMaxBounds(bounds);;
+    }).setView([48.400002, -4.48333], 4.5).setMaxBounds(bounds);
     L.tileLayer.wms("https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?",
         {
             "attribution": "",
@@ -151,5 +336,6 @@ window.onload = function () {
     markers.on('clusterclick', showContent);
     markers.addLayer(geoJsonPoint);
     map.addLayer(markers);
+    L.control.scale().addTo(map);
 }
 

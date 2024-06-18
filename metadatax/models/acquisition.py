@@ -270,7 +270,7 @@ class Deployment(models.Model):
 
     deployment_date = models.DateTimeField(
         null=True, blank=True,
-        default=datetime.datetime(1970, 1, 1),
+        default=datetime.datetime(2020, 1, 1, 12,0,0),
         help_text="Date and time at which the measurement system was deployed in UTC.",
         verbose_name="Deployment date (UTC)"
     )
@@ -283,7 +283,7 @@ class Deployment(models.Model):
 
     recovery_date = models.DateTimeField(
         null=True, blank=True,
-        default=datetime.datetime(1970, 1, 1),
+        default=datetime.datetime(2020, 1, 1, 12, 0, 0),
         help_text="Date and time at which the measurement system was recovered in UTC.",
         verbose_name="Recovery date (UTC)"
     )
@@ -311,6 +311,7 @@ class Deployment(models.Model):
     )
 
     objects = models.Manager
+
 
 
 class ChannelConfiguration(models.Model):

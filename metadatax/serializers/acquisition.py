@@ -12,7 +12,7 @@ class ChannelConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChannelConfiguration
         fields = '__all__'
-
+        depth = 2
 
 class PlatformSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,7 +34,10 @@ class DeploymentSerializer(serializers.ModelSerializer):
     platform = PlatformSerializer()
     project = ProjectSerializer()
     name = serializers.CharField(source="__str__")
-
+    channel = ChannelConfigurationSerializer(
+        source='channelconfiguration_set',
+        many=True
+    )
     class Meta:
         model = Deployment
         fields = '__all__'
