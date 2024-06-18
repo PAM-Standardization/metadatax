@@ -21,8 +21,6 @@ class WebsiteView(viewsets.ViewSet):
         })
 
     def map(self):
-        channels = ChannelConfigurationSerializer(ChannelConfiguration.objects.all(), many=True).data
-        return render(self, 'map.html', {
-          "channels": channels
-        })
+        deployment = DeploymentSerializer(Deployment.objects.all(), many=True).data
+        return render(self, 'map.html', {"deployment": deployment})
 

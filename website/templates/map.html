@@ -26,13 +26,20 @@
 <div id="mysidepanel">
     <div id="head">
         <label id="title_panel"></label>
-        <a class="closebtn" onclick="closePanel()" aria-label="Fermer">×</a>
+        <a class="closebtn" onclick="closePanel(table.tBodies.length)" aria-label="Close">×</a>
     </div>
     <table class="table" id="table"></table>
+    <div id="bottom">
+        <label id="bottom_panel"></label>
+        <a  class="bottompanel" id="bottom_left_arrow" title="Previous" aria-label="Previous"></a>
+        <label id="bottom_pagination"></label>
+        <a class="bottompanel" id="bottom_right_arrow" title="Next" aria-label="Next"></a>
+        <a class="bottom_closebtn" onclick="closeMetadataPanel(table.tBodies.length)" title="Close" aria-label="Close" >×</a>
+    </div>
 </div>
 </body>
 
-{{ channels |json_script:"channels" }}
+{{ deployment |json_script:"deployment" }}
 
 <script>
     /**
@@ -89,6 +96,7 @@
      *     }
      * }>}
      */
-    const DATA = JSON.parse(document.getElementById("channels").textContent);
+    const DATA = JSON.parse(document.getElementById("deployment").textContent);
+
 </script>
 <script src="{% static 'map/script.js' %}"></script>

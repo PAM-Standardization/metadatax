@@ -313,6 +313,7 @@ class Deployment(models.Model):
     objects = models.Manager
 
 
+
 class ChannelConfiguration(models.Model):
     """Configuration of a recorded channel for a Hydrophone on a Recorder in a deployment"""
 
