@@ -10,6 +10,7 @@ class MetadataxAdminSite(admin.AdminSite):
         "metadatax": 1,
         "meta_auth": 2,
         "auth": 2,
+        "admin": 2,
         "authtoken": 2
     }
     metadatax_ordering = {
