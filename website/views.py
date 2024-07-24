@@ -7,20 +7,22 @@ from rest_framework import viewsets
 
 from meta_auth.form import SignupForm
 from metadatax.models.acquisition import Deployment, ChannelConfiguration
-from metadatax.serializers.acquisition import DeploymentSerializer, ChannelConfigurationSerializer
+from metadatax.serializers.acquisition import (
+    DeploymentSerializer,
+    ChannelConfigurationSerializer,
+)
 
 
 class WebsiteView(viewsets.ViewSet):
-
     @cache_page(60 * 15)
     @csrf_protect
     def home(self):
-        return render(self, 'home.html', {
-            'register_form': SignupForm(),
-            'isConnected': self.user.is_staff
-        })
+        return render(
+            self,
+            "home.html",
+            {"register_form": SignupForm(), "isConnected": self.user.is_staff},
+        )
 
     def map(self):
         deployment = DeploymentSerializer(Deployment.objects.all(), many=True).data
-        return render(self, 'map.html', {"deployment": deployment})
-
+        return render(self, "map.html", {"deployment": deployment})

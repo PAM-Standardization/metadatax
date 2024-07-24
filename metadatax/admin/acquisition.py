@@ -1,13 +1,28 @@
 """Acquisition metadata administration"""
+import csv
+import io
+
+from django import forms
 from django.contrib import admin
 from django.contrib.admin import TabularInline
+from django.core import validators
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+from meta_auth.admin import JSONExportModelAdmin
 from metadatax.models.acquisition import (
     Institution,
     Campaign,
-    ProjectType, Site, Project, PlatformType, Deployment, ChannelConfiguration, Platform,
+    ProjectType,
+    Site,
+    Project,
+    PlatformType,
+    Deployment,
+    ChannelConfiguration,
+    Platform,
 )
 from .__util__ import custom_titled_filter
-from ..models.data import FileFormat
+from metadatax.models.data import FileFormat, File
+from ..serializers.acquisition import ProjectFullSerializer
 
 
 @admin.register(ProjectType, PlatformType, Site, Campaign, Platform, FileFormat)
@@ -21,9 +36,10 @@ class CommonAcquisitionAdmin(admin.ModelAdmin):
 
 
 @admin.register(Institution)
-class InstitutionAdmin(admin.ModelAdmin):
+class InstitutionModelAdmin(JSONExportModelAdmin):
     """Institution presentation in DjangoAdmin"""
 
+    model = Institution
     list_display = [
         "name",
         "contact",
@@ -38,18 +54,19 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 class CampaignInline(TabularInline):
     model = Campaign
-    classes = ['collapse']
+    classes = ["collapse"]
 
 
 class SiteInline(TabularInline):
     model = Site
-    classes = ['collapse']
+    classes = ["collapse"]
 
 
 @admin.register(Project)
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectModelAdmin(JSONExportModelAdmin):
     """Project presentation in DjangoAdmin"""
 
+    serializer = ProjectFullSerializer
     list_display = [
         "name",
         "list_responsible_parties",
@@ -81,16 +98,22 @@ class ProjectAdmin(admin.ModelAdmin):
         return ", ".join([p.name for p in obj.responsible_parties.all()])
 
     def campaigns(self, obj) -> str:
-        return ", ".join([c.name for c in sorted(obj.campaigns.all(), key=lambda x: x.name)])
+        return ", ".join(
+            [c.name for c in sorted(obj.campaigns.all(), key=lambda x: x.name)]
+        )
 
     def sites(self, obj) -> str:
-        return ", ".join([s.name for s in sorted(obj.sites.all(), key=lambda x: x.name)])
+        return ", ".join(
+            [s.name for s in sorted(obj.sites.all(), key=lambda x: x.name)]
+        )
 
 
 @admin.register(Deployment)
-class DeploymentAdmin(admin.ModelAdmin):
+class DeploymentModelAdmin(JSONExportModelAdmin):
     """Deployment presentation in DjangoAdmin"""
 
+    model = Deployment
+    depth = 2
     list_display = [
         "__str__",
         "name",
@@ -126,33 +149,37 @@ class DeploymentAdmin(admin.ModelAdmin):
                     "project",
                     "provider",
                 ]
-            }
+            },
         ),
         (
             "Location",
             {
-                "classes": ["wide", ],
+                "classes": [
+                    "wide",
+                ],
                 "fields": [
                     "site",
                     "platform",
                     "latitude",
                     "longitude",
                     "bathymetric_depth",
-                ]
-            }
+                ],
+            },
         ),
         (
             "Deployment & Recovery",
             {
-                "classes": ["wide", ],
+                "classes": [
+                    "wide",
+                ],
                 "fields": [
                     "campaign",
                     ("deployment_date", "deployment_vessel"),
                     ("recovery_date", "recovery_vessel"),
-                    "description"
-                ]
-            }
-        )
+                    "description",
+                ],
+            },
+        ),
     ]
 
     @admin.display(description="Campaign")
@@ -163,10 +190,53 @@ class DeploymentAdmin(admin.ModelAdmin):
     def site_name(self, obj) -> str:
         return obj.site.name if obj.site else None
 
+
+class ChannelConfigurationForm(forms.ModelForm):
+    csv_file = forms.FileField(
+        help_text="Conflicting files will be ignored",
+        validators=[validators.FileExtensionValidator(["csv"])]
+    )
+
+    class Meta:
+        model = ChannelConfiguration
+        fields = "__all__"
+
+    def save(self, commit=True):
+        instance: ChannelConfiguration = super().save(commit=commit)
+        csv_file: InMemoryUploadedFile = self.cleaned_data.get("csv_file", None)
+        content = csv_file.read().decode("utf-8")
+        files: list[File] = []
+        file: dict
+        for file in csv.DictReader(io.StringIO(content)):
+            _format, _ = FileFormat.objects.get_or_create(
+                name=str(file["format"]).upper()
+            )
+            files.append(
+                File(
+                    channel_configuration=instance,
+                    name=file["name"],
+                    format=_format,
+                    initial_timestamp=file["initial_timestamp"],
+                    duration=file["duration"],
+                    sampling_frequency=file["sampling_frequency"],
+                    sample_depth=file["sample_depth"],
+                    storage_location=file["storage_location"],
+                    file_size=file["file_size"],
+                    accessibility=file["accessibility"],
+                )
+            )
+
+        File.objects.bulk_create(files, ignore_conflicts=True)
+        return instance
+
+
 @admin.register(ChannelConfiguration)
-class ChannelConfigurationAdmin(admin.ModelAdmin):
+class ChannelConfigurationModelAdmin(JSONExportModelAdmin):
     """ChannelConfiguration presentation in DjangoAdmin"""
 
+    model = ChannelConfiguration
+    depth = 3
+    form = ChannelConfigurationForm
     list_display = [
         "__str__",
         "channel_name",
@@ -206,8 +276,9 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
                 "fields": [
                     "deployment",
                 ]
-            }
-        ), (
+            },
+        ),
+        (
             "Recorder",
             {
                 "fields": [
@@ -218,24 +289,39 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
                     "sampling_frequency",
                     "gain",
                 ]
-            }
-        ), (
+            },
+        ),
+        (
             "Hydrophone",
             {
                 "fields": [
                     "hydrophone",
                     "hydrophone_depth",
                 ]
-            }
-        ), (
+            },
+        ),
+        (
             "Duty cycle",
             {
-                "classes": ["wide",],
+                "classes": [
+                    "wide",
+                ],
                 "fields": [
                     "continuous",
                     "duty_cycle_on",
                     "duty_cycle_off",
-                ]
-            }
-        )
+                ],
+            },
+        ),
+        (
+            "Import files",
+            {
+                "classes": [
+                    "wide",
+                ],
+                "fields": [
+                    "csv_file",
+                ],
+            },
+        ),
     ]

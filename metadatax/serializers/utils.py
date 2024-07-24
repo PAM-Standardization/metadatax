@@ -22,3 +22,11 @@ class EnumField(serializers.ChoiceField):
             return self.enum(value)
         except KeyError:
             return self.fail("invalid_choice", input=data)
+
+
+class SimpleSerializer(serializers.ModelSerializer):
+    """Serializer meant to output basic data"""
+
+    class Meta:
+        model = None
+        fields = "__all__"

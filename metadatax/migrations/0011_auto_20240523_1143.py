@@ -6,19 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metadatax', '0010_alter_deployment_name'),
+        ("metadatax", "0010_alter_deployment_name"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='hydrophone',
-            name='serial_number',
+            model_name="hydrophone",
+            name="serial_number",
             field=models.CharField(default=-1, max_length=255),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='recorder',
-            name='serial_number',
+            model_name="recorder",
+            name="serial_number",
             field=models.CharField(default=-1, max_length=255),
             preserve_default=False,
         ),

@@ -7,18 +7,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metadatax', '0020_alter_recorder_options'),
+        ("metadatax", "0020_alter_recorder_options"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='deployment',
-            name='deployment_date',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(2020, 1, 1, 12, 0), help_text='Date and time at which the measurement system was deployed in UTC.', null=True, verbose_name='Deployment date (UTC)'),
+            model_name="deployment",
+            name="deployment_date",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(2020, 1, 1, 12, 0),
+                help_text="Date and time at which the measurement system was deployed in UTC.",
+                null=True,
+                verbose_name="Deployment date (UTC)",
+            ),
         ),
         migrations.AlterField(
-            model_name='deployment',
-            name='recovery_date',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(2020, 1, 1, 12, 0), help_text='Date and time at which the measurement system was recovered in UTC.', null=True, verbose_name='Recovery date (UTC)'),
+            model_name="deployment",
+            name="recovery_date",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(2020, 1, 1, 12, 0),
+                help_text="Date and time at which the measurement system was recovered in UTC.",
+                null=True,
+                verbose_name="Recovery date (UTC)",
+            ),
         ),
     ]

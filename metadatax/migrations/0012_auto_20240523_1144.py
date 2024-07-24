@@ -6,16 +6,22 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metadatax', '0011_auto_20240523_1143'),
+        ("metadatax", "0011_auto_20240523_1143"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='hydrophonemodel',
-            options={'ordering': ['provider', 'name'], 'verbose_name': 'Equipment - Hydrophone - Model'},
+            name="hydrophonemodel",
+            options={
+                "ordering": ["provider", "name"],
+                "verbose_name": "Equipment - Hydrophone - Model",
+            },
         ),
         migrations.AlterModelOptions(
-            name='recordermodel',
-            options={'ordering': ['provider', 'name'], 'verbose_name': 'Equipment - Recorder - Model'},
+            name="recordermodel",
+            options={
+                "ordering": ["provider", "name"],
+                "verbose_name": "Equipment - Recorder - Model",
+            },
         ),
     ]
