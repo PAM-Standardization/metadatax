@@ -1,6 +1,12 @@
 """Acquisition metadata administration"""
+import csv
+import io
+
+from django import forms
 from django.contrib import admin
 from django.contrib.admin import TabularInline
+from django.core import validators
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from meta_auth.admin import JSONExportModelAdmin
 from metadatax.models.acquisition import (
@@ -15,7 +21,7 @@ from metadatax.models.acquisition import (
     Platform,
 )
 from .__util__ import custom_titled_filter
-from ..models.data import FileFormat
+from metadatax.models.data import FileFormat, File
 from ..serializers.acquisition import ProjectFullSerializer
 
 
@@ -185,12 +191,48 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
         return obj.site.name if obj.site else None
 
 
+class ChannelConfigurationForm(forms.ModelForm):
+    csv_file = forms.FileField(validators=[validators.FileExtensionValidator(["csv"])])
+
+    class Meta:
+        model = ChannelConfiguration
+        fields = "__all__"
+
+    def save(self, commit=True):
+        instance: ChannelConfiguration = super().save(commit=commit)
+        csv_file: InMemoryUploadedFile = self.cleaned_data.get("csv_file", None)
+        content = csv_file.read().decode("utf-8")
+        files: list[File] = []
+        file: dict
+        for file in csv.DictReader(io.StringIO(content)):
+            _format, _ = FileFormat.objects.get_or_create(
+                name=str(file["format"]).upper()
+            )
+            files.append(
+                File(
+                    channel_configuration=instance,
+                    name=file["name"],
+                    format=_format,
+                    initial_timestamp=file["initial_timestamp"],
+                    duration=file["duration"],
+                    sampling_frequency=file["sampling_frequency"],
+                    sample_depth=file["sample_depth"],
+                    storage_location=file["storage_location"],
+                    file_size=file["file_size"],
+                    accessibility=file["accessibility"],
+                )
+            )
+        File.objects.bulk_create(files)
+        return instance
+
+
 @admin.register(ChannelConfiguration)
 class ChannelConfigurationModelAdmin(JSONExportModelAdmin):
     """ChannelConfiguration presentation in DjangoAdmin"""
 
     model = ChannelConfiguration
     depth = 3
+    form = ChannelConfigurationForm
     list_display = [
         "__str__",
         "channel_name",
@@ -264,6 +306,17 @@ class ChannelConfigurationModelAdmin(JSONExportModelAdmin):
                     "continuous",
                     "duty_cycle_on",
                     "duty_cycle_off",
+                ],
+            },
+        ),
+        (
+            "Import files",
+            {
+                "classes": [
+                    "wide",
+                ],
+                "fields": [
+                    "csv_file",
                 ],
             },
         ),

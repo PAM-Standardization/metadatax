@@ -21,6 +21,9 @@ class File(models.Model):
     class Meta:
         unique_together = [["channel_configuration", "name"]]
 
+    def __str__(self):
+        return self.name
+
     channel_configuration = models.ForeignKey(
         to=ChannelConfiguration,
         on_delete=models.CASCADE,

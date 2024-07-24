@@ -12,6 +12,7 @@ class FileModelAdmin(JSONExportModelAdmin):
     """File presentation in DjangoAdmin"""
 
     model = File
+    depth = 5
 
     search_fields = [
         "channel_configuration__channel_name",
