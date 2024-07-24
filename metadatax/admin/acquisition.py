@@ -192,7 +192,10 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
 
 
 class ChannelConfigurationForm(forms.ModelForm):
-    csv_file = forms.FileField(validators=[validators.FileExtensionValidator(["csv"])])
+    csv_file = forms.FileField(
+        help_text="Conflicting files will be ignored",
+        validators=[validators.FileExtensionValidator(["csv"])]
+    )
 
     class Meta:
         model = ChannelConfiguration
@@ -222,7 +225,8 @@ class ChannelConfigurationForm(forms.ModelForm):
                     accessibility=file["accessibility"],
                 )
             )
-        File.objects.bulk_create(files)
+
+        File.objects.bulk_create(files, ignore_conflicts=True)
         return instance
 
 
