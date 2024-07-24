@@ -20,21 +20,19 @@ def forward_migrate_deployment(apps, _):
         platform, _ = platform_model.objects.get_or_create(
             name=deployment.platform_type,
             type=platform_type,
-            description=deployment.platform_description
+            description=deployment.platform_description,
         )
         deployment.platform = platform
 
         if deployment.platform_name:
             site, _ = site_model.objects.get_or_create(
-                name=deployment.platform_name,
-                project=deployment.project
+                name=deployment.platform_name, project=deployment.project
             )
             deployment.site = site
 
         if deployment.campaign:
             campaign, _ = campaign_model.objects.get_or_create(
-                name=deployment.campaign,
-                project=deployment.project
+                name=deployment.campaign, project=deployment.project
             )
             deployment.campaign_model = campaign
         deployment.save()
@@ -61,194 +59,268 @@ def reverse_migrate_deployment(apps, _):
 
 
 def log(apps, _):
-    print('\n> Ok')
+    print("\n> Ok")
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('metadatax', '0006_alter_file_unique_together'),
+        ("metadatax", "0006_alter_file_unique_together"),
     ]
 
     operations = [
         # Deployment
         migrations.CreateModel(
-            name='Campaign',
+            name="Campaign",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
             ],
         ),
         migrations.AddField(
-            model_name='campaign',
-            name='project',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='campaigns',
-                                    to='metadatax.project'),
+            model_name="campaign",
+            name="project",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="campaigns",
+                to="metadatax.project",
+            ),
         ),
         migrations.AddField(
-            model_name='deployment',
-            name='campaign_model',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
-                                    related_name='deployments', to='metadatax.campaign'),
+            model_name="deployment",
+            name="campaign_model",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="deployments",
+                to="metadatax.campaign",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='campaign',
-            constraint=models.UniqueConstraint(fields=('name', 'project_id'), name='unique_campaign_in_project'),
+            model_name="campaign",
+            constraint=models.UniqueConstraint(
+                fields=("name", "project_id"), name="unique_campaign_in_project"
+            ),
         ),
         migrations.CreateModel(
-            name='Platform',
+            name="Platform",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('description', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("description", models.TextField(blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='PlatformType',
+            name="PlatformType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, unique=True)),
             ],
         ),
         migrations.AddField(
-            model_name='platform',
-            name='type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
-                                    related_name='platforms', to='metadatax.platformtype'),
+            model_name="platform",
+            name="type",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="platforms",
+                to="metadatax.platformtype",
+            ),
         ),
         migrations.AddField(
-            model_name='deployment',
-            name='platform',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
-                                    related_name='deployments', to='metadatax.platform'),
+            model_name="deployment",
+            name="platform",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="deployments",
+                to="metadatax.platform",
+            ),
         ),
         migrations.CreateModel(
-            name='Site',
+            name="Site",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
             ],
         ),
         migrations.AddField(
-            model_name='site',
-            name='project',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sites',
-                                    to='metadatax.project'),
+            model_name="site",
+            name="project",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="sites",
+                to="metadatax.project",
+            ),
         ),
         migrations.AddField(
-            model_name='deployment',
-            name='site',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
-                                    related_name='deployments', to='metadatax.site'),
+            model_name="deployment",
+            name="site",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="deployments",
+                to="metadatax.site",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='site',
-            constraint=models.UniqueConstraint(fields=('name', 'project_id'), name='unique_site_in_project'),
+            model_name="site",
+            constraint=models.UniqueConstraint(
+                fields=("name", "project_id"), name="unique_site_in_project"
+            ),
         ),
         migrations.AlterField(
-            model_name='deployment',
-            name='name',
-            field=models.CharField(default='null', max_length=255),
+            model_name="deployment",
+            name="name",
+            field=models.CharField(default="null", max_length=255),
             preserve_default=False,
         ),
-
         # Project
         migrations.CreateModel(
-            name='ProjectType',
+            name="ProjectType",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, unique=True)),
             ],
         ),
         migrations.RunPython(code=log, reverse_code=log),
         migrations.AddField(
-            model_name='project',
-            name='project_type_model',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
-                                    related_name='projects', to='metadatax.projecttype'),
+            model_name="project",
+            name="project_type_model",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="projects",
+                to="metadatax.projecttype",
+            ),
         ),
         migrations.RunPython(code=log, reverse_code=log),
-
         # Institution
         migrations.AddField(
-            model_name='institution',
-            name='website',
-            field=models.URLField(default='null'),
+            model_name="institution",
+            name="website",
+            field=models.URLField(default="null"),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='deployment',
-            name='provider',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL,
-                                    related_name='deployments', to='metadatax.institution'),
+            model_name="deployment",
+            name="provider",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="deployments",
+                to="metadatax.institution",
+            ),
         ),
         migrations.AlterField(
-            model_name='institution',
-            name='contact',
-            field=models.EmailField(default='null', max_length=254),
+            model_name="institution",
+            name="contact",
+            field=models.EmailField(default="null", max_length=254),
             preserve_default=False,
         ),
-
         # Hydrophone
         migrations.RenameField(
-            model_name='hydrophone',
-            old_name='bandwidth',
-            new_name='max_bandwidth',
+            model_name="hydrophone",
+            old_name="bandwidth",
+            new_name="max_bandwidth",
         ),
         migrations.RenameField(
-            model_name='hydrophone',
-            old_name='dynamic_range',
-            new_name='max_dynamic_range',
+            model_name="hydrophone",
+            old_name="dynamic_range",
+            new_name="max_dynamic_range",
         ),
         migrations.AddField(
-            model_name='hydrophone',
-            name='min_bandwidth',
+            model_name="hydrophone",
+            name="min_bandwidth",
             field=models.FloatField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='hydrophone',
-            name='min_dynamic_range',
+            model_name="hydrophone",
+            name="min_dynamic_range",
             field=models.FloatField(blank=True, null=True),
         ),
-
         # Channel configuration
         migrations.AddConstraint(
-            model_name='channelconfiguration',
-            constraint=models.UniqueConstraint(fields=('channel_name', 'deployment_id', 'recorder_id'),
-                                               name='unique_name_in_deployment_with_recorder'),
+            model_name="channelconfiguration",
+            constraint=models.UniqueConstraint(
+                fields=("channel_name", "deployment_id", "recorder_id"),
+                name="unique_name_in_deployment_with_recorder",
+            ),
         ),
-
         # Additional logical migration
-        migrations.RunPython(code=forward_migrate_deployment, reverse_code=reverse_migrate_deployment),
-
+        migrations.RunPython(
+            code=forward_migrate_deployment, reverse_code=reverse_migrate_deployment
+        ),
         # Remove all
         migrations.RemoveField(
-            model_name='deployment',
-            name='platform_type',
+            model_name="deployment",
+            name="platform_type",
         ),
         migrations.RemoveField(
-            model_name='deployment',
-            name='campaign',
+            model_name="deployment",
+            name="campaign",
         ),
         migrations.RenameField(
-            model_name='deployment',
-            old_name='campaign_model',
-            new_name='campaign'
+            model_name="deployment", old_name="campaign_model", new_name="campaign"
         ),
         migrations.RemoveField(
-            model_name='project',
-            name='project_type',
+            model_name="project",
+            name="project_type",
         ),
         migrations.RenameField(
-            model_name='project',
-            old_name='project_type_model',
-            new_name='project_type'
+            model_name="project", old_name="project_type_model", new_name="project_type"
         ),
         migrations.RemoveField(
-            model_name='deployment',
-            name='platform_description',
+            model_name="deployment",
+            name="platform_description",
         ),
         migrations.RemoveField(
-            model_name='deployment',
-            name='platform_name',
+            model_name="deployment",
+            name="platform_name",
         ),
     ]

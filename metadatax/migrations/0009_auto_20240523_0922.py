@@ -16,7 +16,7 @@ def forward_migrate_equipments(apps, _):
         model, _ = recorder_model_model.objects.get_or_create(
             provider=provider,
             name=recorder.model,
-            number_of_channels=recorder.number_of_channels
+            number_of_channels=recorder.number_of_channels,
         )
         recorder.model_class = model
         recorder.save()
@@ -28,7 +28,7 @@ def forward_migrate_equipments(apps, _):
             name=hydrophone.model,
             directivity=hydrophone.directivity,
             operating_min_temperature=hydrophone.operating_min_temperature,
-            operating_max_temperature=hydrophone.operating_max_temperature
+            operating_max_temperature=hydrophone.operating_max_temperature,
         )
         hydrophone.model_class = model
         hydrophone.save()
@@ -47,183 +47,243 @@ def reverse_migrate_equipments(apps, _):
         hydrophone.provider = hydrophone.model_class.provider.name
         hydrophone.model = hydrophone.model_class.name
         hydrophone.directivity = hydrophone.model_class.directivity
-        hydrophone.operating_min_temperature = hydrophone.model_class.operating_min_temperature
-        hydrophone.operating_max_temperature = hydrophone.model_class.operating_max_temperature
+        hydrophone.operating_min_temperature = (
+            hydrophone.model_class.operating_min_temperature
+        )
+        hydrophone.operating_max_temperature = (
+            hydrophone.model_class.operating_max_temperature
+        )
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('metadatax', '0008_alter_institution_website'),
+        ("metadatax", "0008_alter_institution_website"),
     ]
 
     operations = [
         # Add new structure
         migrations.CreateModel(
-            name='EquipmentProvider',
+            name="EquipmentProvider",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True)),
-                ('contact', models.EmailField(blank=True, max_length=254, null=True)),
-                ('website', models.URLField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, unique=True)),
+                ("contact", models.EmailField(blank=True, max_length=254, null=True)),
+                ("website", models.URLField(blank=True, null=True)),
             ],
             options={
-                'verbose_name': 'Equipment - Provider',
+                "verbose_name": "Equipment - Provider",
             },
         ),
         migrations.CreateModel(
-            name='RecorderModel',
+            name="RecorderModel",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('number_of_channels', models.IntegerField(blank=True, null=True)),
-                ('provider',
-                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='recorder_models',
-                                   to='metadatax.equipmentprovider')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("number_of_channels", models.IntegerField(blank=True, null=True)),
+                (
+                    "provider",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="recorder_models",
+                        to="metadatax.equipmentprovider",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Equipment - Recorder - Model',
-                'unique_together': {('provider', 'name')},
+                "verbose_name": "Equipment - Recorder - Model",
+                "unique_together": {("provider", "name")},
             },
         ),
         migrations.CreateModel(
-            name='HydrophoneModel',
+            name="HydrophoneModel",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('directivity', models.TextField(blank=True,
-                                                 choices=[('OMNI', 'Omni-directional'), ('BI', 'Bi-directional'),
-                                                          ('UNI', 'Uni-directional'), ('CAR', 'Cardioid'),
-                                                          ('SCAR', 'Supercardioid')], null=True)),
-                ('operating_min_temperature', models.FloatField(blank=True, null=True)),
-                ('operating_max_temperature', models.FloatField(blank=True, null=True)),
-                ('provider',
-                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hydrophone_models',
-                                   to='metadatax.equipmentprovider')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "directivity",
+                    models.TextField(
+                        blank=True,
+                        choices=[
+                            ("OMNI", "Omni-directional"),
+                            ("BI", "Bi-directional"),
+                            ("UNI", "Uni-directional"),
+                            ("CAR", "Cardioid"),
+                            ("SCAR", "Supercardioid"),
+                        ],
+                        null=True,
+                    ),
+                ),
+                ("operating_min_temperature", models.FloatField(blank=True, null=True)),
+                ("operating_max_temperature", models.FloatField(blank=True, null=True)),
+                (
+                    "provider",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="hydrophone_models",
+                        to="metadatax.equipmentprovider",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Equipment - Hydrophone - Model',
-                'unique_together': {('provider', 'name')},
+                "verbose_name": "Equipment - Hydrophone - Model",
+                "unique_together": {("provider", "name")},
             },
         ),
         migrations.AddField(
-            model_name='recorder',
-            name='model_class',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='recorder_items',
-                                    blank=True, null=True,
-                                    to='metadatax.recordermodel'),
+            model_name="recorder",
+            name="model_class",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="recorder_items",
+                blank=True,
+                null=True,
+                to="metadatax.recordermodel",
+            ),
         ),
         migrations.AddField(
-            model_name='hydrophone',
-            name='model_class',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hydrophone_items',
-                                    blank=True, null=True,
-                                    to='metadatax.hydrophonemodel'),
+            model_name="hydrophone",
+            name="model_class",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="hydrophone_items",
+                blank=True,
+                null=True,
+                to="metadatax.hydrophonemodel",
+            ),
         ),
-
         # Python migration
-        migrations.RunPython(code=forward_migrate_equipments, reverse_code=reverse_migrate_equipments),
-
+        migrations.RunPython(
+            code=forward_migrate_equipments, reverse_code=reverse_migrate_equipments
+        ),
         # Clean recorder
         migrations.AlterUniqueTogether(
-            name='recorder',
-            unique_together={('serial_number',)},
+            name="recorder",
+            unique_together={("serial_number",)},
         ),
         migrations.RemoveField(
-            model_name='recorder',
-            name='model',
+            model_name="recorder",
+            name="model",
         ),
         migrations.AlterField(
-            model_name='recorder',
-            name='model_class',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='recorder_items',
-                                    to='metadatax.recordermodel'),
+            model_name="recorder",
+            name="model_class",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="recorder_items",
+                to="metadatax.recordermodel",
+            ),
         ),
         migrations.RenameField(
-            model_name='recorder',
-            old_name='model_class',
-            new_name='model',
+            model_name="recorder",
+            old_name="model_class",
+            new_name="model",
         ),
         migrations.AlterUniqueTogether(
-            name='recorder',
-            unique_together={('model', 'serial_number')},
+            name="recorder",
+            unique_together={("model", "serial_number")},
         ),
         migrations.RemoveField(
-            model_name='recorder',
-            name='provider',
+            model_name="recorder",
+            name="provider",
         ),
         migrations.RemoveField(
-            model_name='recorder',
-            name='number_of_channels',
+            model_name="recorder",
+            name="number_of_channels",
         ),
-
         # Clean hydrophone
         migrations.AlterUniqueTogether(
-            name='hydrophone',
-            unique_together={('serial_number',)},
+            name="hydrophone",
+            unique_together={("serial_number",)},
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='model',
+            model_name="hydrophone",
+            name="model",
         ),
         migrations.AlterField(
-            model_name='hydrophone',
-            name='model_class',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='hydrophone_items',
-                                    to='metadatax.hydrophonemodel'),
+            model_name="hydrophone",
+            name="model_class",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="hydrophone_items",
+                to="metadatax.hydrophonemodel",
+            ),
         ),
         migrations.RenameField(
-            model_name='hydrophone',
-            old_name='model_class',
-            new_name='model',
+            model_name="hydrophone",
+            old_name="model_class",
+            new_name="model",
         ),
         migrations.AlterUniqueTogether(
-            name='hydrophone',
-            unique_together={('model', 'serial_number')},
+            name="hydrophone",
+            unique_together={("model", "serial_number")},
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='provider',
+            model_name="hydrophone",
+            name="provider",
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='directivity',
+            model_name="hydrophone",
+            name="directivity",
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='operating_max_temperature',
+            model_name="hydrophone",
+            name="operating_max_temperature",
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='operating_min_temperature',
+            model_name="hydrophone",
+            name="operating_min_temperature",
         ),
-
         # Verbose names
         migrations.AlterModelOptions(
-            name='campaign',
-            options={'verbose_name': 'Project - Campaign'},
+            name="campaign",
+            options={"verbose_name": "Project - Campaign"},
         ),
         migrations.AlterModelOptions(
-            name='hydrophone',
-            options={'verbose_name': 'Equipment - Hydrophone'},
+            name="hydrophone",
+            options={"verbose_name": "Equipment - Hydrophone"},
         ),
         migrations.AlterModelOptions(
-            name='platform',
-            options={'verbose_name': 'Deployment - Platform'},
+            name="platform",
+            options={"verbose_name": "Deployment - Platform"},
         ),
         migrations.AlterModelOptions(
-            name='platformtype',
-            options={'verbose_name': 'Deployment - Platform - Type'},
+            name="platformtype",
+            options={"verbose_name": "Deployment - Platform - Type"},
         ),
         migrations.AlterModelOptions(
-            name='projecttype',
-            options={'verbose_name': 'Project - Type'},
+            name="projecttype",
+            options={"verbose_name": "Project - Type"},
         ),
         migrations.AlterModelOptions(
-            name='recorder',
-            options={'verbose_name': 'Equipment - Recorder'},
+            name="recorder",
+            options={"verbose_name": "Equipment - Recorder"},
         ),
         migrations.AlterModelOptions(
-            name='site',
-            options={'verbose_name': 'Project - Site'},
+            name="site",
+            options={"verbose_name": "Project - Site"},
         ),
     ]

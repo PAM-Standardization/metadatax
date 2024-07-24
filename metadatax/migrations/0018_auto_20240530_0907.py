@@ -33,98 +33,121 @@ def reverse_migrate_hydro(apps, _):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('metadatax', '0017_auto_20240527_0943'),
+        ("metadatax", "0017_auto_20240527_0943"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='hydrophonemodel',
-            name='max_bandwidth',
-            field=models.FloatField(blank=True,
-                                    help_text='Upper limiting frequency within a more or less flat response of the hydrophone, pre-amplification included if applicable.',
-                                    null=True),
+            model_name="hydrophonemodel",
+            name="max_bandwidth",
+            field=models.FloatField(
+                blank=True,
+                help_text="Upper limiting frequency within a more or less flat response of the hydrophone, pre-amplification included if applicable.",
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='hydrophonemodel',
-            name='max_dynamic_range',
-            field=models.FloatField(blank=True,
-                                    help_text='Highest level which the hydrophone can handle (dB SPL RMS or peak), pre-amplification included if applicable.',
-                                    null=True),
+            model_name="hydrophonemodel",
+            name="max_dynamic_range",
+            field=models.FloatField(
+                blank=True,
+                help_text="Highest level which the hydrophone can handle (dB SPL RMS or peak), pre-amplification included if applicable.",
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='hydrophonemodel',
-            name='max_operating_depth',
-            field=models.FloatField(blank=True,
-                                    help_text='Maximum depth at which hydrophone operates (in positive meters).',
-                                    null=True, validators=[django.core.validators.MinValueValidator(0)]),
+            model_name="hydrophonemodel",
+            name="max_operating_depth",
+            field=models.FloatField(
+                blank=True,
+                help_text="Maximum depth at which hydrophone operates (in positive meters).",
+                null=True,
+                validators=[django.core.validators.MinValueValidator(0)],
+            ),
         ),
         migrations.AddField(
-            model_name='hydrophonemodel',
-            name='min_bandwidth',
-            field=models.FloatField(blank=True,
-                                    help_text='Lower limiting frequency for a more or less flat response of the hydrophone, pre-amplification included if applicable.',
-                                    null=True),
+            model_name="hydrophonemodel",
+            name="min_bandwidth",
+            field=models.FloatField(
+                blank=True,
+                help_text="Lower limiting frequency for a more or less flat response of the hydrophone, pre-amplification included if applicable.",
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='hydrophonemodel',
-            name='min_dynamic_range',
-            field=models.FloatField(blank=True,
-                                    help_text='Lowest level which the hydrophone can handle (dB SPL RMS or peak), pre-amplification included if applicable.',
-                                    null=True),
+            model_name="hydrophonemodel",
+            name="min_dynamic_range",
+            field=models.FloatField(
+                blank=True,
+                help_text="Lowest level which the hydrophone can handle (dB SPL RMS or peak), pre-amplification included if applicable.",
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='hydrophonemodel',
-            name='noise_floor',
-            field=models.FloatField(blank=True,
-                                    help_text="Self noise of the hydrophone (dB re 1µPa^2/Hz), pre-amplification included if applicable.<br>Average on bandwidth or a fix frequency (generally @5kHz for example). Possibility to 'below sea-state zero' (equivalent to around 30dB @5kHz) could be nice because it is often described like that.",
-                                    null=True),
+            model_name="hydrophonemodel",
+            name="noise_floor",
+            field=models.FloatField(
+                blank=True,
+                help_text="Self noise of the hydrophone (dB re 1µPa^2/Hz), pre-amplification included if applicable.<br>Average on bandwidth or a fix frequency (generally @5kHz for example). Possibility to 'below sea-state zero' (equivalent to around 30dB @5kHz) could be nice because it is often described like that.",
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='deployment',
-            name='deployment_date',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(1970, 1, 1, 0, 0),
-                                       help_text='Date and time at which the measurement system was deployed in UTC.',
-                                       null=True),
+            model_name="deployment",
+            name="deployment_date",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(1970, 1, 1, 0, 0),
+                help_text="Date and time at which the measurement system was deployed in UTC.",
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='deployment',
-            name='recovery_date',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(1970, 1, 1, 0, 0),
-                                       help_text='Date and time at which the measurement system was recovered in UTC.',
-                                       null=True),
+            model_name="deployment",
+            name="recovery_date",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(1970, 1, 1, 0, 0),
+                help_text="Date and time at which the measurement system was recovered in UTC.",
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='platform',
-            name='name',
-            field=models.CharField(blank=True, help_text='Name of the specific support of the deployed instruments',
-                                   max_length=255, null=True),
+            model_name="platform",
+            name="name",
+            field=models.CharField(
+                blank=True,
+                help_text="Name of the specific support of the deployed instruments",
+                max_length=255,
+                null=True,
+            ),
         ),
-
         # Additional logical migration
-        migrations.RunPython(code=forward_migrate_hydro, reverse_code=reverse_migrate_hydro),
-
-        migrations.RemoveField(
-            model_name='hydrophone',
-            name='max_bandwidth',
+        migrations.RunPython(
+            code=forward_migrate_hydro, reverse_code=reverse_migrate_hydro
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='max_dynamic_range',
+            model_name="hydrophone",
+            name="max_bandwidth",
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='max_operating_depth',
+            model_name="hydrophone",
+            name="max_dynamic_range",
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='min_bandwidth',
+            model_name="hydrophone",
+            name="max_operating_depth",
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='min_dynamic_range',
+            model_name="hydrophone",
+            name="min_bandwidth",
         ),
         migrations.RemoveField(
-            model_name='hydrophone',
-            name='noise_floor',
+            model_name="hydrophone",
+            name="min_dynamic_range",
+        ),
+        migrations.RemoveField(
+            model_name="hydrophone",
+            name="noise_floor",
         ),
     ]

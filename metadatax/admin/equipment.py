@@ -1,9 +1,14 @@
 """Acquisition metadata administration"""
 from django.contrib import admin
 
+from meta_auth.admin import JSONExportModelAdmin
 from metadatax.models.equipment import (
     Recorder,
-    Hydrophone, EquipmentProvider, RecorderModel, HydrophoneModel, HydrophoneDirectivity
+    Hydrophone,
+    EquipmentProvider,
+    RecorderModel,
+    HydrophoneModel,
+    HydrophoneDirectivity,
 )
 
 
@@ -25,9 +30,7 @@ class RecorderModelAdmin(admin.ModelAdmin):
         "name",
         "provider",
     ]
-    list_filter = [
-        "number_of_channels"
-    ]
+    list_filter = ["number_of_channels"]
     list_display = [
         "name",
         "provider",
@@ -36,8 +39,11 @@ class RecorderModelAdmin(admin.ModelAdmin):
 
 
 @admin.register(Recorder)
-class RecorderAdmin(admin.ModelAdmin):
+class RecorderAdmin(JSONExportModelAdmin):
     """Recorder presentation in DjangoAdmin"""
+
+    model = Recorder
+    depth = 2
 
     search_fields = [
         "model",
@@ -63,9 +69,7 @@ class HydrophoneModelAdmin(admin.ModelAdmin):
         "name",
         "provider",
     ]
-    list_filter = [
-        "directivity"
-    ]
+    list_filter = ["directivity"]
     list_display = [
         "name",
         "provider",
@@ -74,13 +78,16 @@ class HydrophoneModelAdmin(admin.ModelAdmin):
         "bandwidth",
         "noise_floor",
         "dynamic_range",
-        "max_operating_depth"
+        "max_operating_depth",
     ]
 
 
 @admin.register(Hydrophone)
-class HydrophoneAdmin(admin.ModelAdmin):
+class HydrophoneAdmin(JSONExportModelAdmin):
     """Hydrophone presentation in DjangoAdmin"""
+
+    model = Hydrophone
+    depth = 2
 
     search_fields = [
         "model",
@@ -99,7 +106,7 @@ class HydrophoneAdmin(admin.ModelAdmin):
         "bandwidth",
         "noise_floor",
         "dynamic_range",
-        "max_operating_depth"
+        "max_operating_depth",
     ]
 
     def directivity(self, obj):

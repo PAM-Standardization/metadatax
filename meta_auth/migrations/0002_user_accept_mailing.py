@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('meta_auth', '0001_initial'),
+        ("meta_auth", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='accept_mailing',
+            model_name="user",
+            name="accept_mailing",
             field=models.BooleanField(default=False),
         ),
     ]

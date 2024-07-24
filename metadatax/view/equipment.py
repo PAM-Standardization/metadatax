@@ -10,23 +10,27 @@ from metadatax.serializers.equipment import (
 )
 
 
-class HydrophoneViewSet(mixins.CreateModelMixin,
-                        mixins.UpdateModelMixin,
-                        viewsets.ReadOnlyModelViewSet):
+class HydrophoneViewSet(
+    mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet
+):
     queryset = Hydrophone.objects.all()
     serializer_class = HydrophoneSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [
+        IsAuthenticatedOrReadOnly,
+    ]
     filter_fields = [
         "provider",
     ]
 
 
-class RecorderViewSet(mixins.CreateModelMixin,
-                      mixins.UpdateModelMixin,
-                      viewsets.ReadOnlyModelViewSet):
+class RecorderViewSet(
+    mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet
+):
     queryset = Recorder.objects.all()
     serializer_class = RecorderSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [
+        IsAuthenticatedOrReadOnly,
+    ]
     filter_fields = [
         "provider",
     ]

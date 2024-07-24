@@ -7,23 +7,40 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metadatax', '0018_auto_20240530_0907'),
+        ("metadatax", "0018_auto_20240530_0907"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='deployment',
-            name='deployment_date',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(1970, 1, 1, 0, 0), help_text='Date and time at which the measurement system was deployed in UTC.', null=True, verbose_name='Deployment date (UTC)'),
+            model_name="deployment",
+            name="deployment_date",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(1970, 1, 1, 0, 0),
+                help_text="Date and time at which the measurement system was deployed in UTC.",
+                null=True,
+                verbose_name="Deployment date (UTC)",
+            ),
         ),
         migrations.AlterField(
-            model_name='deployment',
-            name='recovery_date',
-            field=models.DateTimeField(blank=True, default=datetime.datetime(1970, 1, 1, 0, 0), help_text='Date and time at which the measurement system was recovered in UTC.', null=True, verbose_name='Recovery date (UTC)'),
+            model_name="deployment",
+            name="recovery_date",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.datetime(1970, 1, 1, 0, 0),
+                help_text="Date and time at which the measurement system was recovered in UTC.",
+                null=True,
+                verbose_name="Recovery date (UTC)",
+            ),
         ),
         migrations.AlterField(
-            model_name='file',
-            name='initial_timestamp',
-            field=models.DateTimeField(blank=True, help_text='Date and time of the audio file start (in UTC).', null=True, verbose_name='Initial timestamp (UTC)'),
+            model_name="file",
+            name="initial_timestamp",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="Date and time of the audio file start (in UTC).",
+                null=True,
+                verbose_name="Initial timestamp (UTC)",
+            ),
         ),
     ]

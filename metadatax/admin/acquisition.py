@@ -1,13 +1,22 @@
 """Acquisition metadata administration"""
 from django.contrib import admin
 from django.contrib.admin import TabularInline
+
+from meta_auth.admin import JSONExportModelAdmin
 from metadatax.models.acquisition import (
     Institution,
     Campaign,
-    ProjectType, Site, Project, PlatformType, Deployment, ChannelConfiguration, Platform,
+    ProjectType,
+    Site,
+    Project,
+    PlatformType,
+    Deployment,
+    ChannelConfiguration,
+    Platform,
 )
 from .__util__ import custom_titled_filter
 from ..models.data import FileFormat
+from ..serializers.acquisition import ProjectFullSerializer
 
 
 @admin.register(ProjectType, PlatformType, Site, Campaign, Platform, FileFormat)
@@ -21,9 +30,10 @@ class CommonAcquisitionAdmin(admin.ModelAdmin):
 
 
 @admin.register(Institution)
-class InstitutionAdmin(admin.ModelAdmin):
+class InstitutionModelAdmin(JSONExportModelAdmin):
     """Institution presentation in DjangoAdmin"""
 
+    model = Institution
     list_display = [
         "name",
         "contact",
@@ -38,18 +48,19 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 class CampaignInline(TabularInline):
     model = Campaign
-    classes = ['collapse']
+    classes = ["collapse"]
 
 
 class SiteInline(TabularInline):
     model = Site
-    classes = ['collapse']
+    classes = ["collapse"]
 
 
 @admin.register(Project)
-class ProjectAdmin(admin.ModelAdmin):
+class ProjectModelAdmin(JSONExportModelAdmin):
     """Project presentation in DjangoAdmin"""
 
+    serializer = ProjectFullSerializer
     list_display = [
         "name",
         "list_responsible_parties",
@@ -81,16 +92,22 @@ class ProjectAdmin(admin.ModelAdmin):
         return ", ".join([p.name for p in obj.responsible_parties.all()])
 
     def campaigns(self, obj) -> str:
-        return ", ".join([c.name for c in sorted(obj.campaigns.all(), key=lambda x: x.name)])
+        return ", ".join(
+            [c.name for c in sorted(obj.campaigns.all(), key=lambda x: x.name)]
+        )
 
     def sites(self, obj) -> str:
-        return ", ".join([s.name for s in sorted(obj.sites.all(), key=lambda x: x.name)])
+        return ", ".join(
+            [s.name for s in sorted(obj.sites.all(), key=lambda x: x.name)]
+        )
 
 
 @admin.register(Deployment)
-class DeploymentAdmin(admin.ModelAdmin):
+class DeploymentModelAdmin(JSONExportModelAdmin):
     """Deployment presentation in DjangoAdmin"""
 
+    model = Deployment
+    depth = 2
     list_display = [
         "__str__",
         "name",
@@ -126,33 +143,37 @@ class DeploymentAdmin(admin.ModelAdmin):
                     "project",
                     "provider",
                 ]
-            }
+            },
         ),
         (
             "Location",
             {
-                "classes": ["wide", ],
+                "classes": [
+                    "wide",
+                ],
                 "fields": [
                     "site",
                     "platform",
                     "latitude",
                     "longitude",
                     "bathymetric_depth",
-                ]
-            }
+                ],
+            },
         ),
         (
             "Deployment & Recovery",
             {
-                "classes": ["wide", ],
+                "classes": [
+                    "wide",
+                ],
                 "fields": [
                     "campaign",
                     ("deployment_date", "deployment_vessel"),
                     ("recovery_date", "recovery_vessel"),
-                    "description"
-                ]
-            }
-        )
+                    "description",
+                ],
+            },
+        ),
     ]
 
     @admin.display(description="Campaign")
@@ -163,10 +184,13 @@ class DeploymentAdmin(admin.ModelAdmin):
     def site_name(self, obj) -> str:
         return obj.site.name if obj.site else None
 
+
 @admin.register(ChannelConfiguration)
-class ChannelConfigurationAdmin(admin.ModelAdmin):
+class ChannelConfigurationModelAdmin(JSONExportModelAdmin):
     """ChannelConfiguration presentation in DjangoAdmin"""
 
+    model = ChannelConfiguration
+    depth = 3
     list_display = [
         "__str__",
         "channel_name",
@@ -206,8 +230,9 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
                 "fields": [
                     "deployment",
                 ]
-            }
-        ), (
+            },
+        ),
+        (
             "Recorder",
             {
                 "fields": [
@@ -218,24 +243,28 @@ class ChannelConfigurationAdmin(admin.ModelAdmin):
                     "sampling_frequency",
                     "gain",
                 ]
-            }
-        ), (
+            },
+        ),
+        (
             "Hydrophone",
             {
                 "fields": [
                     "hydrophone",
                     "hydrophone_depth",
                 ]
-            }
-        ), (
+            },
+        ),
+        (
             "Duty cycle",
             {
-                "classes": ["wide",],
+                "classes": [
+                    "wide",
+                ],
                 "fields": [
                     "continuous",
                     "duty_cycle_on",
                     "duty_cycle_off",
-                ]
-            }
-        )
+                ],
+            },
+        ),
     ]

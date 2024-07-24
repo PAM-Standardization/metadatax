@@ -17,6 +17,7 @@ psycopg2-binary = "^2.8.6"
 [tool.poetry.group.dev.dependencies]
 drf-yasg = "^1.21.7"
 drf-spectacular = "^0.27.2"
+black = "^22.10.0"
 
 [tool.poetry.group.prod.dependencies]
 gunicorn = "^22.0.0"

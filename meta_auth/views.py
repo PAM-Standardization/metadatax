@@ -7,7 +7,6 @@ from .form import SignupForm
 
 
 class UserViewSet(viewsets.ViewSet):
-
     def register(self, *args, **kwargs):
         form = SignupForm(self.POST)
         if form.is_valid():
@@ -17,8 +16,9 @@ class UserViewSet(viewsets.ViewSet):
             user.allow_metadatax_edition()
             user.save()
             login(self, user)
-            return redirect('/admin/')
-        return render(self, 'home.html', {
-            'register_form': form,
-            'isConnected': self.user.is_staff
-        })
+            return redirect("/admin/")
+        return render(
+            self,
+            "home.html",
+            {"register_form": form, "isConnected": self.user.is_staff},
+        )

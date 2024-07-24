@@ -1,11 +1,11 @@
 from .acquisition import (
-    ProjectAdmin,
-    ChannelConfigurationAdmin,
-    DeploymentAdmin,
-    InstitutionAdmin,
+    ProjectModelAdmin,
+    ChannelConfigurationModelAdmin,
+    DeploymentModelAdmin,
+    InstitutionModelAdmin,
 )
 from .data import (
-    FileAdmin,
+    FileModelAdmin,
 )
 from .equipment import (
     RecorderAdmin,

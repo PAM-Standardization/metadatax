@@ -6,49 +6,55 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metadatax', '0013_auto_20240523_1155'),
+        ("metadatax", "0013_auto_20240523_1155"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='campaign',
-            options={'ordering': ['project', 'name'], 'verbose_name': 'Project - Campaign'},
+            name="campaign",
+            options={
+                "ordering": ["project", "name"],
+                "verbose_name": "Project - Campaign",
+            },
         ),
         migrations.AlterModelOptions(
-            name='channelconfiguration',
-            options={'ordering': ['deployment', 'channel_name']},
+            name="channelconfiguration",
+            options={"ordering": ["deployment", "channel_name"]},
         ),
         migrations.AlterModelOptions(
-            name='deployment',
-            options={'ordering': ['project', 'name']},
+            name="deployment",
+            options={"ordering": ["project", "name"]},
         ),
         migrations.AlterModelOptions(
-            name='institution',
-            options={'ordering': ['name']},
+            name="institution",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='platform',
-            options={'ordering': ['name'], 'verbose_name': 'Deployment - Platform'},
+            name="platform",
+            options={"ordering": ["name"], "verbose_name": "Deployment - Platform"},
         ),
         migrations.AlterModelOptions(
-            name='platformtype',
-            options={'ordering': ['name'], 'verbose_name': 'Deployment - Platform - Type'},
+            name="platformtype",
+            options={
+                "ordering": ["name"],
+                "verbose_name": "Deployment - Platform - Type",
+            },
         ),
         migrations.AlterModelOptions(
-            name='project',
-            options={'ordering': ['name']},
+            name="project",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='projecttype',
-            options={'ordering': ['name'], 'verbose_name': 'Project - Type'},
+            name="projecttype",
+            options={"ordering": ["name"], "verbose_name": "Project - Type"},
         ),
         migrations.AlterModelOptions(
-            name='site',
-            options={'ordering': ['project', 'name'], 'verbose_name': 'Project - Site'},
+            name="site",
+            options={"ordering": ["project", "name"], "verbose_name": "Project - Site"},
         ),
         migrations.AlterField(
-            model_name='channelconfiguration',
-            name='gain',
+            model_name="channelconfiguration",
+            name="gain",
             field=models.FloatField(),
         ),
     ]

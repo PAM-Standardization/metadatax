@@ -5,8 +5,9 @@ from metadatax.models.data import File
 from metadatax.serializers.data import FileSerializer
 
 
-class FileViewSet(mixins.UpdateModelMixin,
-                  viewsets.ReadOnlyModelViewSet):
+class FileViewSet(mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet):
     queryset = File.objects.all()
     serializer_class = FileSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly,]
+    permission_classes = [
+        IsAuthenticatedOrReadOnly,
+    ]
