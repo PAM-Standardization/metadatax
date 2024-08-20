@@ -33,39 +33,41 @@
 
 </div>
 
-<div id="content">
-    <div id="ppt">
-        <iframe width="350" height="200"
-                src="{% static 'home\\workshop serenade 2024.pdf' %}"
-                title="PowerPoint workshop Serenade"
+<div id="content-container">
+    <div id="content">
+        <div id="ppt">
+            <iframe width="350" height="200"
+                    src="{% static 'home\\workshop serenade 2024.pdf' %}"
+                    title="PowerPoint workshop Serenade"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <a href="{% static 'home\\workshop serenade 2024.pdf' %}" target="_blank">Open presentation in a new tab</a>
+        </div>
+
+        <form id="register-form" name="register-form" method="post" action="/auth/user/register/">
+            {% csrf_token %}
+
+            <h2>Try Metadatax now!</h2>
+
+            {% if isConnected %}
+                <a href="/admin/">
+                    Access administration
+                </a>
+            {% else %}
+                {{ register_form.as_p }}
+
+                <button type="submit">Register</button>
+            {% endif %}
+
+        </form>
+
+        <iframe id="video"
+                width="350" height="196"
+                src="https://www.youtube.com/embed/01ePb8YitZc?si=3Ywi3iSG7OM6oz18"
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        <a href="{% static 'home\\workshop serenade 2024.pdf' %}" target="_blank">Open presentation in a new tab</a>
+
     </div>
-
-    <form id="register-form" name="register-form" method="post" action="/auth/user/register/">
-        {% csrf_token %}
-
-        <h2>Try Metadatax now!</h2>
-
-        {% if isConnected %}
-            <a href="/admin/">
-                Access administration
-            </a>
-        {% else %}
-            {{ register_form.as_p }}
-
-            <button type="submit">Register</button>
-        {% endif %}
-
-    </form>
-
-    <iframe id="video"
-            width="350" height="196"
-            src="https://www.youtube.com/embed/01ePb8YitZc?si=3Ywi3iSG7OM6oz18"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
 </div>
 
 <div id="footer">

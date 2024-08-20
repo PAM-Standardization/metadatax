@@ -1,5 +1,5 @@
 #background {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -7,24 +7,6 @@
     object-fit: cover;
     z-index: -1;
 }
-.tiles-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.tile {
-    flex: 1 0 300px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-    transition: transform 0.3s ease-in-out;
-}
-
-.tile:hover {
-    transform: scale(1.05);
-}
-
 
 body, * {
     color: white;
@@ -45,12 +27,6 @@ body {
     padding: 2rem 2rem;
     gap: 2rem;
     align-items: center;
-}
-
-#head form {
-    grid-auto-flow: column;
-    padding: 0;
-    background: none;
 }
 
 h1 {
@@ -78,16 +54,22 @@ button:hover {
     opacity: 0.8;
 }
 
-
+#content-container {
+    justify-self: stretch;
+    align-self: stretch;
+    overflow: auto;
+    padding: 2rem 1rem;
+    display: grid;
+    align-items: center;
+}
 #content {
     display: grid;
     align-items: center;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     justify-items: stretch;
-    overflow: auto;
-    padding: 2rem 1rem;
     gap: 2rem;
+    height: fit-content;
 }
 
 #content #video,
@@ -99,11 +81,13 @@ button:hover {
     overflow: hidden;
     border: none;
 }
+
 #content #ppt {
     display: grid;
     justify-items: center;
     height: fit-content;
 }
+
 #content #ppt a {
     opacity: 0.8;
     font-size: 0.8rem;
@@ -131,7 +115,7 @@ form button {
 }
 
 form .input,
-form > p{
+form > p {
     position: relative;
     width: 100%;
     display: grid;
@@ -140,14 +124,14 @@ form > p{
     align-items: center;
 }
 
-form > p label{
+form > p label {
     position: absolute;
     left: 1rem;
     top: -0.75rem;
     z-index: 1;
 }
 
-form > p input{
+form > p input {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     background: rgba(255, 255, 255, 0.1);
@@ -158,21 +142,22 @@ form > p input{
     transition: 300ms;
 }
 
-form > p input::placeholder{
+form > p input::placeholder {
     color: rgba(255, 255, 255, 0.5);
 }
 
-form > p input:hover{
+form > p input:hover {
     background: rgba(255, 255, 255, 0.05);
 }
 
-form > p input:focus{
+form > p input:focus {
     background: rgba(255, 255, 255, 0.25);
 }
 
 form > p label[for=id_accept_mailing] {
     position: unset;
 }
+
 form > p input#id_accept_mailing {
     order: -1;
     height: 1rem;
@@ -196,6 +181,7 @@ ul.errorlist {
 
 #footer p {
     color: lightslategrey;
+    text-align: center;
 }
 
 #footer p a {
@@ -205,14 +191,17 @@ ul.errorlist {
 }
 
 
-
 @media (max-width: 800px) {
     #head {
-      grid-template-columns: auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
     }
+
     #content {
-        grid-template-columns: unset;
-        grid-template-rows: unset;
+        display: flex;
+        flex-direction: column;
+        height: fit-content;
     }
 
     #content #video {
