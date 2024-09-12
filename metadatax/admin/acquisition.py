@@ -8,7 +8,6 @@ from django.contrib.admin import TabularInline
 from django.core import validators
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
-from meta_auth.admin import JSONExportModelAdmin
 from metadatax.models.acquisition import (
     Institution,
     Campaign,
@@ -20,7 +19,7 @@ from metadatax.models.acquisition import (
     ChannelConfiguration,
     Platform,
 )
-from .__util__ import custom_titled_filter
+from .__util__ import custom_titled_filter, JSONExportModelAdmin
 from metadatax.models.data import FileFormat, File
 from ..serializers.acquisition import ProjectFullSerializer
 
@@ -194,7 +193,7 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
 class ChannelConfigurationForm(forms.ModelForm):
     csv_file = forms.FileField(
         help_text="Conflicting files will be ignored",
-        validators=[validators.FileExtensionValidator(["csv"])]
+        validators=[validators.FileExtensionValidator(["csv"])],
     )
 
     class Meta:

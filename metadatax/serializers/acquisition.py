@@ -12,13 +12,6 @@ from metadatax.models.acquisition import (
 from metadatax.serializers.utils import EnumField
 
 
-class ChannelConfigurationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ChannelConfiguration
-        fields = "__all__"
-        depth = 3
-
-
 class PlatformSerializer(serializers.ModelSerializer):
     class Meta:
         model = Platform
@@ -59,7 +52,42 @@ class ChannelConfigurationWithoutDeploymentSerializer(serializers.ModelSerialize
         exclude = [
             "deployment",
         ]
-        depth = 2
+        depth = 3
+
+
+class DeploymentSerializerWithChannel(serializers.ModelSerializer):
+    platform = PlatformSerializer()
+    project = ProjectSerializer()
+    name = serializers.CharField(source="__str__")
+    channel = ChannelConfigurationWithoutDeploymentSerializer(
+        source="channelconfiguration_set", many=True
+    )
+
+    class Meta:
+        model = Deployment
+        fields = "__all__"
+        depth = 1
+
+
+class DeploymentSerializer(serializers.ModelSerializer):
+    platform = PlatformSerializer()
+    project = ProjectSerializer()
+    name = serializers.CharField(source="__str__")
+
+    class Meta:
+        model = Deployment
+        fields = "__all__"
+        depth = 1
+
+
+class ChannelConfigurationSerializer(serializers.ModelSerializer):
+
+    deployment = DeploymentSerializer()
+
+    class Meta:
+        model = ChannelConfiguration
+        fields = "__all__"
+        depth = 3
 
 
 class DeploymentWithoutProjectSerializer(serializers.ModelSerializer):
@@ -88,26 +116,6 @@ class ProjectFullSerializer(serializers.ModelSerializer):
         model = Project
         fields = "__all__"
         depth = 1
-
-
-class DeploymentSerializer(serializers.ModelSerializer):
-    platform = PlatformSerializer()
-    project = ProjectSerializer()
-    name = serializers.CharField(source="__str__")
-    channel = ChannelConfigurationSerializer(
-        source="channelconfiguration_set", many=True
-    )
-
-    class Meta:
-        model = Deployment
-        fields = "__all__"
-        depth = 1
-
-
-class DeploymentLightSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Deployment
-        fields = "__all__"
 
 
 class InstitutionSerializer(serializers.ModelSerializer):

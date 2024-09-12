@@ -1,7 +1,6 @@
 """Acquisition metadata administration"""
 from django.contrib import admin
 
-from meta_auth.admin import JSONExportModelAdmin
 from metadatax.models.equipment import (
     Recorder,
     Hydrophone,
@@ -10,6 +9,7 @@ from metadatax.models.equipment import (
     HydrophoneModel,
     HydrophoneDirectivity,
 )
+from .__util__ import JSONExportModelAdmin
 
 
 @admin.register(EquipmentProvider)
