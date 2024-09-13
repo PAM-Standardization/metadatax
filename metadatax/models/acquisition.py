@@ -383,13 +383,13 @@ class ChannelConfiguration(models.Model):
         null=True,
         blank=True,
         validators=[MinValueValidator(0)],
-        help_text="If its not Continuous, time length (in second) during which the recorder is on.",
+        help_text="If it's not Continuous, time length (in second) during which the recorder is on.",
     )
     duty_cycle_off = models.IntegerField(
         null=True,
         blank=True,
         validators=[MinValueValidator(0)],
-        help_text="If its not Continuous, time length (in second) during which the recorder is off.",
+        help_text="If it's not Continuous, time length (in second) during which the recorder is off.",
     )
 
     sampling_frequency = models.IntegerField(

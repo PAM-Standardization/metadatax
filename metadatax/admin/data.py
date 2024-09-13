@@ -1,9 +1,8 @@
 """Acquisition metadata administration"""
 from django.contrib import admin
 
-from meta_auth.admin import JSONExportModelAdmin
 from metadatax.models.data import File
-from .__util__ import custom_titled_filter
+from .__util__ import custom_titled_filter, JSONExportModelAdmin
 from ..models import Accessibility
 
 
