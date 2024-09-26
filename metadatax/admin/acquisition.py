@@ -248,6 +248,8 @@ class ChannelConfigurationModelAdmin(JSONExportModelAdmin):
         "sampling_frequency",
         "recording_format",
         "sample_depth",
+        "harvest_starting_date",
+        "harvest_ending_date",
     ]
     search_fields = [
         "channel_name",
@@ -299,6 +301,18 @@ class ChannelConfigurationModelAdmin(JSONExportModelAdmin):
                 ]
             },
         ),
+         (
+            "Recording period",
+                    {
+                        "classes": [
+                            "wide",
+                        ],
+                        "fields": [
+                            "harvest_starting_date",
+                            "harvest_ending_date",
+                        ],
+                    },
+          ),
         (
             "Duty cycle",
             {
