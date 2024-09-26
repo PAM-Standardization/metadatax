@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 
 from .equipment import Hydrophone, Recorder
 import datetime
-
+import pytz
 
 class Institution(models.Model):
     """Institution"""
@@ -425,6 +425,22 @@ class ChannelConfiguration(models.Model):
     sample_depth = models.IntegerField(
         validators=[MinValueValidator(0)],
         help_text="Number of quantization bits used to represent each sample by the recorder channel (in bits).",
+    )
+
+    harvest_starting_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        default=datetime.datetime(2020, 1, 1, 12, 0, 0, tzinfo=pytz.UTC),
+        help_text="Harvest start date at which the channel configuration was idle to record (in UTC).",
+        verbose_name="Harvest start date (UTC)",
+    )
+
+    harvest_ending_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        default=datetime.datetime(2020, 1, 1, 12, 0, 0, tzinfo=pytz.UTC),
+        help_text="Harvest stop date at which the channel configuration finished to record in (in UTC).",
+        verbose_name="Harvest stop date (UTC)",
     )
 
     def duty_cycle(self) -> str:
