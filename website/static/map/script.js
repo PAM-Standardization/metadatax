@@ -286,7 +286,7 @@ window.onload = function () {
         zoomControl: true,
         preferCanvas: true,
     }).setView([48.400002, -4.48333], 4.5).setMaxBounds(bounds);
-    L.tileLayer.wms("https://www.gebco.net/data_and_products/gebco_web_services/web_map_service/mapserv?",
+    L.tileLayer.wms("https://wms.gebco.net/mapserv?",
         {
             "attribution": "",
             "format": "image/png",
