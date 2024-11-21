@@ -1,6 +1,7 @@
 """Acquisition metadata administration"""
 import csv
 import io
+from typing import Optional
 
 from django import forms
 from django.contrib import admin
@@ -194,6 +195,7 @@ class ChannelConfigurationForm(forms.ModelForm):
     csv_file = forms.FileField(
         help_text="Conflicting files will be ignored",
         validators=[validators.FileExtensionValidator(["csv"])],
+        required=False,
     )
 
     class Meta:
@@ -202,7 +204,9 @@ class ChannelConfigurationForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance: ChannelConfiguration = super().save(commit=commit)
-        csv_file: InMemoryUploadedFile = self.cleaned_data.get("csv_file", None)
+        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get("csv_file", None)
+        if csv_file is None:
+            return instance
         content = csv_file.read().decode("utf-8")
         files: list[File] = []
         file: dict
