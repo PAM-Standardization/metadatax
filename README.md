@@ -3,6 +3,11 @@
 metadatax is a Django app.
 
 
+## Overview
+Here is a schema of the database structure
+![v1 - Métadonnées d'acquisition](https://github.com/user-attachments/assets/4462f7f8-f8e6-42dd-b6eb-a7dfee9459f9)
+
+
 ## Quick start
 ### Local development
 In your `pyproject.toml` add 
