@@ -286,7 +286,24 @@ window.onload = function () {
         zoomControl: true,
         preferCanvas: true,
     }).setView([48.400002, -4.48333], 4.5).setMaxBounds(bounds);
-    L.tileLayer.wms("https://wms.gebco.net/mapserv?",
+
+    var url ='https://wms.gebco.net/mapserv?'
+    var request;
+    if(window.XMLHttpRequest)
+       request = new XMLHttpRequest();
+    else
+       request = new ActiveXObject("Microsoft.XMLHTTP");
+    request.open('GET', url, false);
+    try {
+        request.send();
+         if (request.status !== 200) {
+            url =' https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+        }
+    }
+    catch (error) {
+      url =' https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+    }
+    L.tileLayer.wms(url,
         {
             "attribution": "",
             "format": "image/png",
