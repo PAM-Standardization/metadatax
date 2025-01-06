@@ -65,6 +65,11 @@ class Recorder(models.Model):
     serial_number = models.CharField(
         max_length=255, help_text="Serial number of the recorder"
     )
+    name = models.CharField(
+        blank=True,
+        null=True,
+        max_length=255, help_text="Name of the recorder"
+    )
 
 
 class HydrophoneDirectivity(models.TextChoices):
