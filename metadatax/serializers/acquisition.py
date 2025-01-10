@@ -7,7 +7,7 @@ from metadatax.models.acquisition import (
     Platform,
     Accessibility,
     Campaign,
-    Site,
+    Site,MobilePlatform
 )
 from metadatax.serializers.utils import EnumField
 
@@ -54,7 +54,10 @@ class ChannelConfigurationWithoutDeploymentSerializer(serializers.ModelSerialize
         ]
         depth = 3
 
-
+class MobilePlatformSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MobilePlatform
+        fields = "__all__"
 class DeploymentSerializerWithChannel(serializers.ModelSerializer):
     platform = PlatformSerializer()
     project = ProjectSerializer()
@@ -62,7 +65,9 @@ class DeploymentSerializerWithChannel(serializers.ModelSerializer):
     channel = ChannelConfigurationWithoutDeploymentSerializer(
         source="channelconfiguration_set", many=True
     )
-
+    mobile = MobilePlatformSerializer(
+        source="mobileplatform_set", many=True
+    )
     class Meta:
         model = Deployment
         fields = "__all__"
@@ -88,6 +93,7 @@ class ChannelConfigurationSerializer(serializers.ModelSerializer):
         model = ChannelConfiguration
         fields = "__all__"
         depth = 3
+
 
 
 class DeploymentWithoutProjectSerializer(serializers.ModelSerializer):

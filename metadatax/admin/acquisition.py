@@ -2,12 +2,13 @@
 import csv
 import io
 from typing import Optional
-
+from datetime import datetime
 from django import forms
 from django.contrib import admin
 from django.contrib.admin import TabularInline
 from django.core import validators
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.utils import timezone
 
 from metadatax.models.acquisition import (
     Institution,
@@ -18,7 +19,7 @@ from metadatax.models.acquisition import (
     PlatformType,
     Deployment,
     ChannelConfiguration,
-    Platform,
+    Platform,MobilePlatform,
 )
 from .__util__ import custom_titled_filter, JSONExportModelAdmin
 from metadatax.models.data import FileFormat, File
@@ -107,6 +108,64 @@ class ProjectModelAdmin(JSONExportModelAdmin):
             [s.name for s in sorted(obj.sites.all(), key=lambda x: x.name)]
         )
 
+class DeploymentForm(forms.ModelForm):
+    """Deployment presentation in DjangoAdmin"""
+    csv_file = forms.FileField(
+        required=False,
+        help_text="Only for mobile platform such as glider.",
+        validators=[validators.FileExtensionValidator(["csv"])]
+    )
+
+    class Meta:
+        model = Deployment
+        fields = "__all__"
+
+    def save(self, commit=True):
+        instance: Deployment = super().save(commit=commit)
+        csv_file: InMemoryUploadedFile = self.cleaned_data.get("csv_file", None)
+        if csv_file is None:
+            return instance
+        # with open(str(csv_file), 'r') as f:
+        #     h =  csv.DictReader(f)
+        #     print(h)
+        #     headers = h.fieldnames
+        #     print(headers)
+        content = csv_file.read().decode("utf-8")
+        mobile: list[MobilePlatform] = []
+        tz = timezone.get_current_timezone()
+
+        # with open(csv_file., 'r') as f:
+        #     h =  csv.DictReader(f)
+        #     print(h)
+        #     headers = h.fieldnames
+        #     print(headers)
+        file: dict
+        for file in csv.DictReader(io.StringIO(content)):
+            headers = [k for k in file.keys()][0]
+            data =file.get(headers).split(';')
+            mobile.append(
+                MobilePlatform(
+                    deployment=instance,
+                    datetime=timezone.make_aware(datetime.strptime((data[0]), "%Y-%m-%dT%H:%M:%S"), tz, True),
+                    longitude=self.get_value(data,1),
+                    latitude=self.get_value(data,2),
+                    bathymetric_depth=self.get_value(data,3),
+                    heading=self.get_value(data,4),
+                    pitch=self.get_value(data,5),
+                    roll=self.get_value(data,6)
+                )
+            )
+
+        MobilePlatform.objects.bulk_create(mobile, ignore_conflicts=True)
+        return instance
+
+    def get_value(self, value, index):
+        try:
+           return float(value[index])
+        except:
+            return  0
+
+
 
 @admin.register(Deployment)
 class DeploymentModelAdmin(JSONExportModelAdmin):
@@ -114,6 +173,7 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
 
     model = Deployment
     depth = 2
+    form = DeploymentForm
     list_display = [
         "__str__",
         "name",
@@ -163,6 +223,7 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
                     "latitude",
                     "longitude",
                     "bathymetric_depth",
+                    "csv_file"
                 ],
             },
         ),
