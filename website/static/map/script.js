@@ -87,7 +87,7 @@ function getCellInnerText(deployment, key) {
         case "recovery_date":
             return deployment[key] ? (new Date(deployment[key])).toISOString() : EMPTY_VALUE;
         case "coordinates":
-            return `${deployment.latitude}, ${deployment.longitude}`;
+            return deployment.mobile.length==0 ? `${deployment.latitude}, ${deployment.longitude}` : EMPTY_VALUE;
         default:
             return deployment[key] ?? EMPTY_VALUE;
     }
@@ -275,11 +275,20 @@ const ProjectColor = new Map();
 let map;
 
 window.onload = function () {
+    const mobile_platform =  []
     for (const deployment of DATA) {
         if (ProjectColor.has(deployment.project.id)) continue;
         ProjectColor.set(deployment.project.id, getRandomColor())
-    }
 
+       if (deployment.mobile.length>0) {
+            let mobile_platform_pop_up=deployment.project.name
+       }
+       for (const l of deployment.mobile) {
+            let temp_line = []
+            temp_line.push(l.longitude, l.latitude)
+            mobile_platform.push(temp_line)
+        }
+    }
   const bounds= [[-200, -200], [200, 200]]
     map = L.map('map', {
         minZoom: 2, zoom: 3,
@@ -322,20 +331,32 @@ window.onload = function () {
             deployment,
         },
         geometry: {
-            "type": "Point",
-            "coordinates": [deployment.longitude, deployment.latitude]
+            "type": deployment.mobile.length==0 ? "Point" : "LineString",
+            "coordinates": deployment.mobile.length==0 ? [deployment.longitude, deployment.latitude]  :
+         deployment.mobile.map((element) =>  Array.of(element.longitude, element.latitude))
         }
     }))
-
+console.log(geojsonValue)
     const geoJsonPoint = L.geoJSON(geojsonValue, {
         pointToLayer: (feature, coordinates) => {
+          if (feature.properties.deployment.mobile.length==0) {
             return L.circleMarker(coordinates, {
                 color: 'black',
                 fillColor: ProjectColor.get(feature.properties.deployment.project.id),
                 fillOpacity: 1,
                 radius: 10,
             })
+            }
         },
+    style: function(feature) {
+        switch (feature.geometry.type) {
+            case 'LineString': return {
+                                color: ProjectColor.get(feature.properties.deployment.project.id),
+                                weight: 5,
+                                opacity: 1
+                                }
+        }
+    },
         onEachFeature: (feature, layer) => {
             layer.bindTooltip(`
                     <div>

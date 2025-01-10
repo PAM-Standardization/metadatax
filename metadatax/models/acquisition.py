@@ -314,9 +314,13 @@ class Deployment(models.Model):
     )
 
     longitude = models.FloatField(
+        blank=True,
+        null=True,
         help_text="Longitude of the platform position (WGS84 decimal degree)."
     )
     latitude = models.FloatField(
+        blank=True,
+        null=True,
         help_text="Latitude of the platform position (WGS84 decimal degrees)."
     )
     bathymetric_depth = models.IntegerField(
@@ -414,3 +418,19 @@ class ChannelConfiguration(models.Model):
         if self.continuous:
             return "Continuous"
         return f"ON: {self.duty_cycle_on} - OFF: {self.duty_cycle_off}"
+
+class MobilePlatform(models.Model):
+    deployment = models.ForeignKey(to=Deployment, on_delete=models.CASCADE)
+    datetime = models.DateTimeField()
+    longitude = models.FloatField()
+    latitude = models.FloatField()
+    bathymetric_depth = models.FloatField()
+    heading = models.FloatField(null=True,
+                                blank=True,
+                                default=0.0)
+    pitch = models.FloatField(null=True,
+                              blank=True,
+                              default=0.0)
+    roll = models.FloatField(null=True,
+                             blank=True,
+                             default=0.0)
