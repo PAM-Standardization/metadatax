@@ -112,7 +112,7 @@ class DeploymentForm(forms.ModelForm):
     """Deployment presentation in DjangoAdmin"""
     csv_file = forms.FileField(
         required=False,
-        help_text="Only for mobile platform such as glider.",
+        help_text="Only for mobile platform such as glider. Csv headers must contains Datetime in %Y-%m-%dT%H:%M:%S format, longitude, latitude, bathymetric depth, heading, pitch and roll",
         validators=[validators.FileExtensionValidator(["csv"])]
     )
 
@@ -125,20 +125,9 @@ class DeploymentForm(forms.ModelForm):
         csv_file: InMemoryUploadedFile = self.cleaned_data.get("csv_file", None)
         if csv_file is None:
             return instance
-        # with open(str(csv_file), 'r') as f:
-        #     h =  csv.DictReader(f)
-        #     print(h)
-        #     headers = h.fieldnames
-        #     print(headers)
         content = csv_file.read().decode("utf-8")
         mobile: list[MobilePlatform] = []
         tz = timezone.get_current_timezone()
-
-        # with open(csv_file., 'r') as f:
-        #     h =  csv.DictReader(f)
-        #     print(h)
-        #     headers = h.fieldnames
-        #     print(headers)
         file: dict
         for file in csv.DictReader(io.StringIO(content)):
             headers = [k for k in file.keys()][0]
