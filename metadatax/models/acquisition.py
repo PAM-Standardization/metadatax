@@ -424,7 +424,7 @@ class MobilePlatform(models.Model):
     datetime = models.DateTimeField()
     longitude = models.FloatField()
     latitude = models.FloatField()
-    bathymetric_depth = models.FloatField()
+    hydrophone_depth = models.FloatField()
     heading = models.FloatField(null=True,
                                 blank=True,
                                 default=0.0)
