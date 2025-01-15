@@ -138,7 +138,7 @@ class DeploymentForm(forms.ModelForm):
                     datetime=timezone.make_aware(datetime.strptime((data[0]), "%Y-%m-%dT%H:%M:%S"), tz, True),
                     longitude=self.get_value(data,1),
                     latitude=self.get_value(data,2),
-                    bathymetric_depth=self.get_value(data,3),
+                    hydrophone_depth=self.get_value(data,3),
                     heading=self.get_value(data,4),
                     pitch=self.get_value(data,5),
                     roll=self.get_value(data,6)
