@@ -48,6 +48,7 @@ class RecorderAdmin(JSONExportModelAdmin):
     search_fields = [
         "model",
         "serial_number",
+        "name",
     ]
     list_filter = [
         "model__provider",
@@ -55,6 +56,7 @@ class RecorderAdmin(JSONExportModelAdmin):
     ]
     list_display = [
         "serial_number",
+        "name",
         "model",
         "number_of_channels",
     ]
