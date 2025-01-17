@@ -28,7 +28,7 @@ class EquipmentProviderAdmin(admin.ModelAdmin):
 class RecorderModelAdmin(admin.ModelAdmin):
     search_fields = [
         "name",
-        "provider",
+        "provider__name",
     ]
     list_filter = ["number_of_channels"]
     list_display = [
@@ -46,7 +46,8 @@ class RecorderAdmin(JSONExportModelAdmin):
     depth = 2
 
     search_fields = [
-        "model",
+        "model__name",
+        "model__provider__name",
         "serial_number",
         "name",
     ]
@@ -69,7 +70,7 @@ class RecorderAdmin(JSONExportModelAdmin):
 class HydrophoneModelAdmin(admin.ModelAdmin):
     search_fields = [
         "name",
-        "provider",
+        "provider__name",
     ]
     list_filter = ["directivity"]
     list_display = [
@@ -92,7 +93,8 @@ class HydrophoneAdmin(JSONExportModelAdmin):
     depth = 2
 
     search_fields = [
-        "model",
+        "model__name",
+        "model__provider__name",
         "serial_number",
     ]
     list_filter = [
