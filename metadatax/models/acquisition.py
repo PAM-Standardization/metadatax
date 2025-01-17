@@ -163,6 +163,11 @@ class Site(models.Model):
         help_text="Project associated to this site",
     )
 
+class PlatformTypeMobility(models.TextChoices):
+    """PlatformTypeMobility level of the platform. Multiple choices are offered : Fix or Mobile"""
+
+    FIX = ("F", "Fix")
+    MOBILE = ("M", "Mobile")
 
 class PlatformType(models.Model):
     class Meta:
@@ -177,7 +182,13 @@ class PlatformType(models.Model):
         unique=True,
         help_text="Generic name of the support of the deployed instruments",
     )
-
+    type = models.TextField(
+        choices=PlatformTypeMobility.choices,
+        blank=True,
+        null=True,
+        default=PlatformTypeMobility.FIX,
+        help_text="Whether the platform is fix or mobile",
+    )
 
 class Platform(models.Model):
     class Meta:

@@ -122,39 +122,36 @@ class DeploymentForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance: Deployment = super().save(commit=commit)
+        instance.save()
         csv_file: InMemoryUploadedFile = self.cleaned_data.get("csv_file", None)
         if csv_file is None:
             return instance
         content = csv_file.read().decode("utf-8")
         mobile: list[MobilePlatform] = []
-        tz = timezone.get_current_timezone()
-        file: dict
         for file in csv.DictReader(io.StringIO(content)):
-            headers = [k for k in file.keys()][0]
-            data =file.get(headers).split(';')
-            mobile.append(
-                MobilePlatform(
-                    deployment=instance,
-                    datetime=timezone.make_aware(datetime.strptime((data[0]), "%Y-%m-%dT%H:%M:%S"), tz, True),
-                    longitude=self.get_value(data,1),
-                    latitude=self.get_value(data,2),
-                    hydrophone_depth=self.get_value(data,3),
-                    heading=self.get_value(data,4),
-                    pitch=self.get_value(data,5),
-                    roll=self.get_value(data,6)
-                )
-            )
-
+            headers = [k for k in file.keys()]
+            new_mobile_platform = self.create_mobile_platform(instance, file, headers)
+            mobile.append(new_mobile_platform)
         MobilePlatform.objects.bulk_create(mobile, ignore_conflicts=True)
         return instance
 
-    def get_value(self, value, index):
+    def get_value(self, file,headers, index):
         try:
-           return float(value[index])
+           return float(file.get(headers[index]))
         except:
-            return  0
+            return 0
 
-
+    def create_mobile_platform(self, instance, file, headers):
+        tz = timezone.get_current_timezone()
+        return MobilePlatform(
+                    deployment=instance,
+                    datetime=timezone.make_aware(datetime.strptime(file.get(headers[0]), "%Y-%m-%dT%H:%M:%S"), tz, True),
+                    longitude=self.get_value(file,headers,1),
+                    latitude=self.get_value(file,headers,2),
+                    hydrophone_depth=self.get_value(file,headers,3),
+                    heading=self.get_value(file,headers,4),
+                    pitch=self.get_value(file,headers,5),
+                    roll=self.get_value(file,headers,6))
 
 @admin.register(Deployment)
 class DeploymentModelAdmin(JSONExportModelAdmin):
