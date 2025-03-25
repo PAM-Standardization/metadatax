@@ -2,12 +2,15 @@
 import csv
 import io
 from typing import Optional
-
+from datetime import datetime
 from django import forms
 from django.contrib import admin
 from django.contrib.admin import TabularInline
 from django.core import validators
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.html import format_html
 
 from metadatax.models.acquisition import (
     Institution,
@@ -19,6 +22,7 @@ from metadatax.models.acquisition import (
     Deployment,
     ChannelConfiguration,
     Platform,
+    MobilePlatform,
 )
 from .__util__ import custom_titled_filter, JSONExportModelAdmin
 from metadatax.models.data import FileFormat, File
@@ -108,12 +112,65 @@ class ProjectModelAdmin(JSONExportModelAdmin):
         )
 
 
+class DeploymentForm(forms.ModelForm):
+    """Deployment presentation in DjangoAdmin"""
+
+    csv_file = forms.FileField(
+        required=False,
+        help_text="Only for mobile platform such as glider. Csv headers must contains Datetime in %Y-%m-%dT%H:%M:%S format, longitude, latitude, bathymetric depth, heading, pitch and roll",
+        validators=[validators.FileExtensionValidator(["csv"])],
+    )
+
+    class Meta:
+        model = Deployment
+        fields = "__all__"
+
+    def save(self, commit=True):
+        instance: Deployment = super().save(commit=commit)
+        instance.save()
+        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get(
+            "csv_file", None
+        )
+        if csv_file is None:
+            return instance
+        content = csv_file.read().decode("utf-8")
+        mobile: list[MobilePlatform] = []
+        for file in csv.DictReader(io.StringIO(content)):
+            headers = [k for k in file.keys()]
+            new_mobile_platform = self.create_mobile_platform(instance, file, headers)
+            mobile.append(new_mobile_platform)
+        MobilePlatform.objects.bulk_create(mobile, ignore_conflicts=True)
+        return instance
+
+    def get_value(self, file, headers, index):
+        try:
+            return float(file.get(headers[index]))
+        except:
+            return 0
+
+    def create_mobile_platform(self, instance, file, headers):
+        tz = timezone.get_current_timezone()
+        return MobilePlatform(
+            deployment=instance,
+            datetime=timezone.make_aware(
+                datetime.strptime(file.get(headers[0]), "%Y-%m-%dT%H:%M:%S"), tz, True
+            ),
+            longitude=self.get_value(file, headers, 1),
+            latitude=self.get_value(file, headers, 2),
+            hydrophone_depth=self.get_value(file, headers, 3),
+            heading=self.get_value(file, headers, 4),
+            pitch=self.get_value(file, headers, 5),
+            roll=self.get_value(file, headers, 6),
+        )
+
+
 @admin.register(Deployment)
 class DeploymentModelAdmin(JSONExportModelAdmin):
     """Deployment presentation in DjangoAdmin"""
 
     model = Deployment
     depth = 2
+    form = DeploymentForm
     list_display = [
         "__str__",
         "name",
@@ -126,6 +183,7 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
         "recovery_date",
         "recovery_vessel",
         "platform",
+        "mobile_platforms",
         "longitude",
         "latitude",
         "bathymetric_depth",
@@ -163,6 +221,7 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
                     "latitude",
                     "longitude",
                     "bathymetric_depth",
+                    "csv_file",
                 ],
             },
         ),
@@ -190,6 +249,21 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
     def site_name(self, obj) -> str:
         return obj.site.name if obj.site else None
 
+    @admin.display(description="Mobile platforms")
+    def mobile_platforms(self, obj: Deployment) -> str:
+        return format_html(
+            "<br/>".join(
+                [
+                    format_html(
+                        '<a href="{}">{}</a>',
+                        reverse("admin:metadatax_mobileplatform_change", args=[p.id]),
+                        p,
+                    )
+                    for p in obj.mobileplatform_set.all()
+                ]
+            )
+        )
+
 
 class ChannelConfigurationForm(forms.ModelForm):
     csv_file = forms.FileField(
@@ -204,7 +278,9 @@ class ChannelConfigurationForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance: ChannelConfiguration = super().save(commit=commit)
-        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get("csv_file", None)
+        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get(
+            "csv_file", None
+        )
         if csv_file is None:
             return instance
         content = csv_file.read().decode("utf-8")
@@ -327,4 +403,22 @@ class ChannelConfigurationModelAdmin(JSONExportModelAdmin):
                 ],
             },
         ),
+    ]
+
+
+@admin.register(MobilePlatform)
+class MobilePlatformModelAdmin(JSONExportModelAdmin):
+    """ChannelConfiguration presentation in DjangoAdmin"""
+
+    model = MobilePlatform
+    list_display = [
+        "pk",
+        "deployment",
+        "datetime",
+        "longitude",
+        "latitude",
+        "hydrophone_depth",
+        "heading",
+        "pitch",
+        "roll",
     ]

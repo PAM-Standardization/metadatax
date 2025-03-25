@@ -66,9 +66,7 @@ class Recorder(models.Model):
         max_length=255, help_text="Serial number of the recorder"
     )
     name = models.CharField(
-        blank=True,
-        null=True,
-        max_length=255, help_text="Name of the recorder"
+        blank=True, null=True, max_length=255, help_text="Name of the recorder"
     )
 
 

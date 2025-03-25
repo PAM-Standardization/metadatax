@@ -164,6 +164,13 @@ class Site(models.Model):
     )
 
 
+class PlatformTypeMobility(models.TextChoices):
+    """PlatformTypeMobility level of the platform. Multiple choices are offered : Fix or Mobile"""
+
+    FIX = ("F", "Fix")
+    MOBILE = ("M", "Mobile")
+
+
 class PlatformType(models.Model):
     class Meta:
         verbose_name = "Deployment - Platform - Type"
@@ -176,6 +183,13 @@ class PlatformType(models.Model):
         max_length=255,
         unique=True,
         help_text="Generic name of the support of the deployed instruments",
+    )
+    type = models.TextField(
+        choices=PlatformTypeMobility.choices,
+        blank=True,
+        null=True,
+        default=PlatformTypeMobility.FIX,
+        help_text="Whether the platform is fix or mobile",
     )
 
 
@@ -314,10 +328,14 @@ class Deployment(models.Model):
     )
 
     longitude = models.FloatField(
-        help_text="Longitude of the platform position (WGS84 decimal degree)."
+        blank=True,
+        null=True,
+        help_text="Longitude of the platform position (WGS84 decimal degree).",
     )
     latitude = models.FloatField(
-        help_text="Latitude of the platform position (WGS84 decimal degrees)."
+        blank=True,
+        null=True,
+        help_text="Latitude of the platform position (WGS84 decimal degrees).",
     )
     bathymetric_depth = models.IntegerField(
         null=True,
@@ -414,3 +432,37 @@ class ChannelConfiguration(models.Model):
         if self.continuous:
             return "Continuous"
         return f"ON: {self.duty_cycle_on} - OFF: {self.duty_cycle_off}"
+
+
+class MobilePlatform(models.Model):
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_position_at_datetime_for_deployment",
+                fields=[
+                    "deployment",
+                    "datetime",
+                ],
+            )
+        ]
+
+    deployment = models.ForeignKey(
+        to=Deployment, on_delete=models.CASCADE, help_text="Related deployment"
+    )
+    datetime = models.DateTimeField(
+        help_text="Datetime for the mobile platform position"
+    )
+    longitude = models.FloatField(help_text="Longitude of the mobile platform")
+    latitude = models.FloatField(help_text="Latitude of the mobile platform")
+    hydrophone_depth = models.FloatField(
+        help_text="Hydrophone depth of the mobile platform (In positive meters)"
+    )
+    heading = models.FloatField(
+        null=True, blank=True, default=0.0, help_text="Heading of the mobile platform"
+    )
+    pitch = models.FloatField(
+        null=True, blank=True, default=0.0, help_text="Pitch of the mobile platform"
+    )
+    roll = models.FloatField(
+        null=True, blank=True, default=0.0, help_text="Roll of the mobile platform"
+    )
