@@ -8,7 +8,9 @@ from django.contrib import admin
 from django.contrib.admin import TabularInline
 from django.core import validators
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import format_html
 
 from metadatax.models.acquisition import (
     Institution,
@@ -19,7 +21,8 @@ from metadatax.models.acquisition import (
     PlatformType,
     Deployment,
     ChannelConfiguration,
-    Platform,MobilePlatform,
+    Platform,
+    MobilePlatform,
 )
 from .__util__ import custom_titled_filter, JSONExportModelAdmin
 from metadatax.models.data import FileFormat, File
@@ -108,6 +111,7 @@ class ProjectModelAdmin(JSONExportModelAdmin):
             [s.name for s in sorted(obj.sites.all(), key=lambda x: x.name)]
         )
 
+
 class DeploymentForm(forms.ModelForm):
     """Deployment presentation in DjangoAdmin"""
     csv_file = forms.FileField(
@@ -123,7 +127,7 @@ class DeploymentForm(forms.ModelForm):
     def save(self, commit=True):
         instance: Deployment = super().save(commit=commit)
         instance.save()
-        csv_file: InMemoryUploadedFile = self.cleaned_data.get("csv_file", None)
+        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get("csv_file", None)
         if csv_file is None:
             return instance
         content = csv_file.read().decode("utf-8")
@@ -135,7 +139,7 @@ class DeploymentForm(forms.ModelForm):
         MobilePlatform.objects.bulk_create(mobile, ignore_conflicts=True)
         return instance
 
-    def get_value(self, file,headers, index):
+    def get_value(self, file, headers, index):
         try:
            return float(file.get(headers[index]))
         except:
@@ -172,6 +176,7 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
         "recovery_date",
         "recovery_vessel",
         "platform",
+        "mobile_platforms",
         "longitude",
         "latitude",
         "bathymetric_depth",
@@ -236,6 +241,17 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
     @admin.display(description="Site")
     def site_name(self, obj) -> str:
         return obj.site.name if obj.site else None
+
+    @admin.display(description="Mobile platforms")
+    def mobile_platforms(self, obj: Deployment) -> str:
+        return format_html("<br/>".join([
+            format_html(
+                '<a href="{}">{}</a>',
+                reverse("admin:metadatax_mobileplatform_change", args=[p.id]),
+                p
+            )
+            for p in obj.mobileplatform_set.all()
+        ]))
 
 
 class ChannelConfigurationForm(forms.ModelForm):
@@ -374,4 +390,22 @@ class ChannelConfigurationModelAdmin(JSONExportModelAdmin):
                 ],
             },
         ),
+    ]
+
+
+@admin.register(MobilePlatform)
+class MobilePlatformModelAdmin(JSONExportModelAdmin):
+    """ChannelConfiguration presentation in DjangoAdmin"""
+
+    model = MobilePlatform
+    list_display = [
+        "pk",
+        "deployment",
+        "datetime",
+        "longitude",
+        "latitude",
+        "hydrophone_depth",
+        "heading",
+        "pitch",
+        "roll",
     ]
