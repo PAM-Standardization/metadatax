@@ -431,6 +431,18 @@ class ChannelConfiguration(models.Model):
         return f"ON: {self.duty_cycle_on} - OFF: {self.duty_cycle_off}"
 
 class MobilePlatform(models.Model):
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_position_at_datetime_for_deployment",
+                fields=[
+                    "deployment",
+                    "datetime",
+                ],
+            )
+        ]
+
     deployment = models.ForeignKey(to=Deployment, on_delete=models.CASCADE)
     datetime = models.DateTimeField()
     longitude = models.FloatField()
