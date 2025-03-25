@@ -114,10 +114,11 @@ class ProjectModelAdmin(JSONExportModelAdmin):
 
 class DeploymentForm(forms.ModelForm):
     """Deployment presentation in DjangoAdmin"""
+
     csv_file = forms.FileField(
         required=False,
         help_text="Only for mobile platform such as glider. Csv headers must contains Datetime in %Y-%m-%dT%H:%M:%S format, longitude, latitude, bathymetric depth, heading, pitch and roll",
-        validators=[validators.FileExtensionValidator(["csv"])]
+        validators=[validators.FileExtensionValidator(["csv"])],
     )
 
     class Meta:
@@ -127,7 +128,9 @@ class DeploymentForm(forms.ModelForm):
     def save(self, commit=True):
         instance: Deployment = super().save(commit=commit)
         instance.save()
-        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get("csv_file", None)
+        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get(
+            "csv_file", None
+        )
         if csv_file is None:
             return instance
         content = csv_file.read().decode("utf-8")
@@ -141,21 +144,25 @@ class DeploymentForm(forms.ModelForm):
 
     def get_value(self, file, headers, index):
         try:
-           return float(file.get(headers[index]))
+            return float(file.get(headers[index]))
         except:
             return 0
 
     def create_mobile_platform(self, instance, file, headers):
         tz = timezone.get_current_timezone()
         return MobilePlatform(
-                    deployment=instance,
-                    datetime=timezone.make_aware(datetime.strptime(file.get(headers[0]), "%Y-%m-%dT%H:%M:%S"), tz, True),
-                    longitude=self.get_value(file,headers,1),
-                    latitude=self.get_value(file,headers,2),
-                    hydrophone_depth=self.get_value(file,headers,3),
-                    heading=self.get_value(file,headers,4),
-                    pitch=self.get_value(file,headers,5),
-                    roll=self.get_value(file,headers,6))
+            deployment=instance,
+            datetime=timezone.make_aware(
+                datetime.strptime(file.get(headers[0]), "%Y-%m-%dT%H:%M:%S"), tz, True
+            ),
+            longitude=self.get_value(file, headers, 1),
+            latitude=self.get_value(file, headers, 2),
+            hydrophone_depth=self.get_value(file, headers, 3),
+            heading=self.get_value(file, headers, 4),
+            pitch=self.get_value(file, headers, 5),
+            roll=self.get_value(file, headers, 6),
+        )
+
 
 @admin.register(Deployment)
 class DeploymentModelAdmin(JSONExportModelAdmin):
@@ -214,7 +221,7 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
                     "latitude",
                     "longitude",
                     "bathymetric_depth",
-                    "csv_file"
+                    "csv_file",
                 ],
             },
         ),
@@ -244,14 +251,18 @@ class DeploymentModelAdmin(JSONExportModelAdmin):
 
     @admin.display(description="Mobile platforms")
     def mobile_platforms(self, obj: Deployment) -> str:
-        return format_html("<br/>".join([
-            format_html(
-                '<a href="{}">{}</a>',
-                reverse("admin:metadatax_mobileplatform_change", args=[p.id]),
-                p
+        return format_html(
+            "<br/>".join(
+                [
+                    format_html(
+                        '<a href="{}">{}</a>',
+                        reverse("admin:metadatax_mobileplatform_change", args=[p.id]),
+                        p,
+                    )
+                    for p in obj.mobileplatform_set.all()
+                ]
             )
-            for p in obj.mobileplatform_set.all()
-        ]))
+        )
 
 
 class ChannelConfigurationForm(forms.ModelForm):
@@ -267,7 +278,9 @@ class ChannelConfigurationForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance: ChannelConfiguration = super().save(commit=commit)
-        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get("csv_file", None)
+        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get(
+            "csv_file", None
+        )
         if csv_file is None:
             return instance
         content = csv_file.read().decode("utf-8")

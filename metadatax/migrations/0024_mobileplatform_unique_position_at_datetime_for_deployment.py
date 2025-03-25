@@ -6,12 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metadatax', '0023_auto_20250117_1057'),
+        ("metadatax", "0023_auto_20250117_1057"),
     ]
 
     operations = [
         migrations.AddConstraint(
-            model_name='mobileplatform',
-            constraint=models.UniqueConstraint(fields=('deployment', 'datetime'), name='unique_position_at_datetime_for_deployment'),
+            model_name="mobileplatform",
+            constraint=models.UniqueConstraint(
+                fields=("deployment", "datetime"),
+                name="unique_position_at_datetime_for_deployment",
+            ),
         ),
     ]

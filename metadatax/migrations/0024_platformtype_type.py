@@ -6,13 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metadatax', '0023_auto_20250117_1418'),
+        ("metadatax", "0023_auto_20250117_1418"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='platformtype',
-            name='type',
-            field=models.TextField(blank=True, choices=[('F', 'Fix'), ('M', 'Mobile')], default='F', help_text='Whether the platform is fix or mobile', null=True),
+            model_name="platformtype",
+            name="type",
+            field=models.TextField(
+                blank=True,
+                choices=[("F", "Fix"), ("M", "Mobile")],
+                default="F",
+                help_text="Whether the platform is fix or mobile",
+                null=True,
+            ),
         ),
     ]

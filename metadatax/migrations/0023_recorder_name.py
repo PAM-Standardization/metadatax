@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metadatax', '0022_auto_20240911_1902'),
+        ("metadatax", "0022_auto_20240911_1902"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='recorder',
-            name='name',
-            field=models.CharField(blank=True, help_text='Name of the recorder', max_length=255, null=True),
+            model_name="recorder",
+            name="name",
+            field=models.CharField(
+                blank=True, help_text="Name of the recorder", max_length=255, null=True
+            ),
         ),
     ]
