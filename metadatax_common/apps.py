@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class OntologyConfig(AppConfig):
+class MetadataxCommonConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "metadatax_ontology"
+    name = "metadatax_common"
