@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import sys
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,8 +29,8 @@ DEBUG = os.environ.get("DEBUG").lower() == "True".lower()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = (
-    os.environ.get("SECRET_KEY")
-    or "django-insecure-5aw47ol+qg@^43cys*-@#7en6i-)9-n=+l3vm(p1+#l+(3lma+"
+        os.environ.get("SECRET_KEY")
+        or "django-insecure-5aw47ol+qg@^43cys*-@#7en6i-)9-n=+l3vm(p1+#l+(3lma+"
 )
 
 ALLOWED_HOSTS = ["localhost"]
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "metadatax.apps.MetadataxConfig",
+    "metadatax_ontology.apps.OntologyConfig",
     "meta_auth.apps.MetaAuthConfig",
     "website.apps.WebsiteConfig",
     "drf_yasg",
@@ -148,7 +150,6 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = "meta_auth.User"
 AUTHENTICATION_BACKENDS = ["meta_auth.backend.EmailBackend"]
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

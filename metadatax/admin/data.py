@@ -2,7 +2,7 @@
 from django.contrib import admin
 
 from metadatax.models.data import File
-from .__util__ import custom_titled_filter, JSONExportModelAdmin
+from utils.admin import JSONExportModelAdmin, custom_titled_filter
 from ..models import Accessibility
 
 

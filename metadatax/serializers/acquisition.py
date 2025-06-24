@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from metadatax.models.acquisition import (
     Institution,
     Project,
@@ -10,7 +11,7 @@ from metadatax.models.acquisition import (
     Site,
     MobilePlatform,
 )
-from metadatax.serializers.utils import EnumField
+from utils.serializers import EnumField
 
 
 class PlatformSerializer(serializers.ModelSerializer):
@@ -89,7 +90,6 @@ class DeploymentSerializer(serializers.ModelSerializer):
 
 
 class ChannelConfigurationSerializer(serializers.ModelSerializer):
-
     deployment = DeploymentSerializer()
 
     class Meta:
