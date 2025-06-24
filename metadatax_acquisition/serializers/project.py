@@ -5,6 +5,7 @@ from metadatax_common.models import Accessibility
 from metadatax_common.serializers import ContactRoleSerializer
 from utils.serializers import EnumField
 from .campaign import CampaignSerializer
+from .deployment import DeploymentExportSerializer
 from .project_type import ProjectTypeSerializer
 from .site import SiteSerializer
 
@@ -23,8 +24,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class ProjectExportSerializer(ProjectSerializer):
     campaigns = CampaignSerializer(many=True)
     sites = SiteSerializer(many=True)
-
-    # TODO: add deployments
+    deployments = DeploymentExportSerializer(many=True)
 
     class Meta:
         model = Project

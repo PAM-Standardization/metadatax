@@ -10,6 +10,8 @@ class PlatformSerializer(serializers.ModelSerializer):
     provider = ContactSerializer()
     type = PlatformTypeSerializer()
 
+    # TODO: add mobile platforms points
+
     class Meta:
         model = Platform
         fields = '__all__'
