@@ -18,7 +18,7 @@ class ContactRole(models.Model):
         unique_together = (("contact", "role"),)
 
     def __str__(self):
-        return f"{self.contact} - {self.role}"
+        return f"{self.role}: {self.contact}"
 
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     role = models.CharField(max_length=2, choices=Type.choices)
