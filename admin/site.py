@@ -8,10 +8,11 @@ class MetadataxAdminSite(admin.AdminSite):
 
     app_ordering = {
         "metadatax": 1,
-        "meta_auth": 2,
-        "auth": 2,
-        "admin": 2,
-        "authtoken": 2,
+        "ontology": 2,
+        "meta_auth": 3,
+        "auth": 3,
+        "admin": 3,
+        "authtoken": 3,
     }
     metadatax_ordering = {
         "> Map": 0,

@@ -19,8 +19,9 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("metadatax/", include("metadatax.urls")),
-    path("auth/", include("meta_auth.urls")),
-    path("", include("website.urls")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path("admin/", admin.site.urls),
+                  path("metadatax/", include("metadatax.urls")),
+                  path("auth/", include("meta_auth.urls")),
+                  path("ontology/", include("ontology.urls")),
+                  path("", include("website.urls")),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

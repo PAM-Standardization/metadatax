@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "metadatax.apps.MetadataxConfig",
     "meta_auth.apps.MetaAuthConfig",
+    "ontology.apps.OntologyConfig",
     "website.apps.WebsiteConfig",
     "drf_yasg",
     "django_filters",

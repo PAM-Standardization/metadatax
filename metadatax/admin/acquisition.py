@@ -1,8 +1,9 @@
 """Acquisition metadata administration"""
 import csv
 import io
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
 from django import forms
 from django.contrib import admin
 from django.contrib.admin import TabularInline
@@ -24,8 +25,8 @@ from metadatax.models.acquisition import (
     Platform,
     MobilePlatform,
 )
-from .__util__ import custom_titled_filter, JSONExportModelAdmin
 from metadatax.models.data import FileFormat, File
+from utils.admin import JSONExportModelAdmin, custom_titled_filter
 from ..serializers.acquisition import ProjectFullSerializer
 
 
@@ -381,18 +382,18 @@ class ChannelConfigurationModelAdmin(JSONExportModelAdmin):
                 ]
             },
         ),
-         (
+        (
             "Recording period",
-                    {
-                        "classes": [
-                            "wide",
-                        ],
-                        "fields": [
-                            "harvest_starting_date",
-                            "harvest_ending_date",
-                        ],
-                    },
-          ),
+            {
+                "classes": [
+                    "wide",
+                ],
+                "fields": [
+                    "harvest_starting_date",
+                    "harvest_ending_date",
+                ],
+            },
+        ),
         (
             "Duty cycle",
             {

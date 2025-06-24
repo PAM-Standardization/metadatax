@@ -1,11 +1,12 @@
 from rest_framework import serializers
+
 from metadatax.models.equipment import (
     Recorder,
     Hydrophone,
     HydrophoneModel,
     HydrophoneDirectivity,
 )
-from metadatax.serializers.utils import EnumField
+from utils.serializers import EnumField
 
 
 class RecorderSerializer(serializers.ModelSerializer):

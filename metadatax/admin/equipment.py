@@ -9,7 +9,7 @@ from metadatax.models.equipment import (
     HydrophoneModel,
     HydrophoneDirectivity,
 )
-from .__util__ import JSONExportModelAdmin
+from utils.admin import JSONExportModelAdmin
 
 
 @admin.register(EquipmentProvider)
