@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ontology.models import Source
+from metadatax_ontology.models import Source
 
 
 class SourceSerializer(serializers.ModelSerializer):

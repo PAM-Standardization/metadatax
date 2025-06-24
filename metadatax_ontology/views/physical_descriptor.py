@@ -2,14 +2,14 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from ontology.models import Label
-from ontology.serializers import LabelSerializer
+from metadatax_ontology.models import PhysicalDescriptor
+from metadatax_ontology.serializers import PhysicalDescriptorSerializer
 from utils.views import ModelFilter
 
 
-class LabelViewSet(viewsets.ModelViewSet):
-    queryset = Label.objects.all()
-    serializer_class = LabelSerializer
+class PhysicalDescriptorViewSet(viewsets.ModelViewSet):
+    queryset = PhysicalDescriptor.objects.all()
+    serializer_class = PhysicalDescriptorSerializer
     filter_backends = [
         DjangoFilterBackend,
         ModelFilter,

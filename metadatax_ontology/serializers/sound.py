@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ontology.models import Sound
+from metadatax_ontology.models import Sound
 
 
 class SoundSerializer(serializers.ModelSerializer):

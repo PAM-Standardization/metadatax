@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from ontology.views import (
+from metadatax_ontology.views import (
     LabelViewSet,
     SourceViewSet,
     SoundViewSet,

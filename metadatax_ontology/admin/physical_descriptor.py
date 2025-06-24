@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from ontology.models import PhysicalDescriptor
+from metadatax_ontology.models import PhysicalDescriptor
 
 
 @admin.register(PhysicalDescriptor)

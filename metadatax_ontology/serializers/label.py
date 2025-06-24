@@ -1,9 +1,11 @@
 from rest_framework import serializers
 
-from ontology.models import Label
-from ontology.serializers.physical_descriptor import PhysicalDescriptorSerializer
-from ontology.serializers.sound import SoundSerializer
-from ontology.serializers.source import SourceSerializer
+from metadatax_ontology.models import Label
+from metadatax_ontology.serializers.physical_descriptor import (
+    PhysicalDescriptorSerializer,
+)
+from metadatax_ontology.serializers.sound import SoundSerializer
+from metadatax_ontology.serializers.source import SourceSerializer
 
 
 class LabelSerializer(serializers.ModelSerializer):

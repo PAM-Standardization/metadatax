@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ontology.models import PhysicalDescriptor, SignalShape, SignalPlurality
+from metadatax_ontology.models import PhysicalDescriptor, SignalShape, SignalPlurality
 from utils.serializers import EnumField
 
 

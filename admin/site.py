@@ -8,7 +8,7 @@ class MetadataxAdminSite(admin.AdminSite):
 
     app_ordering = {
         "metadatax": 1,
-        "ontology": 2,
+        "metadatax_ontology": 2,
         "meta_auth": 3,
         "auth": 3,
         "admin": 3,

@@ -2,8 +2,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from ontology.models import Source
-from ontology.serializers import SourceSerializer
+from metadatax_ontology.models import Source
+from metadatax_ontology.serializers import SourceSerializer
 from utils.views import ModelFilter
 
 

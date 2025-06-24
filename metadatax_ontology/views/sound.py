@@ -2,8 +2,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from ontology.models import Sound
-from ontology.serializers import SoundSerializer
+from metadatax_ontology.models import Sound
+from metadatax_ontology.serializers import SoundSerializer
 from utils.views import ModelFilter
 
 
