@@ -15,7 +15,7 @@ from django.utils.safestring import mark_safe
 
 from metadatax_acquisition.models import Deployment, DeploymentMobilePosition
 from metadatax_acquisition.serializers import DeploymentExportSerializer
-from utils.admin import JSONExportModelAdmin, custom_titled_filter
+from utils.admin import JSONExportModelAdmin
 
 
 class DeploymentForm(forms.ModelForm):
@@ -55,7 +55,7 @@ class DeploymentForm(forms.ModelForm):
             return 0
 
     def create_mobile_platform(
-            self, instance, file, headers
+        self, instance, file, headers
     ) -> DeploymentMobilePosition:
         tz = timezone.get_current_timezone()
         return DeploymentMobilePosition(
@@ -104,7 +104,6 @@ class DeploymentAdmin(JSONExportModelAdmin):
     ]
     list_filter = [
         "project__accessibility",
-        ("platform__type__name", custom_titled_filter("platform type")),
     ]
     fieldsets = [
         (

@@ -7,6 +7,7 @@ from metadatax_acquisition.views import (
     SiteViewSet,
     CampaignViewSet,
     DeploymentMobilePositionViewSet,
+    ChannelConfigurationViewSet,
 )
 
 router = routers.DefaultRouter()
@@ -18,6 +19,11 @@ router.register(
     r"deployment/mobile-position",
     DeploymentMobilePositionViewSet,
     basename="deployment-mobile-position",
+)
+router.register(
+    r"channel-configuration",
+    ChannelConfigurationViewSet,
+    basename="channel-configuration",
 )
 
 urlpatterns = [
