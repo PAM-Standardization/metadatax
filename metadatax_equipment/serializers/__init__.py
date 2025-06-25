@@ -1,2 +1,7 @@
+from .acoustic_detector_specification import AcousticDetectorSpecificationSerializer
+from .equipment import EquipmentSerializer
+from .hydrophone_specification import HydrophoneSpecificationSerializer
 from .platform import PlatformSerializer
 from .platform_type import PlatformTypeSerializer
+from .recorder_specification import RecorderSpecificationSerializer
+from .sd_card_specification import SDCardSpecificationSerializer
