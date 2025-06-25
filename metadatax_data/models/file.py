@@ -18,7 +18,7 @@ class File(models.Model):
     )
     format = models.ForeignKey(
         to=FileFormat,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         help_text="Format of the audio file.",
     )
 

@@ -1,6 +1,7 @@
 from django.db import models
 
-from metadatax.models import ChannelConfiguration, File
+from metadatax_data.models import File
+from .channel_configuration import ChannelConfiguration
 
 
 class ChannelConfigurationFiles(models.Model):

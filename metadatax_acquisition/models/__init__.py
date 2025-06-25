@@ -3,6 +3,7 @@ from .channel_configuration import ChannelConfiguration
 from .channel_configuration_detector_specification import (
     ChannelConfigurationDetectorSpecification,
 )
+from .channel_configuration_files import ChannelConfigurationFiles
 from .channel_configuration_recorder_specification import (
     ChannelConfigurationRecorderSpecification,
 )
