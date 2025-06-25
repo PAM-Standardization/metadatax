@@ -2,6 +2,8 @@ from .acoustic_detector_specification import AcousticDetectorSpecification
 from .equipment import Equipment
 from .hydrophone_directivity import HydrophoneDirectivity
 from .hydrophone_specification import HydrophoneSpecification
+from .maintenance import Maintenance
+from .maintenance_type import MaintenanceType
 from .platform import Platform
 from .platform_type import PlatformType
 from .recorder_specification import RecorderSpecification
