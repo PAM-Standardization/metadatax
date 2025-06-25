@@ -9,12 +9,13 @@ from django.core import validators
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from metadatax_acquisition.models import ChannelConfiguration
-from metadatax_data.models import FileFormat
+from metadatax_acquisition.serializers import ChannelConfigurationSerializer
+from metadatax_data.models import FileFormat, File, AudioProperties
 from utils.admin import JSONExportModelAdmin
 
 
 class ChannelConfigurationForm(forms.ModelForm):
-    csv_file = forms.FileField(
+    csv_audio_file = forms.FileField(
         help_text="Conflicting files will be ignored",
         validators=[validators.FileExtensionValidator(["csv"])],
         required=False,
@@ -32,28 +33,33 @@ class ChannelConfigurationForm(forms.ModelForm):
         if csv_file is None:
             return instance
         content = csv_file.read().decode("utf-8")
+        audio_properties: list[AudioProperties] = []
         files: list[File] = []
         file: dict
         for file in csv.DictReader(io.StringIO(content)):
             _format, _ = FileFormat.objects.get_or_create(
                 name=str(file["format"]).upper()
             )
+            audio = AudioProperties(
+                sampling_frequency=file["sampling_frequency"],
+                initial_timestamp=file["initial_timestamp"],
+                duration=file["duration"],
+                sample_depth=file["sample_depth"],
+            )
+            audio_properties.append(audio)
             files.append(
                 File(
-                    channel_configuration=instance,
-                    name=file["name"],
+                    filename=file["name"],
                     format=_format,
-                    initial_timestamp=file["initial_timestamp"],
-                    duration=file["duration"],
-                    sampling_frequency=file["sampling_frequency"],
-                    sample_depth=file["sample_depth"],
+                    audio_properties=audio,
                     storage_location=file["storage_location"],
                     file_size=file["file_size"],
                     accessibility=file["accessibility"],
                 )
             )
 
-        File.objects.bulk_create(files, ignore_conflicts=True)
+        AudioProperties.objects.bulk_create(audio_properties, ignore_conflicts=True)
+        instance.files.bulk_create(files, ignore_conflicts=True)
         return instance
 
 

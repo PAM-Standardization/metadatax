@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 from metadatax_acquisition.models import Deployment
+from metadatax_data.models import File
 from metadatax_equipment.models import Equipment
 from .channel_configuration_detector_specification import (
     ChannelConfigurationDetectorSpecification,
@@ -76,4 +77,7 @@ class ChannelConfiguration(models.Model):
         default=datetime.datetime(2020, 1, 1, 12, 0, 0, tzinfo=pytz.UTC),
         help_text="Harvest stop date at which the channel configuration finished to record in (in UTC).",
         verbose_name="Harvest stop date (UTC)",
+    )
+    files = models.ManyToManyField(
+        File, blank=True, through="ChannelConfigurationFiles"
     )
