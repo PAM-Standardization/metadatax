@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from metadatax_acquisition.models import Deployment
+from metadatax_acquisition.models import Deployment, DeploymentMobilePosition
 from metadatax_acquisition.serializers import DeploymentExportSerializer
 from utils.admin import JSONExportModelAdmin, custom_titled_filter
 
@@ -23,7 +23,7 @@ class DeploymentForm(forms.ModelForm):
 
     csv_file = forms.FileField(
         required=False,
-        help_text="Only for mobile platform such as glider. Csv headers must contains Datetime in %Y-%m-%dT%H:%M:%S format, longitude, latitude, bathymetric depth, heading, pitch and roll",
+        help_text="Only for mobile platform such as glider. Csv headers must contains Datetime in %Y-%m-%dT%H:%M:%S format, longitude, latitude, depth, heading, pitch and roll",
         validators=[validators.FileExtensionValidator(["csv"])],
     )
 
@@ -40,12 +40,12 @@ class DeploymentForm(forms.ModelForm):
         if csv_file is None:
             return instance
         content = csv_file.read().decode("utf-8")
-        mobile: list[MobilePlatform] = []
+        mobile: list[DeploymentMobilePosition] = []
         for file in csv.DictReader(io.StringIO(content)):
             headers = [k for k in file.keys()]
             new_mobile_platform = self.create_mobile_platform(instance, file, headers)
             mobile.append(new_mobile_platform)
-        MobilePlatform.objects.bulk_create(mobile, ignore_conflicts=True)
+        DeploymentMobilePosition.objects.bulk_create(mobile, ignore_conflicts=True)
         return instance
 
     def get_value(self, file, headers, index):
@@ -54,16 +54,18 @@ class DeploymentForm(forms.ModelForm):
         except:
             return 0
 
-    def create_mobile_platform(self, instance, file, headers):
+    def create_mobile_platform(
+            self, instance, file, headers
+    ) -> DeploymentMobilePosition:
         tz = timezone.get_current_timezone()
-        return MobilePlatform(
+        return DeploymentMobilePosition(
             deployment=instance,
             datetime=timezone.make_aware(
                 datetime.strptime(file.get(headers[0]), "%Y-%m-%dT%H:%M:%S"), tz, True
             ),
             longitude=self.get_value(file, headers, 1),
             latitude=self.get_value(file, headers, 2),
-            hydrophone_depth=self.get_value(file, headers, 3),
+            depth=self.get_value(file, headers, 3),
             heading=self.get_value(file, headers, 4),
             pitch=self.get_value(file, headers, 5),
             roll=self.get_value(file, headers, 6),
