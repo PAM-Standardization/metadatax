@@ -60,7 +60,7 @@ class Equipment(models.Model):
     )
 
     purchase_date = models.DateField(null=True, blank=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, blank=True, null=True)
     battery_slots_count = models.IntegerField(null=True, blank=True)
     battery_type = models.CharField(max_length=100, null=True, blank=True)
     cables = models.TextField(null=True, blank=True)

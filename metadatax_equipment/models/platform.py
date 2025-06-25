@@ -8,7 +8,7 @@ class Platform(models.Model):
     """Platform model"""
 
     class Meta:
-        unique_together = ['owner', 'provider', 'type']
+        unique_together = ['owner', 'provider', 'type', 'name']
 
     def __str__(self):
         if self.name:
@@ -19,5 +19,5 @@ class Platform(models.Model):
     provider = models.ForeignKey(Contact, on_delete=models.PROTECT, related_name='provided_platforms')
     type = models.ForeignKey(PlatformType, on_delete=models.PROTECT, related_name='platforms')
 
-    name = models.CharField(max_length=100, blank=True, null=True, unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
