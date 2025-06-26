@@ -30,60 +30,6 @@ body > #links a {
     text-decoration: none
 }
 
-body > #mysidepanel {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    z-index: 2000;
-    gap: 1rem;
-    width: 0;
-    max-width: calc(100vw - 2rem);
-    max-height: 75vh;
-    left: 10px;
-    background-color: white;
-    overflow-x: hidden;
-    transition: 0.5s;
-}
-
-body > #mysidepanel > #head {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    padding: 0.5rem;
-    gap: 1rem;
-    align-items: center;
-    background-color: white;
-    position: sticky;
-    top: 0;
-}
-body > #mysidepanel > #bottom {
-    padding: 0.5rem;
-    background-color: white;
-    position: sticky;
-    top: 0;
-    font-size: 20px;
-}
-
-body > #mysidepanel a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    transition: 0.3s;
-    cursor: pointer;
-}
-
-body > #mysidepanel a:hover {
-    color: #f1f1f1;
-}
-
-body > #mysidepanel > #head label,
-body > #mysidepanel .closebtn {
-    font-size: 36px;
-}
-body > #mysidepanel .bottom_closebtn {
-    font-size: 25px;
-}
-
 table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -94,17 +40,21 @@ table {
 table .label::first-letter {
     text-transform: capitalize;
 }
+
 table .popuptitle::first-letter {
     text-transform: capitalize;
     font-weight: bold;
 }
+
 table .popuptitle {
     font-weight: bold;
     background-color: #AFE7D7
 }
+
 table .popuptitle:hover {
-    opacity:0.7
+    opacity: 0.7
 }
+
 th, td {
     text-align: left;
     padding: 16px;
@@ -112,4 +62,92 @@ th, td {
 
 tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+
+
+#deployment-panel {
+    position: absolute;
+    top: 20%;
+    left: 1rem;
+    bottom: 3rem;
+    width: 0;
+    border-radius: 1rem;
+    transition: 300ms ease-in-out;
+    background: white;
+    z-index: 999;
+    overflow: auto;
+}
+
+#deployment-panel.open {
+    width: 30%;
+}
+
+#deployment-panel > .title {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 1rem;
+    gap: 0 1rem;
+    align-items: center;
+    background: white;
+    box-shadow: inset rgba(149, 157, 165, 0.2) 0 8px 24px;
+
+    a {
+        grid-row: 1/3;
+        grid-column: 2;
+        font-size: 1.5rem;
+        cursor: pointer;
+        opacity: 0.5;
+    }
+}
+
+#deployment-panel > .content {
+    display: grid;
+    padding: 1rem 0;
+    gap: 1rem;
+}
+
+#deployment-panel #project,
+#deployment-panel #deployment,
+#deployment-panel *[id^=channel] {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    background: white;
+    overflow: hidden;
+
+    &.closed {
+        height: 2rem;
+    }
+
+    h5 {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.5rem;
+        align-items: center;
+        height: 1rem;
+
+        a {
+            cursor: pointer;
+        }
+
+        user-select: none;
+    }
+
+    > * {
+        padding: 0.5rem;
+    }
+
+    > *:nth-child(2n + 2) {
+        display: grid;
+        align-items: center;
+        color: darkslategray;
+    }
+
+    > *:nth-child(4n + 2), > *:nth-child(4n + 3) {
+        background: rgba(0, 0, 0, 0.03);
+    }
 }

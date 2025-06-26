@@ -5,19 +5,19 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from meta_auth.models import User
-from metadatax.models import Project, Recorder
-from metadatax.models.acquisition import (
+from metadatax_acquisition.models import (
     ProjectType,
-    Accessibility,
-    Platform,
-    PlatformType,
+    Project,
+    ChannelConfigurationRecorderSpecification,
 )
-from metadatax.models.data import FileFormat
-from metadatax.models.equipment import (
-    RecorderModel,
-    EquipmentProvider,
-    Hydrophone,
-    HydrophoneModel,
+from metadatax_common.models import Accessibility, Contact, ContactRole
+from metadatax_data.models import FileFormat
+from metadatax_equipment.models import (
+    PlatformType,
+    Platform,
+    RecorderSpecification,
+    Equipment,
+    HydrophoneSpecification,
 )
 
 
@@ -26,23 +26,23 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Flush database
-        self.stdout.write("[DATABASE] flush...")
+        self.stdout.write("[DATABASE] flush...", ending="   ")
         management.call_command("flush", interactive=False)
-        self.stdout.write("[DATABASE] flush ✓")
+        self.stdout.write(" ✓")
 
         # Create users
-        self.stdout.write("[CREATE] Users...")
+        self.stdout.write("[CREATE] Users...", ending="      ")
         self.create_admin()
 
         # Create projects
-        self.stdout.write("[CREATE] Projects...")
+        self.stdout.write("[CREATE] Projects...", ending="  ")
         self.create_CETIROISE_project()
 
     def create_admin(self):
         User.objects.create_user(
             "admin", "admin@test.fr", "admin", is_superuser=True, is_staff=True
         )
-        self.stdout.write("[CREATE] User admin ✓")
+        self.stdout.write("admin ✓\n")
 
     def create_CETIROISE_project(self):
         project_type, _ = ProjectType.objects.get_or_create(name="research")
@@ -52,10 +52,14 @@ class Command(BaseCommand):
             accessibility=Accessibility.REQUEST,
         )
 
-        project.responsible_parties.create(name="OFB", contact="contact@ofb.test")
-        ensta_bretagne = project.responsible_parties.create(
-            name="ENSTA Bretagne", contact="contact@ensta-bretagne.test"
+        project.contacts.create(
+            contact=Contact.objects.create(name="OFB", mail="contact@ofb.test"),
+            role=ContactRole.Type.MAIN_CONTACT,
         )
+        ensta = Contact.objects.create(
+            name="ENSTA Bretagne", mail="contact@ensta-bretagne.test"
+        )
+        project.contacts.create(contact=ensta, role=ContactRole.Type.PROJECT_MANAGER)
 
         phase1 = project.campaigns.create(name="Phase 1")
         site_a = project.sites.create(name="A")
@@ -65,12 +69,14 @@ class Command(BaseCommand):
             name="mooring line with acoustic release"
         )
         mooring_line = Platform.objects.create(
-            name="Mooring line CETIROISE", type=platform_type
+            name="Mooring line CETIROISE",
+            type=platform_type,
+            owner=ensta,
+            provider=ensta,
         )
 
         vessel = "Céladon"
         deployment = project.deployments.create(
-            provider=ensta_bretagne,
             campaign=phase1,
             site=site_a,
             platform=mooring_line,
@@ -83,7 +89,6 @@ class Command(BaseCommand):
         )
 
         project.deployments.create(
-            provider=ensta_bretagne,
             campaign=phase1,
             site=site_b,
             platform=mooring_line,
@@ -95,31 +100,41 @@ class Command(BaseCommand):
             recovery_date=timezone.make_aware(datetime(2022, 8, 23, 11, 19)),
             recovery_vessel=vessel,
         )
-
-        file_format, _ = FileFormat.objects.get_or_create(name="WAV")
-        deployment.channelconfiguration_set.create(
-            recorder=Recorder.objects.create(
-                serial_number="001",
-                model=RecorderModel.objects.create(
-                    name="LP-440",
-                    number_of_channels=1,
-                    provider=EquipmentProvider.objects.create(name="RTSYS"),
-                ),
-            ),
-            channel_name="A",
-            recording_format=file_format,
-            sample_depth=16,
-            sampling_frequency=128_000,
-            gain=0,
-            hydrophone=Hydrophone.objects.create(
-                serial_number="785465",
-                sensitivity=-169.9,
-                model=HydrophoneModel.objects.create(
-                    name="HTI-99HF",
-                    provider=EquipmentProvider.objects.create(name="HTI"),
-                ),
-            ),
-            hydrophone_depth=100,
-            continuous=True,
+        contact_role = ContactRole.objects.create(
+            contact=ensta,
+            role=ContactRole.Type.CONTACT_POINT,
         )
-        self.stdout.write("[CREATE] Project CETIROISE ✓")
+        for d in project.deployments.all():
+            d.contacts.add(contact_role)
+
+        file_format, _ = FileFormat.objects.get_or_create(name=".wav")
+        channel = deployment.channel_configurations.create(
+            recorder_specification=ChannelConfigurationRecorderSpecification.objects.create(
+                recorder=Equipment.objects.create(
+                    model="LP-440",
+                    serial_number="001",
+                    owner=ensta,
+                    provider=Contact.objects.create(name="RTSYS"),
+                    recorder_specification=RecorderSpecification.objects.create(
+                        channels_count=1
+                    ),
+                ),
+                hydrophone=Equipment.objects.create(
+                    model="HTI-99HF",
+                    serial_number="785465",
+                    owner=ensta,
+                    provider=Contact.objects.create(name="HTI"),
+                    hydrophone_specification=HydrophoneSpecification.objects.create(
+                        sensitivity=-169.9
+                    ),
+                ),
+                sampling_frequency=128_000,
+                channel_name="A",
+                sample_depth=16,
+                gain=0,
+            ),
+            continuous=True,
+            instrument_depth=100,
+        )
+        channel.recorder_specification.recording_formats.add(file_format)
+        self.stdout.write(" CETIROISE ✓\n")

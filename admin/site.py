@@ -7,22 +7,16 @@ class MetadataxAdminSite(admin.AdminSite):
     site_title = "Metadatax (demo)"
 
     app_ordering = {
-        "metadatax": 1,
-        "metadatax_ontology": 2,
+        "metadatax": 0,
+        "metadatax_common": 1,
+        "metadatax_ontology": 1,
+        "metadatax_acquisition": 1,
+        "metadatax_data": 1,
+        "metadatax_equipment": 1,
         "meta_auth": 3,
         "auth": 3,
         "admin": 3,
         "authtoken": 3,
-    }
-    metadatax_ordering = {
-        "> Map": 0,
-        "Institutions": 1,
-        "Projects": 2,
-        "Deployments": 3,
-        "Channel configurations": 4,
-        "Files": 5,
-        "Equipment - Recorders": 10,
-        "Equipment - Hydrophones": 11,
     }
 
     def _build_app_dict(self, request, label=None):
@@ -39,24 +33,24 @@ class MetadataxAdminSite(admin.AdminSite):
         app_dict = super()._build_app_dict(request, label)
         # check if there is value for label = admin view for specific app
         if label:
-            app_dict["models"] = [
-                m
-                for m in app_dict["models"]
-                if m["name"] in list(self.metadatax_ordering.keys())
-            ]
             app_dict["models"].append(map_fake_model)
+            app_dict["models"] = [m for m in app_dict["models"]]
 
         # otherwise = home admin view with all apps
         else:
-            app = app_dict.get("metadatax", None)
-            if app:
-                app["models"] = [
-                    m
-                    for m in app["models"]
-                    if m["name"] in list(self.metadatax_ordering.keys())
-                ]
-                app["models"].append(map_fake_model)
-                app["models"].sort(key=lambda x: self.metadatax_ordering[x["name"]])
+            app = app_dict.get(
+                "metadatax",
+                {
+                    "name": "Metadatax",
+                    "app_label": "metadatax",
+                    "app_url": "/admin/metadatax/",
+                    "has_module_perms": True,
+                    "models": [],
+                },
+            )
+            app["models"].append(map_fake_model)
+            app["models"] = [m for m in app["models"]]
+            app_dict["metadatax"] = app
         return app_dict
 
     def get_app_list(self, request):

@@ -11,6 +11,10 @@
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
     <title>World map of deployments position</title>
 
@@ -21,82 +25,29 @@
 <div id="links">
     <a href="/">Home</a>
     <a href="/admin/">Access administration</a>
+</div>
 
-</div>
-<div id="mysidepanel">
-    <div id="head">
-        <label id="title_panel"></label>
-        <a class="closebtn" onclick="closePanel(table.tBodies.length)" aria-label="Close">×</a>
+<div id="deployment-panel">
+    <div class="title">
+        <h3 id="deployment-title"></h3>
+        <h4 id="project-title"></h4>
+        <a onclick="DeploymentPanel.close()">
+            <ion-icon name="close"></ion-icon>
+        </a>
     </div>
-    <table class="table" id="table"></table>
-    <div id="bottom">
-        <label id="bottom_panel"></label>
-        <a  class="bottompanel" id="bottom_left_arrow" title="Previous" aria-label="Previous"></a>
-        <label id="bottom_pagination"></label>
-        <a class="bottompanel" id="bottom_right_arrow" title="Next" aria-label="Next"></a>
-        <a class="bottom_closebtn" onclick="closeMetadataPanel(table.tBodies.length)" title="Close" aria-label="Close" >×</a>
-    </div>
+    <div class="content" id="deployment-content"></div>
 </div>
+
 </body>
 
-{{ deployment |json_script:"deployment" }}
+{{ deployments | json_script:"deployments" }}
+{{ projects | json_script:"projects" }}
 
 <script>
-    /**
-     * @type {Array<{
-     *     bathymetric_depth: number | null;
-     *     campaign: {
-     *         id: number;
-     *         name: string;
-     *     };
-     *     deployment_date: string;
-     *     deployment_vessel: string;
-     *     description: string;
-     *     id: number;
-     *     latitude: number;
-     *     longitude: number;
-     *     name: number | null;
-     *     platform: {
-     *         description: string | null;
-     *         id: number;
-     *         name: string;
-     *         type: {
-     *             id: number;
-     *             name: string;
-     *         };
-     *     };
-     *     project: {
-     *         accessibility: string;
-     *         doi: string | null;
-     *         id: number;
-     *         name: string;
-     *         project_goal: string | null;
-     *         project_type: {
-     *             id: number;
-     *             name: string;
-     *         };
-     *         responsible_parties: Array<{
-     *             id: number;
-     *             name: string;
-     *             contact: string;
-     *             website: contact | null;
-     *         }>;
-     *     };
-     *     provider: {
-     *         id: number;
-     *         name: string;
-     *         contact: string;
-     *         website: contact | null;
-     *     };
-     *     recovery_date: string;
-     *     recovery_vessel: string;
-     *     campaign: {
-     *         id: number;
-     *         name: string;
-     *     }
-     * }>}
-     */
-    const DATA = JSON.parse(document.getElementById("deployment").textContent);
-
+    /** @type Array<Deployment> */
+    const DEPLOYMENTS = JSON.parse(document.getElementById("deployments").textContent);
+    /** @type Array<Project> */
+    const PROJECTS = JSON.parse(document.getElementById("projects").textContent);
 </script>
+<script src="{% static 'map/detailPanel.js' %}"></script>
 <script src="{% static 'map/script.js' %}"></script>

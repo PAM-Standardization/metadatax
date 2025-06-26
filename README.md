@@ -5,7 +5,7 @@ metadatax is a Django app.
 
 ## Overview
 Here is a schema of the database structure
-![v1 - Métadonnées d'acquisition](https://github.com/user-attachments/assets/4462f7f8-f8e6-42dd-b6eb-a7dfee9459f9)
+![v2 - Métadonnées d'acquisition](./schema.svg)
 
 
 ## Quick start
@@ -27,12 +27,20 @@ poetry run black admin meta_auth metadatax website
 ```python
     INSTALLED_APPS = [
         ...,
-        "metadatax",
+        "metadatax_common",
+        "metadatax_data",
+        "metadatax_acquisition",
+        "metadatax_equipment",
+        "metadatax_ontology",
     ]
 ```
 2. Include the metadatax URLconf in your project urls.py like this::
 ```python
-    path("metadatax/", include("metadatax.urls")),
+  path("metadatax/", include("metadatax_common.urls")),
+  path("metadatax/ontology/", include("metadatax_ontology.urls")),
+  path("metadatax/acquisition/", include("metadatax_acquisition.urls")),
+  path("metadatax/equipment/", include("metadatax_equipment.urls")),
+  path("metadatax/data/", include("metadatax_data.urls")),
 ```
 3. Run `python manage.py migrate` to create the models.
 

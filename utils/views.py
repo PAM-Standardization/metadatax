@@ -1,6 +1,7 @@
 import json
 
 from django.core.exceptions import FieldError
+from django.db.models import Q
 from rest_framework import filters
 from rest_framework.request import Request
 
@@ -13,10 +14,20 @@ class ModelFilter(filters.BaseFilterBackend):
         for param in request.query_params:
             try:
                 value = request.query_params[param]
+                key = param
+                is_negation = param[-1] == "!"
+                if is_negation:
+                    key = param[:-1]
                 try:
-                    _queryset = _queryset.filter(**{param: json.loads(value)})
+                    filter = Q(**{key: json.loads(value)})
+                    if is_negation:
+                        filter = ~filter
+                    _queryset = _queryset.filter(filter)
                 except (json.JSONDecodeError, TypeError):
-                    _queryset = _queryset.filter(**{param: value})
+                    filter = Q(**{key: value})
+                    if is_negation:
+                        filter = ~filter
+                    _queryset = _queryset.filter(filter)
             except FieldError:
                 continue
         return _queryset.distinct()

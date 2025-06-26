@@ -1,0 +1,25 @@
+from django.contrib import admin
+
+from metadatax_equipment.models import Maintenance
+
+
+@admin.register(Maintenance)
+class MaintenanceAdmin(admin.ModelAdmin):
+    list_display = [
+        "type",
+        "date",
+        "platform",
+        "equipment",
+        "description",
+        "maintainer"
+    ]
+    search_fields = [
+        "type__name",
+        "platform__type__name",
+        "platform__name",
+        "equipment__serial_number",
+        "equipment__model",
+        "equipment__name",
+        "maintainer__name",
+        "maintainer__mail",
+    ]

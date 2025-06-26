@@ -48,6 +48,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "metadatax.apps.MetadataxConfig",
+    "metadatax_common.apps.MetadataxCommonConfig",
+    "metadatax_data.apps.MetadataxDataConfig",
+    "metadatax_acquisition.apps.MetadataxAcquisitionConfig",
+    "metadatax_equipment.apps.MetadataxEquipmentConfig",
     "metadatax_ontology.apps.OntologyConfig",
     "meta_auth.apps.MetaAuthConfig",
     "website.apps.WebsiteConfig",
@@ -145,7 +149,7 @@ OAUTH2_PROVIDER = {
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_FILTER_BACKENDS": ["utils.views.ModelFilter"],
 }
 
 AUTH_USER_MODEL = "meta_auth.User"
