@@ -28,6 +28,7 @@ class DeploymentMobilePosition(models.Model):
             MinValueValidator(0),
         ],
     )
+
     heading = models.FloatField(
         null=True, blank=True, default=0.0, help_text="Heading of the mobile platform"
     )

@@ -17,4 +17,6 @@ class ChannelConfigurationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChannelConfiguration
-        fields = "__all__"
+        exclude = [
+            "files",
+        ]

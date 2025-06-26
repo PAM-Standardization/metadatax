@@ -6,12 +6,8 @@ from django.views.decorators.csrf import csrf_protect
 from rest_framework import viewsets
 
 from meta_auth.form import SignupForm
-from metadatax.models.acquisition import Deployment
-
-
-# from metadatax.serializers.acquisition import (
-#     DeploymentSerializerWithChannel,
-# )
+from metadatax_acquisition.serializers import DeploymentExportSerializer
+from metadatax_acquisition.views import DeploymentViewSet, ProjectViewSet
 
 
 class WebsiteView(viewsets.ViewSet):
@@ -25,5 +21,21 @@ class WebsiteView(viewsets.ViewSet):
         )
 
     def map(self):
-        deployment = Deployment(Deployment.objects.all(), many=True).data
-        return render(self, "map.html", {"deployment": deployment})
+        deployments = DeploymentExportSerializer(
+            DeploymentViewSet.queryset.prefetch_related(
+                "channel_configurations",
+                "mobile_positions",
+            ),
+            many=True,
+        ).data
+        projects = ProjectViewSet.serializer_class(
+            ProjectViewSet.queryset, many=True
+        ).data
+        return render(
+            self,
+            "map.html",
+            {
+                "deployments": deployments,
+                "projects": projects,
+            },
+        )
