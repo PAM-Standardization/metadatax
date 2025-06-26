@@ -41,9 +41,11 @@ class DeploymentMobilePosition(models.Model):
 
 
 @receiver(pre_init, sender=DeploymentMobilePosition)
-def assure_mobile_position_is_on_mobile_deployment(sender, args, **kwargs):
-    deployment: Deployment = args["deployment"]
-    if not deployment.platform.type.is_mobile:
+def assure_mobile_position_is_on_mobile_deployment(sender, args, signal, **kwargs):
+    if not kwargs or not kwargs["kwargs"]:
+        return
+    deployment: Deployment = kwargs["kwargs"]["deployment"]
+    if not deployment.platform or not deployment.platform.type.is_mobile:
         raise ValidationError(
             detail="Deployment mobile position should be on a deployment with a mobile platform",
             code="invalid",

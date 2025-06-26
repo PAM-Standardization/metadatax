@@ -8,9 +8,7 @@ from django import forms
 from django.contrib import admin
 from django.core import validators
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.urls import reverse
 from django.utils import timezone
-from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 from metadatax_acquisition.models import Deployment, DeploymentMobilePosition
@@ -166,15 +164,4 @@ class DeploymentAdmin(JSONExportModelAdmin):
 
     @admin.display(description="Mobile platforms")
     def mobile_platforms(self, obj: Deployment) -> str:
-        return format_html(
-            "<br/>".join(
-                [
-                    format_html(
-                        '<a href="{}">{}</a>',
-                        reverse("admin:metadatax_mobileplatform_change", args=[p.id]),
-                        p,
-                    )
-                    for p in obj.mobileplatform_set.all()
-                ]
-            )
-        )
+        return mark_safe("<br/>".join([str(p) for p in obj.mobile_positions.all()]))

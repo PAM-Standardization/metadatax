@@ -7,16 +7,17 @@ const markers = L.markerClusterGroup({
 });
 
 function componentToHex(c) {
-  let hex = c.toString(16);
-  return hex.length === 1 ? "0" + hex : hex;
+    let hex = c.toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
 }
+
 function intToRGB(value) {
     value *= 319
-  //credit to https://stackoverflow.com/a/2262117/2737978 for the idea of how to implement
-  let blue = 128 + Math.floor(value % 128);
-  let green = 128 + Math.floor(value / 128 % 128);
-  let red = 128 + Math.floor(value / 128 / 128 % 128);
-  return '#' + componentToHex(red) + componentToHex(green) + componentToHex(blue)
+    //credit to https://stackoverflow.com/a/2262117/2737978 for the idea of how to implement
+    let blue = 128 + Math.floor(value % 128);
+    let green = 128 + Math.floor(value / 128 % 128);
+    let red = 128 + Math.floor(value / 128 / 128 % 128);
+    return '#' + componentToHex(red) + componentToHex(green) + componentToHex(blue)
 }
 
 const ProjectColor = new Map();

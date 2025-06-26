@@ -24,7 +24,7 @@ class ProjectAdmin(JSONExportModelAdmin):
         "end_date",
         "financing",
         "list_campaigns",
-        "sites",
+        "list_sites",
     ]
     search_fields = [
         "name",
