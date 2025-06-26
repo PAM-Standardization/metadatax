@@ -24,7 +24,11 @@ class ChannelConfiguration(models.Model):
             "deployment",
         ]
 
-    deployment = models.ForeignKey(to=Deployment, on_delete=models.CASCADE)
+    deployment = models.ForeignKey(
+        to=Deployment,
+        on_delete=models.CASCADE,
+        related_name="channel_configurations",
+    )
 
     recorder_specification = models.OneToOneField(
         ChannelConfigurationRecorderSpecification,

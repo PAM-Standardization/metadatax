@@ -19,13 +19,12 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-                  path("admin/", admin.site.urls),
-                  path("metadatax/old", include("metadatax.urls")),
-                  path("auth/", include("meta_auth.urls")),
-                  path("metadatax/", include("metadatax_common.urls")),
-                  path("metadatax/ontology/", include("metadatax_ontology.urls")),
-                  path("metadatax/acquisition/", include("metadatax_acquisition.urls")),
-                  path("metadatax/equipment/", include("metadatax_equipment.urls")),
-                  path("metadatax/data/", include("metadatax_data.urls")),
-                  path("", include("website.urls")),
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path("admin/", admin.site.urls),
+    path("auth/", include("meta_auth.urls")),
+    path("metadatax/", include("metadatax_common.urls")),
+    path("metadatax/ontology/", include("metadatax_ontology.urls")),
+    path("metadatax/acquisition/", include("metadatax_acquisition.urls")),
+    path("metadatax/equipment/", include("metadatax_equipment.urls")),
+    path("metadatax/data/", include("metadatax_data.urls")),
+    path("", include("website.urls")),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

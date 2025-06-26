@@ -7,9 +7,11 @@ from rest_framework import viewsets
 
 from meta_auth.form import SignupForm
 from metadatax.models.acquisition import Deployment
-from metadatax.serializers.acquisition import (
-    DeploymentSerializerWithChannel,
-)
+
+
+# from metadatax.serializers.acquisition import (
+#     DeploymentSerializerWithChannel,
+# )
 
 
 class WebsiteView(viewsets.ViewSet):
@@ -23,5 +25,5 @@ class WebsiteView(viewsets.ViewSet):
         )
 
     def map(self):
-        deployment = DeploymentSerializerWithChannel(Deployment.objects.all(), many=True).data
+        deployment = Deployment(Deployment.objects.all(), many=True).data
         return render(self, "map.html", {"deployment": deployment})
