@@ -1,7 +1,7 @@
 """Acquisition metadata administration"""
 from django.contrib import admin
 
-from metadatax.models.data import FileFormat
+from metadatax_data.models import FileFormat
 
 
 @admin.register(FileFormat)
