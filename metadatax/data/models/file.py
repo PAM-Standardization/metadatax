@@ -23,6 +23,7 @@ class File(models.Model):
         to=FileFormat,
         on_delete=models.PROTECT,
         help_text="Format of the audio file.",
+        related_name="files",
     )
 
     audio_properties = models.OneToOneField(

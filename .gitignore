@@ -4,3 +4,6 @@ postgres/
 **/__pycache__
 *.pyc
 **.env
+/docs/.vitepress/cache/
+node_modules
+static

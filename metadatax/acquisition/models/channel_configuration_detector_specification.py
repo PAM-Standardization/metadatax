@@ -28,9 +28,12 @@ class ChannelConfigurationDetectorSpecification(models.Model):
         related_name="channel_configuration_detector_specifications",
         validators=[validate_detector],
     )
-    output_formats = models.ManyToManyField(FileFormat)
+    output_formats = models.ManyToManyField(
+        FileFormat, related_name="channel_configuration_detector_specifications"
+    )
     labels = models.ManyToManyField(
-        Label
+        Label,
+        related_name="channel_configuration_detector_specifications",
     )  # TODO: check labels are in detector detected labels
 
     min_frequency = models.IntegerField(

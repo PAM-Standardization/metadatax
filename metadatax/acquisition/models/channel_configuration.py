@@ -36,14 +36,18 @@ class ChannelConfiguration(models.Model):
         on_delete=models.PROTECT,
         blank=True,
         null=True,
+        related_name="channel_configuration",
     )
     detector_specification = models.OneToOneField(
         ChannelConfigurationDetectorSpecification,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
+        related_name="channel_configuration",
     )
-    other_equipments = models.ManyToManyField(Equipment, blank=True)
+    other_equipments = models.ManyToManyField(
+        Equipment, blank=True, related_name="channel_configurations"
+    )
     continuous = models.BooleanField(
         null=True,
         blank=True,

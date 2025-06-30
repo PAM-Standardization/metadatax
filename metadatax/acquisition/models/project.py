@@ -19,7 +19,9 @@ class Project(models.Model):
         max_length=255, unique=True, help_text="Name of the project"
     )
     contacts = models.ManyToManyField(
-        ContactRole, help_text="Should have at least one 'Main Contact'"
+        ContactRole,
+        help_text="Should have at least one 'Main Contact'",
+        related_name="projects",
     )  # TODO: constraint
 
     accessibility = models.CharField(

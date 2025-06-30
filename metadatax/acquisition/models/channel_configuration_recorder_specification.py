@@ -41,7 +41,9 @@ class ChannelConfigurationRecorderSpecification(models.Model):
         related_name="channel_configuration_hydrophone_specifications",
         validators=[validate_hydrophone],
     )
-    recording_formats = models.ManyToManyField(FileFormat)
+    recording_formats = models.ManyToManyField(
+        FileFormat, related_name="channel_configuration_recorder_specifications"
+    )
     sampling_frequency = models.IntegerField(
         validators=[MinValueValidator(0)],
         help_text="Sampling frequency of the recording channel (in Hertz).",

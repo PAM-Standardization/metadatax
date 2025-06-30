@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "graphene_django",
     "meta_auth.apps.MetaAuthConfig",
     "website.apps.WebsiteConfig",
     "drf_yasg",
@@ -169,3 +170,5 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT") or 5432,
     }
 }
+
+GRAPHENE = {"SCHEMA": "metadatax.schema.schema"}

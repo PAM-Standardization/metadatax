@@ -9,11 +9,13 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 Django = "^3.2"
-django-filter = "^21"
+django-filter = ">=2"
 djangorestframework = "^3.15.1"
 python-dotenv = "^1.0.1"
 psycopg2-binary = "^2.8.6"
 django-model-prefix = "^1.1.0"
+graphene-django = "^3.2.3"
+graphene-django-pagination = {url = "https://github.com/instruct-br/graphene-django-pagination/archive/master.zip"}
 
 [tool.poetry.group.dev.dependencies]
 drf-yasg = "^1.21.7"

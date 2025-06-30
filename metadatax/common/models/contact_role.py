@@ -21,5 +21,5 @@ class ContactRole(models.Model):
     def __str__(self):
         return f"{ContactRole.Type(self.role).label}: {self.contact}"
 
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name="roles")
     role = models.CharField(max_length=2, choices=Type.choices)
