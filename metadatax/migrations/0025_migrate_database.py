@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-from metadatax_common.models import ContactRole
+from metadatax.common.models import ContactRole
 
 
 class MigrationAction:
@@ -10,48 +10,48 @@ class MigrationAction:
         self.unknown_format_id = None
         self.apps = apps
 
-        self.Contact = apps.get_model("metadatax_common", "Contact")
-        self.ContactRole = apps.get_model("metadatax_common", "ContactRole")
+        self.Contact = apps.get_model("common", "Contact")
+        self.ContactRole = apps.get_model("common", "ContactRole")
         self.migration_contact, _ = self.Contact.objects.get_or_create(
             name="[Migration]"
         )
 
-        self.ProjectType = apps.get_model("metadatax_acquisition", "ProjectType")
-        self.Project = apps.get_model("metadatax_acquisition", "Project")
+        self.ProjectType = apps.get_model("acquisition", "ProjectType")
+        self.Project = apps.get_model("acquisition", "Project")
         self.ProjectContactThrough = self.Project.contacts.through
-        self.Site = apps.get_model("metadatax_acquisition", "Site")
-        self.Campaign = apps.get_model("metadatax_acquisition", "Campaign")
-        self.Deployment = apps.get_model("metadatax_acquisition", "Deployment")
+        self.Site = apps.get_model("acquisition", "Site")
+        self.Campaign = apps.get_model("acquisition", "Campaign")
+        self.Deployment = apps.get_model("acquisition", "Deployment")
         self.DeploymentContactThrough = self.Deployment.contacts.through
         self.ChannelConfiguration = apps.get_model(
-            "metadatax_acquisition", "ChannelConfiguration"
+            "acquisition", "ChannelConfiguration"
         )
         self.ChannelConfigurationRecorderSpecification = apps.get_model(
-            "metadatax_acquisition", "ChannelConfigurationRecorderSpecification"
+            "acquisition", "ChannelConfigurationRecorderSpecification"
         )
         self.ChannelConfigurationRecorderSpecificationFormatThrough = (
             self.ChannelConfigurationRecorderSpecification.recording_formats.through
         )
         self.DeploymentMobilePosition = apps.get_model(
-            "metadatax_acquisition", "DeploymentMobilePosition"
+            "acquisition", "DeploymentMobilePosition"
         )
         self.ChannelConfigurationFiles = apps.get_model(
-            "metadatax_acquisition", "ChannelConfigurationFiles"
+            "acquisition", "ChannelConfigurationFiles"
         )
 
-        self.PlatformType = apps.get_model("metadatax_equipment", "PlatformType")
-        self.Platform = apps.get_model("metadatax_equipment", "Platform")
-        self.Equipment = apps.get_model("metadatax_equipment", "Equipment")
+        self.PlatformType = apps.get_model("equipment", "PlatformType")
+        self.Platform = apps.get_model("equipment", "Platform")
+        self.Equipment = apps.get_model("equipment", "Equipment")
         self.RecorderSpecification = apps.get_model(
-            "metadatax_equipment", "RecorderSpecification"
+            "equipment", "RecorderSpecification"
         )
         self.HydrophoneSpecification = apps.get_model(
-            "metadatax_equipment", "HydrophoneSpecification"
+            "equipment", "HydrophoneSpecification"
         )
 
-        self.FileFormat = apps.get_model("metadatax_data", "FileFormat")
-        self.File = apps.get_model("metadatax_data", "File")
-        self.AudioProperties = apps.get_model("metadatax_data", "AudioProperties")
+        self.FileFormat = apps.get_model("data", "FileFormat")
+        self.File = apps.get_model("data", "File")
+        self.AudioProperties = apps.get_model("data", "AudioProperties")
 
         self.run_migration(apps.get_model("metadatax", "Project").objects.all())
 
@@ -526,10 +526,10 @@ class MigrationAction:
 class Migration(migrations.Migration):
     dependencies = [
         ("metadatax", "0024_channelconfiguration_harvesttime"),
-        ("metadatax_common", "0001_initial"),
-        ("metadatax_acquisition", "0002_initial"),
-        ("metadatax_equipment", "0001_initial"),
-        ("metadatax_data", "0001_initial"),
+        ("common", "0001_initial"),
+        ("acquisition", "0002_initial"),
+        ("equipment", "0001_initial"),
+        ("data", "0001_initial"),
     ]
 
     operations = [

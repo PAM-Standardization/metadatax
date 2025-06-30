@@ -5,14 +5,14 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from meta_auth.models import User
-from metadatax_acquisition.models import (
+from metadatax.acquisition.models import (
     ProjectType,
     Project,
     ChannelConfigurationRecorderSpecification,
 )
-from metadatax_common.models import Accessibility, Contact, ContactRole
-from metadatax_data.models import FileFormat
-from metadatax_equipment.models import (
+from metadatax.common.models import Accessibility, Contact, ContactRole
+from metadatax.data.models import FileFormat
+from metadatax.equipment.models import (
     PlatformType,
     Platform,
     RecorderSpecification,

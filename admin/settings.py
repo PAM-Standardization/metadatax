@@ -29,8 +29,8 @@ DEBUG = os.environ.get("DEBUG").lower() == "True".lower()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = (
-        os.environ.get("SECRET_KEY")
-        or "django-insecure-5aw47ol+qg@^43cys*-@#7en6i-)9-n=+l3vm(p1+#l+(3lma+"
+    os.environ.get("SECRET_KEY")
+    or "django-insecure-5aw47ol+qg@^43cys*-@#7en6i-)9-n=+l3vm(p1+#l+(3lma+"
 )
 
 ALLOWED_HOSTS = ["localhost"]
@@ -41,24 +41,25 @@ if HOST:
 # Application definition
 
 INSTALLED_APPS = [
+    "model_prefix",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "metadatax.apps.MetadataxConfig",
-    "metadatax_common.apps.MetadataxCommonConfig",
-    "metadatax_data.apps.MetadataxDataConfig",
-    "metadatax_acquisition.apps.MetadataxAcquisitionConfig",
-    "metadatax_equipment.apps.MetadataxEquipmentConfig",
-    "metadatax_ontology.apps.OntologyConfig",
     "meta_auth.apps.MetaAuthConfig",
     "website.apps.WebsiteConfig",
     "drf_yasg",
     "django_filters",
     "rest_framework",
     "rest_framework.authtoken",
+    "metadatax.apps.MetadataxConfig",
+    "metadatax.common.apps.MetadataxCommonConfig",
+    "metadatax.data.apps.MetadataxDataConfig",
+    "metadatax.acquisition.apps.MetadataxAcquisitionConfig",
+    "metadatax.equipment.apps.MetadataxEquipmentConfig",
+    "metadatax.ontology.apps.OntologyConfig",
 ]
 
 MIDDLEWARE = [
