@@ -17,14 +17,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.views.decorators.csrf import csrf_exempt
+from graphene_django.views import GraphQLView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("meta_auth.urls")),
-    path("metadatax/", include("metadatax_common.urls")),
-    path("metadatax/ontology/", include("metadatax_ontology.urls")),
-    path("metadatax/acquisition/", include("metadatax_acquisition.urls")),
-    path("metadatax/equipment/", include("metadatax_equipment.urls")),
-    path("metadatax/data/", include("metadatax_data.urls")),
+    path("metadatax/", include("metadatax.urls")),
+    path("metadatax/graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
     path("", include("website.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

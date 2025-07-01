@@ -6,8 +6,8 @@ from django.views.decorators.csrf import csrf_protect
 from rest_framework import viewsets
 
 from meta_auth.form import SignupForm
-from metadatax_acquisition.serializers import DeploymentExportSerializer
-from metadatax_acquisition.views import DeploymentViewSet, ProjectViewSet
+from metadatax.acquisition.serializers import DeploymentExportSerializer
+from metadatax.acquisition.views import DeploymentViewSet, ProjectViewSet
 
 
 class WebsiteView(viewsets.ViewSet):

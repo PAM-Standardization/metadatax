@@ -27,20 +27,16 @@ poetry run black admin meta_auth metadatax website
 ```python
     INSTALLED_APPS = [
         ...,
-        "metadatax_common",
-        "metadatax_data",
-        "metadatax_acquisition",
-        "metadatax_equipment",
-        "metadatax_ontology",
+        "metadatax.common",
+        "metadatax.data",
+        "metadatax.acquisition",
+        "metadatax.equipment",
+        "metadatax.ontology",
     ]
 ```
 2. Include the metadatax URLconf in your project urls.py like this::
 ```python
-  path("metadatax/", include("metadatax_common.urls")),
-  path("metadatax/ontology/", include("metadatax_ontology.urls")),
-  path("metadatax/acquisition/", include("metadatax_acquisition.urls")),
-  path("metadatax/equipment/", include("metadatax_equipment.urls")),
-  path("metadatax/data/", include("metadatax_data.urls")),
+  path("metadatax/", include("metadatax.urls")),
 ```
 3. Run `python manage.py migrate` to create the models.
 

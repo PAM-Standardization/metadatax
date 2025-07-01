@@ -24,7 +24,7 @@ type Contact = {
     website: string | null;
 }
 type Role =
-    'Main Contac' |
+    'Main Contact' |
     'Funder' |
     'Project Owner' |
     'Project Manager' |

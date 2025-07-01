@@ -6,11 +6,13 @@ from rest_framework import filters
 from rest_framework.request import Request
 
 
-class ModelFilter(filters.BaseFilterBackend):
+class ModelFilter(
+    filters.SearchFilter,
+):
     """Common filter for model viewsets"""
 
     def filter_queryset(self, request: Request, queryset, view):
-        _queryset = queryset
+        _queryset = super().filter_queryset(request, queryset, view)
         for param in request.query_params:
             try:
                 value = request.query_params[param]
