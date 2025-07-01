@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from metadatax.ontology.models import Source
 from metadatax.ontology.serializers import SourceSerializer
-from utils.views import ModelFilter
+from metadatax.utils import ModelFilter
 
 
 class SourceViewSet(viewsets.ModelViewSet):

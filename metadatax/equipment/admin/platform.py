@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from metadatax.equipment.models import Platform
 from metadatax.equipment.serializers.platform import PlatformSerializer
-from utils.admin import JSONExportModelAdmin
+from metadatax.utils import JSONExportModelAdmin
 
 
 @admin.register(Platform)

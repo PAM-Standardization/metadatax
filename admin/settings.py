@@ -151,7 +151,7 @@ OAUTH2_PROVIDER = {
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_FILTER_BACKENDS": ["utils.views.ModelFilter"],
+    "DEFAULT_FILTER_BACKENDS": ["metadatax.utils.views.ModelFilter"],
 }
 
 AUTH_USER_MODEL = "meta_auth.User"

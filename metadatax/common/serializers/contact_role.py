@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from metadatax.common.models import ContactRole
-from utils.serializers import EnumField
+from metadatax.utils import EnumField
 from .contact import ContactSerializer
 
 

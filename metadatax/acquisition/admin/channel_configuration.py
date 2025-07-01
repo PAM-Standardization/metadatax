@@ -11,7 +11,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from metadatax.acquisition.models import ChannelConfiguration
 from metadatax.acquisition.serializers import ChannelConfigurationSerializer
 from metadatax.data.models import FileFormat, File, AudioProperties
-from utils.admin import JSONExportModelAdmin
+from metadatax.utils import JSONExportModelAdmin
 
 
 class ChannelConfigurationForm(forms.ModelForm):

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from metadatax.ontology.models import PhysicalDescriptor, SignalShape, SignalPlurality
-from utils.serializers import EnumField
+from metadatax.utils import EnumField
 
 
 class PhysicalDescriptorSerializer(serializers.ModelSerializer):

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from metadatax.equipment.models import HydrophoneDirectivity, HydrophoneSpecification
-from utils.serializers import EnumField
+from metadatax.utils import EnumField
 
 
 class HydrophoneSpecificationSerializer(serializers.ModelSerializer):

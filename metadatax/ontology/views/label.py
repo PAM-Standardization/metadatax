@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from metadatax.ontology.models import Label
 from metadatax.ontology.serializers import LabelSerializer
-from utils.views import ModelFilter
+from metadatax.utils import ModelFilter
 
 
 class LabelViewSet(viewsets.ModelViewSet):

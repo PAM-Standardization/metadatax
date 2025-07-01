@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from metadatax.ontology.models import Sound
 from metadatax.ontology.serializers import SoundSerializer
-from utils.views import ModelFilter
+from metadatax.utils import ModelFilter
 
 
 class SoundViewSet(viewsets.ModelViewSet):

@@ -13,7 +13,7 @@ from django.utils.safestring import mark_safe
 
 from metadatax.acquisition.models import Deployment, DeploymentMobilePosition
 from metadatax.acquisition.serializers import DeploymentExportSerializer
-from utils.admin import JSONExportModelAdmin
+from metadatax.utils import JSONExportModelAdmin
 
 
 class DeploymentForm(forms.ModelForm):

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from metadatax.acquisition.models import Project, Financing
 from metadatax.common.models import Accessibility
 from metadatax.common.serializers import ContactRoleSerializer
-from utils.serializers import EnumField
+from metadatax.utils import EnumField
 from .campaign import CampaignSerializer
 from .deployment import DeploymentExportSerializer
 from .project_type import ProjectTypeSerializer

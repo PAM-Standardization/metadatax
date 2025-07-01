@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from metadatax.ontology.models import PhysicalDescriptor
 from metadatax.ontology.serializers import PhysicalDescriptorSerializer
-from utils.views import ModelFilter
+from metadatax.utils import ModelFilter
 
 
 class PhysicalDescriptorViewSet(viewsets.ModelViewSet):

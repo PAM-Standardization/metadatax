@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from metadatax.ontology.models import Label
 from metadatax.ontology.serializers import LabelSerializer
-from utils.admin import JSONExportModelAdmin
+from metadatax.utils import JSONExportModelAdmin
 
 
 @admin.register(Label)

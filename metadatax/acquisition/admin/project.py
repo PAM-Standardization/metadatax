@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 
 from metadatax.acquisition.models import Project
 from metadatax.acquisition.serializers import ProjectExportSerializer
-from utils.admin import JSONExportModelAdmin
+from metadatax.utils import JSONExportModelAdmin
 from .campaign import CampaignInline
 from .site import SiteInline
 
