@@ -25,6 +25,9 @@ class ChannelConfiguration(models.Model):
         ]
         db_table = "metadatax_acquisition_channelconfiguration"
 
+    def __str__(self):
+        return f"{self.deployment} [{self.id}]"
+
     deployment = models.ForeignKey(
         to=Deployment,
         on_delete=models.CASCADE,

@@ -17,7 +17,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path("", include("metadatax.common.urls")),
-    path("", include("metadatax.acquisition.urls")),
+    path("acquisition/", include("metadatax.acquisition.urls")),
     path("ontology/", include("metadatax.ontology.urls")),
     path("equipment/", include("metadatax.equipment.urls")),
     path("data/", include("metadatax.data.urls")),

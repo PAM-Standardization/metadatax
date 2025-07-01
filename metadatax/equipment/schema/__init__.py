@@ -1,5 +1,5 @@
 from graphene import ObjectType, Field
-from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django_pagination import DjangoPaginationConnectionField
 
 from metadatax.equipment.models import SDCardSpecification, RecorderSpecification, PlatformType, Platform, \
     MaintenanceType, Maintenance, HydrophoneSpecification, Equipment, AcousticDetectorSpecification
@@ -15,31 +15,31 @@ from .sd_card_specification import SDCardSpecificationNode
 
 
 class EquipmentQuery(ObjectType):
-    all_acoustic_detector_specifications = DjangoFilterConnectionField(AcousticDetectorSpecificationNode)
+    all_acoustic_detector_specifications = DjangoPaginationConnectionField(AcousticDetectorSpecificationNode)
     acoustic_detector_specification_by_id = Field(AcousticDetectorSpecificationNode)
 
-    all_equipments = DjangoFilterConnectionField(EquipmentNode)
+    all_equipments = DjangoPaginationConnectionField(EquipmentNode)
     equipment_by_id = Field(EquipmentNode)
 
-    all_hydrophone_specifications = DjangoFilterConnectionField(HydrophoneSpecificationNode)
+    all_hydrophone_specifications = DjangoPaginationConnectionField(HydrophoneSpecificationNode)
     hydrophone_specification_by_id = Field(HydrophoneSpecificationNode)
 
-    all_maintenances = DjangoFilterConnectionField(MaintenanceNode)
+    all_maintenances = DjangoPaginationConnectionField(MaintenanceNode)
     maintenance_by_id = Field(MaintenanceNode)
 
-    all_maintenance_types = DjangoFilterConnectionField(MaintenanceTypeNode)
+    all_maintenance_types = DjangoPaginationConnectionField(MaintenanceTypeNode)
     maintenance_type_by_id = Field(MaintenanceTypeNode)
 
-    all_platforms = DjangoFilterConnectionField(PlatformNode)
+    all_platforms = DjangoPaginationConnectionField(PlatformNode)
     platform_by_id = Field(PlatformNode)
 
-    all_platform_types = DjangoFilterConnectionField(PlatformTypeNode)
+    all_platform_types = DjangoPaginationConnectionField(PlatformTypeNode)
     platform_type_by_id = Field(PlatformTypeNode)
 
-    all_recorder_specifications = DjangoFilterConnectionField(RecorderSpecificationNode)
+    all_recorder_specifications = DjangoPaginationConnectionField(RecorderSpecificationNode)
     recorder_specification_by_id = Field(RecorderSpecificationNode)
 
-    all_sd_card_specifications = DjangoFilterConnectionField(SDCardSpecificationNode)
+    all_sd_card_specifications = DjangoPaginationConnectionField(SDCardSpecificationNode)
     sd_card_specification_by_id = Field(SDCardSpecificationNode)
 
     def resolve_acoustic_detector_specification_by_id(self, info, id: int):

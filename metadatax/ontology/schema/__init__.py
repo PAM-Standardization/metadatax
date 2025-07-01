@@ -1,5 +1,5 @@
 from graphene import ObjectType, Field
-from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django_pagination import DjangoPaginationConnectionField
 
 from metadatax.ontology.models import Label, PhysicalDescriptor, Sound, Source
 from .label import LabelNode
@@ -10,16 +10,16 @@ from .source import SourceNode
 
 class OntologyQuery(ObjectType):
 
-    all_labels = DjangoFilterConnectionField(LabelNode)
+    all_labels = DjangoPaginationConnectionField(LabelNode)
     label_by_id = Field(LabelNode)
 
-    all_physical_descriptors = DjangoFilterConnectionField(PhysicalDescriptorNode)
+    all_physical_descriptors = DjangoPaginationConnectionField(PhysicalDescriptorNode)
     physical_descriptor_by_id = Field(PhysicalDescriptorNode)
 
-    all_sounds = DjangoFilterConnectionField(SoundNode)
+    all_sounds = DjangoPaginationConnectionField(SoundNode)
     sound_by_id = Field(SoundNode)
 
-    all_sources = DjangoFilterConnectionField(SourceNode)
+    all_sources = DjangoPaginationConnectionField(SourceNode)
     source_by_id = Field(SourceNode)
 
     def resolve_label_by_id(self, info, id):
