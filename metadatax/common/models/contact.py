@@ -1,5 +1,7 @@
 from django.db import models
 
+from .institution import Institution
+
 
 class Contact(models.Model):
     """Contact model"""
@@ -14,3 +16,5 @@ class Contact(models.Model):
 
     mail = models.EmailField(max_length=255, blank=True, null=True)
     website = models.URLField(max_length=255, blank=True, null=True)
+
+    current_institutions = models.ManyToManyField(Institution, related_name="contacts")

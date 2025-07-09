@@ -7,6 +7,10 @@ from django import forms
 from django.contrib import admin
 from django.core import validators
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.utils.translation import gettext_lazy as _
+from django_admin_multiple_choice_list_filter.list_filters import (
+    MultipleChoiceListFilter,
+)
 
 from metadatax.acquisition.models import ChannelConfiguration
 from metadatax.acquisition.serializers import ChannelConfigurationSerializer
@@ -63,6 +67,25 @@ class ChannelConfigurationForm(forms.ModelForm):
         return instance
 
 
+class ChannelConfigurationTypeFilter(MultipleChoiceListFilter):
+    title = _("Type")
+    parameter_name = "type__in"
+
+    def lookups(self, request, model_admin):
+        return [
+            ("recorder_specification", "Recorder"),
+            ("detector_specification", "Acoustic detector"),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() is None:
+            return queryset
+        filters = {}
+        for filter in self.value_as_list():
+            filters[filter + "__isnull"] = False
+        return queryset.filter(**filters)
+
+
 @admin.register(ChannelConfiguration)
 class ChannelConfigurationAdmin(JSONExportModelAdmin):
     """ChannelConfiguration presentation in DjangoAdmin"""
@@ -91,8 +114,12 @@ class ChannelConfigurationAdmin(JSONExportModelAdmin):
         "deployment__site__name",
     ]
     list_filter = [
+        ChannelConfigurationTypeFilter,
         "deployment__project__accessibility",
         "continuous",
+    ]
+    filter_horizontal = [
+        "other_equipments",
     ]
 
     @admin.display(description="Other equipments")

@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Q, F
 
+from metadatax.bibliography.models import Bibliography
+
 
 class Source(models.Model):
     """Ontology for the source of the sound"""
@@ -32,4 +34,8 @@ class Source(models.Model):
         blank=True,
         related_name="children",
         on_delete=models.SET_NULL,
+    )
+
+    related_bibliography = models.ManyToManyField(
+        Bibliography, related_name="related_sources"
     )

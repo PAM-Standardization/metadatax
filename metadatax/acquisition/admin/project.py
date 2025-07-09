@@ -50,8 +50,8 @@ class ProjectAdmin(JSONExportModelAdmin):
 
     @admin.display(description="Campaigns")
     def list_campaigns(self, obj: Project) -> str:
-        return mark_safe("<br/>".join([str(c) for c in obj.campaigns.all()]))
+        return mark_safe("<br/>".join([c.name for c in obj.campaigns.all()]))
 
     @admin.display(description="Sites")
     def list_sites(self, obj: Project) -> str:
-        return mark_safe("<br/>".join([str(s) for s in obj.sites.all()]))
+        return mark_safe("<br/>".join([s.name for s in obj.sites.all()]))

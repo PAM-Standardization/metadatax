@@ -1,8 +1,11 @@
+import graphene
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
 from graphene_django import DjangoObjectType
 
 from metadatax.ontology.models import Source
+from metadatax.ontology.serializers import SourceSerializer
+from metadatax.utils.schema import PostMutation, DeleteMutation
 
 
 class SourceFilter(FilterSet):
@@ -32,3 +35,18 @@ class SourceNode(DjangoObjectType):
         fields = "__all__"
         filterset_class = SourceFilter
         interfaces = (relay.Node,)
+
+
+class PostSourceMutation(PostMutation):
+    data = graphene.Field(SourceNode)
+
+    class Meta:
+        serializer_class = SourceSerializer
+        model_class = Source
+        model_operations = ["create", "update"]
+        lookup_field = "id"
+
+
+class DeleteSourceMutation(DeleteMutation):
+    class Meta:
+        model_class = Source

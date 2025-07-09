@@ -1,6 +1,7 @@
 from django.db import models
-
 from django.db.models import Q, F
+
+from metadatax.bibliography.models import Bibliography
 
 
 class Sound(models.Model):
@@ -35,3 +36,6 @@ class Sound(models.Model):
     )
 
     associated_names = models.ManyToManyField("self", related_name="associated_names")
+    related_bibliography = models.ManyToManyField(
+        Bibliography, related_name="related_sounds"
+    )

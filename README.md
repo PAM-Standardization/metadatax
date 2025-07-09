@@ -27,11 +27,14 @@ poetry run black admin meta_auth metadatax website
 ```python
     INSTALLED_APPS = [
         ...,
+        "django_admin_multiple_choice_list_filter",
+        "metadatax",
         "metadatax.common",
-        "metadatax.data",
+        "metadatax.bibliography",
+        "metadatax.ontology",
         "metadatax.acquisition",
         "metadatax.equipment",
-        "metadatax.ontology",
+        "metadatax.data",
     ]
 ```
 2. Include the metadatax URLconf in your project urls.py like this::

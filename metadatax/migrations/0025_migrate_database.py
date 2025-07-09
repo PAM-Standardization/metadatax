@@ -53,6 +53,12 @@ class MigrationAction:
         self.File = apps.get_model("data", "File")
         self.AudioProperties = apps.get_model("data", "AudioProperties")
 
+        for recorder in apps.get_model("metadatax", "Recorder").objects.all():
+            self.migrate_old_recorder(recorder)
+        for hydrophone in apps.get_model("metadatax", "Hydrophone").objects.all():
+            self.migrate_old_hydrophone(hydrophone)
+        for platform in apps.get_model("metadatax", "Platform").objects.all():
+            self.migrate_old_platform(platform)
         self.run_migration(apps.get_model("metadatax", "Project").objects.all())
 
     def run_migration(self, old_projects):
@@ -60,22 +66,15 @@ class MigrationAction:
         self.migrate_project_types(old_projects=old_projects)
         self.migrate_sites(old_projects=old_projects)
         self.migrate_campaigns(old_projects=old_projects)
-        self.migrate_platforms(old_projects=old_projects)
-        self.migrate_platform_types(old_projects=old_projects)
         self.migrate_deployments(old_projects=old_projects)
         self.migrate_channel_configurations(old_projects=old_projects)
         self.migrate_file_formats(old_projects=old_projects)
-        self.migrate_equipment(old_projects=old_projects)
-        self.migrate_recorder_specifications(old_projects=old_projects)
-        self.migrate_hydrophone_specifications(old_projects=old_projects)
         self.migrate_channel_configuration_recorder_specification(
             old_projects=old_projects
         )
         self.migrate_channel_configuration_recorder_specifications_format_through(
             old_projects=old_projects
         )
-        self.migrate_contacts(old_projects=old_projects)
-        self.migrate_contact_roles(old_projects=old_projects)
         self.migrate_project_contact_roles(old_projects=old_projects)
         self.migrate_deployment_contact_roles(old_projects=old_projects)
         self.migrate_deployment_mobile_positions(old_projects=old_projects)
@@ -148,44 +147,16 @@ class MigrationAction:
                     description=deployment.description,
                     site_id=deployment.site_id,
                     campaign_id=deployment.campaign_id,
-                    platform_id=deployment.platform_id,
+                    platform=self.Platform.objects.get(
+                        name=deployment.platform.name,
+                        type__name=deployment.platform.type.name,
+                    )
+                    if deployment.platform is not None
+                    else None,
                 )
                 for project in old_projects
                 for deployment in project.deployments.all()
             ]
-        )
-
-    def migrate_platforms(self, old_projects):
-        self.Platform.objects.bulk_create(
-            [
-                self.Platform(
-                    id=deployment.platform_id,
-                    owner=self.migration_contact,
-                    provider=self.migration_contact,
-                    type_id=deployment.platform.type_id,
-                    name=deployment.platform.name,
-                    description=deployment.platform.description,
-                )
-                for project in old_projects
-                for deployment in project.deployments.all()
-                if deployment.platform is not None
-            ],
-            ignore_conflicts=True,
-        )
-
-    def migrate_platform_types(self, old_projects):
-        self.PlatformType.objects.bulk_create(
-            [
-                self.PlatformType(
-                    id=deployment.platform.type.id,
-                    name=deployment.platform.type.name,
-                    is_mobile=deployment.platform.type.type == "M",
-                )
-                for project in old_projects
-                for deployment in project.deployments.all()
-                if deployment.platform_id is not None
-            ],
-            ignore_conflicts=True,
         )
 
     def migrate_channel_configurations(self, old_projects):
@@ -213,7 +184,11 @@ class MigrationAction:
             [
                 self.ChannelConfigurationRecorderSpecification(
                     id=channel.id,
-                    recorder_id=channel.recorder_id,
+                    recorder=self.Equipment.objects.get(
+                        provider__name=channel.recorder.model.provider.name,
+                        model=channel.recorder.model.name,
+                        serial_number=channel.recorder.serial_number,
+                    ),
                     hydrophone=self.Equipment.objects.get(
                         provider__name=channel.hydrophone.model.provider.name,
                         model=channel.hydrophone.model.name,
@@ -245,89 +220,52 @@ class MigrationAction:
             ]
         )
 
-    def migrate_contacts(self, old_projects):
-        self.Contact.objects.bulk_create(
-            list(
-                set(
-                    [
-                        self.Contact(
-                            id=institution.id,
-                            name=institution.name,
-                            mail=institution.contact,
-                            website=institution.website,
-                        )
-                        for institution in [
-                            *[
-                                institution
-                                for project in old_projects
-                                for institution in project.responsible_parties.all()
-                            ],
-                            *[
-                                deployment.provider
-                                for project in old_projects
-                                for deployment in project.deployments.all()
-                                if deployment.provider is not None
-                            ],
-                        ]
-                    ]
-                )
-            ),
-            ignore_conflicts=True,
-        )
-
-    def migrate_contact_roles(self, old_projects):
-        self.ContactRole.objects.bulk_create(
-            [
-                *[
-                    self.ContactRole(
-                        id=institution.id,
-                        contact_id=institution.id,
-                        role=ContactRole.Type.MAIN_CONTACT,
-                    )
-                    for project in old_projects
-                    for institution in project.responsible_parties.all()
-                ],
-                *[
-                    self.ContactRole(
-                        id=deployment.provider.id,
-                        contact_id=deployment.provider.id,
-                        role=ContactRole.Type.CONTACT_POINT,
-                    )
-                    for project in old_projects
-                    for deployment in project.deployments.all()
-                    if deployment.provider is not None
-                ],
-            ],
-            ignore_conflicts=True,
-        )
-
     def migrate_project_contact_roles(self, old_projects):
-        self.ProjectContactThrough.objects.bulk_create(
-            [
-                self.ProjectContactThrough(
-                    id=relation.id,
-                    project_id=relation.project_id,
-                    contactrole_id=relation.institution_id,
+        project_contacts = []
+        for project in old_projects:
+            for relation in project.responsible_parties.through.objects.filter(
+                project_id=project.id
+            ):
+                contact, _ = self.Contact.objects.get_or_create(
+                    name=relation.institution.name,
+                    mail=relation.institution.contact,
+                    website=relation.institution.website,
                 )
-                for project in old_projects
-                for relation in project.responsible_parties.through.objects.filter(
-                    project_id=project.id
+                contact_role, _ = self.ContactRole.objects.get_or_create(
+                    contact=contact,
+                    role=ContactRole.Type.MAIN_CONTACT,
                 )
-            ]
-        )
+                project_contacts.append(
+                    self.ProjectContactThrough(
+                        id=relation.id,
+                        project_id=relation.project_id,
+                        contactrole=contact_role,
+                    )
+                )
+        self.ProjectContactThrough.objects.bulk_create(project_contacts)
 
     def migrate_deployment_contact_roles(self, old_projects):
-        self.DeploymentContactThrough.objects.bulk_create(
-            [
-                self.DeploymentContactThrough(
-                    deployment_id=deployment.id,
-                    contactrole_id=deployment.provider.id,
+        deployment_contacts = []
+        for project in old_projects:
+            for deployment in project.deployments.all():
+                if deployment.provider is None:
+                    continue
+                contact, _ = self.Contact.objects.get_or_create(
+                    name=deployment.provider.name,
+                    mail=deployment.provider.contact,
+                    website=deployment.provider.website,
                 )
-                for project in old_projects
-                for deployment in project.deployments.all()
-                if deployment.provider is not None
-            ]
-        )
+                contact_role, _ = self.ContactRole.objects.get_or_create(
+                    contact=contact,
+                    role=ContactRole.Type.CONTACT_POINT,
+                )
+                deployment_contacts.append(
+                    self.DeploymentContactThrough(
+                        deployment_id=deployment.id,
+                        contactrole=contact_role,
+                    )
+                )
+        self.DeploymentContactThrough.objects.bulk_create(deployment_contacts)
 
     def migrate_deployment_mobile_positions(self, old_projects):
         self.DeploymentMobilePosition.objects.bulk_create(
@@ -450,77 +388,71 @@ class MigrationAction:
             for deployment in project.deployments.all()
             for channel in deployment.channelconfiguration_set.all()
         ]
-        equipments = []
         for channel in all_channels:
-            provider, _ = self.Contact.objects.get_or_create(
-                name=channel.recorder.model.provider.name,
-                mail=channel.recorder.model.provider.contact,
-                website=channel.recorder.model.provider.website,
-            )
-            equipments.append(
-                self.Equipment(
-                    id=channel.recorder.id,
-                    model=channel.recorder.model.name,
-                    serial_number=channel.recorder.serial_number,
-                    owner=self.migration_contact,
-                    provider=provider,
-                    name=channel.recorder.name,
-                    recorder_specification_id=channel.recorder.id,
-                )
-            )
-            provider, _ = self.Contact.objects.get_or_create(
-                name=channel.hydrophone.model.provider.name,
-                mail=channel.hydrophone.model.provider.contact,
-                website=channel.hydrophone.model.provider.website,
-            )
-            equipments.append(
-                self.Equipment(
-                    model=channel.hydrophone.model.name,
-                    serial_number=channel.hydrophone.serial_number,
-                    owner=self.migration_contact,
-                    provider=provider,
-                    name=channel.recorder.name,
-                    hydrophone_specification_id=channel.hydrophone.id,
-                )
-            )
-        self.Equipment.objects.bulk_create(equipments, ignore_conflicts=True)
+            self.migrate_old_recorder(channel.recorder)
+            self.migrate_old_hydrophone(channel.hydrophone)
 
-    def migrate_recorder_specifications(self, old_projects):
-        self.RecorderSpecification.objects.bulk_create(
-            [
-                self.RecorderSpecification(
-                    id=channel.recorder.id,
-                    channels_count=channel.recorder.model.number_of_channels,
-                )
-                for project in old_projects
-                for deployment in project.deployments.all()
-                for channel in deployment.channelconfiguration_set.all()
-            ],
-            ignore_conflicts=True,
+    def migrate_old_recorder(self, old_recorder):
+        recorder_provider, _ = self.Contact.objects.get_or_create(
+            name=old_recorder.model.provider.name,
+            mail=old_recorder.model.provider.contact,
+            website=old_recorder.model.provider.website,
         )
+        recorder_equipment, is_new = self.Equipment.objects.get_or_create(
+            model=old_recorder.model.name,
+            serial_number=old_recorder.serial_number,
+            owner=self.migration_contact,
+            provider=recorder_provider,
+            name=old_recorder.name,
+        )
+        if is_new or recorder_equipment.recorder_specification is None:
+            recorder_equipment.recorder_specification = (
+                self.RecorderSpecification.objects.create(
+                    channels_count=old_recorder.model.number_of_channels,
+                )
+            )
+            recorder_equipment.save()
 
-    def migrate_hydrophone_specifications(self, old_projects):
-        self.HydrophoneSpecification.objects.bulk_create(
-            [
-                self.HydrophoneSpecification(
-                    id=channel.hydrophone.id,
-                    sensitivity=channel.hydrophone.sensitivity,
-                    directivity=channel.hydrophone.model.directivity,
-                    operating_min_temperature=channel.hydrophone.model.operating_min_temperature,
-                    operating_max_temperature=channel.hydrophone.model.operating_max_temperature,
-                    min_bandwidth=channel.hydrophone.model.min_bandwidth,
-                    max_bandwidth=channel.hydrophone.model.max_bandwidth,
-                    min_dynamic_range=channel.hydrophone.model.min_dynamic_range,
-                    max_dynamic_range=channel.hydrophone.model.max_dynamic_range,
-                    max_operating_depth=channel.hydrophone.model.max_operating_depth,
-                    noise_floor=channel.hydrophone.model.noise_floor,
-                )
-                for project in old_projects
-                for deployment in project.deployments.all()
-                for channel in deployment.channelconfiguration_set.all()
-            ],
-            ignore_conflicts=True,
+    def migrate_old_hydrophone(self, old_hydrophone):
+        hydrophone_provider, _ = self.Contact.objects.get_or_create(
+            name=old_hydrophone.model.provider.name,
+            mail=old_hydrophone.model.provider.contact,
+            website=old_hydrophone.model.provider.website,
         )
+        hydrophone_equipment, is_new = self.Equipment.objects.get_or_create(
+            model=old_hydrophone.model.name,
+            serial_number=old_hydrophone.serial_number,
+            owner=self.migration_contact,
+            provider=hydrophone_provider,
+        )
+        if is_new or hydrophone_equipment.hydrophone_specification is None:
+            hydrophone_equipment.hydrophone_specification = self.HydrophoneSpecification.objects.create(
+                sensitivity=old_hydrophone.sensitivity,
+                directivity=old_hydrophone.model.directivity,
+                operating_min_temperature=old_hydrophone.model.operating_min_temperature,
+                operating_max_temperature=old_hydrophone.model.operating_max_temperature,
+                min_bandwidth=old_hydrophone.model.min_bandwidth,
+                max_bandwidth=old_hydrophone.model.max_bandwidth,
+                min_dynamic_range=old_hydrophone.model.min_dynamic_range,
+                max_dynamic_range=old_hydrophone.model.max_dynamic_range,
+                max_operating_depth=old_hydrophone.model.max_operating_depth,
+                noise_floor=old_hydrophone.model.noise_floor,
+            )
+            hydrophone_equipment.save()
+
+    def migrate_old_platform(self, old_platform):
+        type, _ = self.PlatformType.objects.get_or_create(
+            name=old_platform.type.name,
+            is_mobile=old_platform.type.type == "M",
+        )
+        platform, _ = self.Platform.objects.get_or_create(
+            owner=self.migration_contact,
+            provider=self.migration_contact,
+            name=old_platform.name,
+            description=old_platform.description,
+            type=type,
+        )
+        return platform
 
 
 class Migration(migrations.Migration):

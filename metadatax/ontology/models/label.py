@@ -1,5 +1,6 @@
 from django.db import models
 
+from metadatax.bibliography.models import Bibliography
 from .sound import Sound
 from .source import Source
 
@@ -21,3 +22,7 @@ class Label(models.Model):
         Sound, on_delete=models.PROTECT, null=True, blank=True, related_name="labels"
     )
     nickname = models.CharField(max_length=255, null=True, blank=True)
+
+    related_bibliography = models.ManyToManyField(
+        Bibliography, related_name="related_labels"
+    )

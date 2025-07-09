@@ -5,7 +5,7 @@ from metadatax.ontology.models import Label, PhysicalDescriptor, Sound, Source
 from .label import LabelNode
 from .physical_descriptor import PhysicalDescriptorNode
 from .sound import SoundNode
-from .source import SourceNode
+from .source import SourceNode, PostSourceMutation, DeleteSourceMutation
 
 
 class OntologyQuery(ObjectType):
@@ -33,3 +33,8 @@ class OntologyQuery(ObjectType):
 
     def resolve_source_by_id(self, info, id):
         return Source.objects.get(pk=id)
+
+
+class OntologyMutation(ObjectType):
+    post_source = PostSourceMutation.Field()
+    delete_source = DeleteSourceMutation.Field()

@@ -10,6 +10,7 @@ class MetadataxAdminSite(admin.AdminSite):
         "metadatax": 0,
         "metadatax.common": 1,
         "metadatax.ontology": 1,
+        "metadatax.bibliography": 1,
         "metadatax.acquisition": 1,
         "metadatax.data": 1,
         "metadatax.equipment": 1,

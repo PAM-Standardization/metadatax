@@ -1,5 +1,6 @@
 from django.db import models
 
+from metadatax.bibliography.models import Bibliography
 from metadatax.common.models import Accessibility, ContactRole
 from .financing import Financing
 from .project_type import ProjectType
@@ -63,4 +64,8 @@ class Project(models.Model):
         max_length=2,
         blank=True,
         null=True,
+    )
+
+    related_bibliography = models.ManyToManyField(
+        Bibliography, related_name="related_projects"
     )

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "metadatax"
-version = "0.4.0"
+version = "0.4.1"
 description = "PAM acquisition metadata"
 authors = ["Your Name <you@example.com>"]
 license = "GPL-3.0"
@@ -16,6 +16,7 @@ psycopg2-binary = "^2.8.6"
 django-model-prefix = "^1.1.0"
 graphene-django = "^3.2.3"
 graphene-django-pagination = {url = "https://github.com/instruct-br/graphene-django-pagination/archive/master.zip"}
+django-admin-multiple-choice-list-filter = "^0.1.1"
 
 [tool.poetry.group.dev.dependencies]
 drf-yasg = "^1.21.7"

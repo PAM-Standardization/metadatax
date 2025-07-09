@@ -117,6 +117,17 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-admin-multiple-choice-list-filter"
+version = "0.1.1"
+description = "A Django app to add a Multiple Choice List Filter to the admin interface."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-admin-multiple-choice-list-filter-0.1.1.tar.gz", hash = "sha256:a5b82682ff752cf74bbc4fa3d562c99b9f9f80389961017e1ac63e08f22d8b9f"},
+    {file = "django_admin_multiple_choice_list_filter-0.1.1-py2-none-any.whl", hash = "sha256:eab2ad5fad6df8ed8436cb6c1d0e67863453a9d30282b7fdcb7e45b2eb37ab6f"},
+]
+
+[[package]]
 name = "django-filter"
 version = "23.5"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
@@ -803,4 +814,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "ff8ec07a35dfa1d330d72e242de0550c46c45f751972407bf8d44c758df34dfc"
+content-hash = "7ce0d135671b4bfda85f95a78027b2d772b7f33608d55e9404cd6bbe2ee38a2b"

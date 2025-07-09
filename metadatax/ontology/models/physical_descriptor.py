@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
+from metadatax.bibliography.models import Bibliography
 from .label import Label
 
 
@@ -44,3 +45,7 @@ class PhysicalDescriptor(models.Model):
         ],
     )
     description = models.TextField(null=True, blank=True)
+
+    related_bibliography = models.ManyToManyField(
+        Bibliography, related_name="related_physical_descriptors"
+    )
