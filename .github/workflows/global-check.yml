@@ -2,9 +2,9 @@ name: Global check
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     types: [ ready_for_review, opened, reopened, synchronize ]
 
 jobs:
