@@ -13,6 +13,7 @@ class InstitutionFilter(FilterSet):
     provided_platforms__id = NumberFilter()
     owned_platforms__id = NumberFilter()
     roles__id = NumberFilter()
+    performed_maintenances__id = NumberFilter()
 
     class Model:
         model = Contact
@@ -30,6 +31,7 @@ class InstitutionFilter(FilterSet):
             "provided_platforms__id": ["exact", "in"],
             "owned_platforms__id": ["exact", "in"],
             "roles__id": ["exact", "in"],
+            "performed_maintenances__id": ["exact", "in"],
         }
 
 

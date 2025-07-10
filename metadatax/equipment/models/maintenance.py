@@ -2,7 +2,7 @@ import datetime
 
 from django.db import models
 
-from metadatax.common.models import Contact
+from metadatax.common.models import Contact, Institution
 from .equipment import Equipment
 from .maintenance_type import MaintenanceType
 from .platform import Platform
@@ -29,6 +29,11 @@ class Maintenance(models.Model):
     description = models.TextField(blank=True, null=True)
     maintainer = models.ForeignKey(
         Contact, on_delete=models.PROTECT,
+        related_name='performed_maintenances',
+        blank=True, null=True,
+    )
+    maintainer_institution = models.ForeignKey(
+        Institution, on_delete=models.PROTECT,
         related_name='performed_maintenances',
         blank=True, null=True,
     )

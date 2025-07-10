@@ -11,6 +11,7 @@ class MaintenanceViewSet(
     queryset = Maintenance.objects.select_related(
         "type",
         "maintainer",
+        "maintainer_institution",
     )
     serializer_class = MaintenanceSerializer
     permission_classes = [

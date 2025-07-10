@@ -11,7 +11,8 @@ class MaintenanceAdmin(admin.ModelAdmin):
         "platform",
         "equipment",
         "description",
-        "maintainer"
+        "maintainer",
+        "maintainer_institution"
     ]
     search_fields = [
         "type__name",
@@ -22,4 +23,6 @@ class MaintenanceAdmin(admin.ModelAdmin):
         "equipment__name",
         "maintainer__name",
         "maintainer__mail",
+        "maintainer_institution__name",
+        "maintainer_institution__mail",
     ]
