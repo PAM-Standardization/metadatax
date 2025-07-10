@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=255, unique=True)),
+                ("name", models.CharField(max_length=255)),
                 ("city", models.CharField(max_length=100)),
                 ("country", models.CharField(max_length=100)),
                 ("mail", models.EmailField(blank=True, max_length=255, null=True)),
@@ -35,5 +35,9 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(
                 related_name="contacts", to="common.Institution"
             ),
+        ),
+        migrations.AlterUniqueTogether(
+            name="Institution",
+            unique_together={("name", "city", "country")},
         ),
     ]
