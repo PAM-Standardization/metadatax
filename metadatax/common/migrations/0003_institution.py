@@ -6,22 +6,34 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0002_alter_contactrole_contact'),
+        ("common", "0002_alter_contactrole_contact"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Institution',
+            name="Institution",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255, unique=True)),
-                ('city', models.CharField(max_length=100)),
-                ('country', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255, unique=True)),
+                ("city", models.CharField(max_length=100)),
+                ("country", models.CharField(max_length=100)),
+                ("mail", models.EmailField(blank=True, max_length=255, null=True)),
+                ("website", models.URLField(blank=True, max_length=255, null=True)),
             ],
         ),
         migrations.AddField(
-            model_name='contact',
-            name='current_institutions',
-            field=models.ManyToManyField(related_name='contacts', to='common.Institution'),
+            model_name="contact",
+            name="current_institutions",
+            field=models.ManyToManyField(
+                related_name="contacts", to="common.Institution"
+            ),
         ),
     ]
