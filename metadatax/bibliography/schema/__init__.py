@@ -1,3 +1,4 @@
+import graphene
 from graphene import ObjectType, Field
 from graphene_django_pagination import DjangoPaginationConnectionField
 
@@ -22,18 +23,26 @@ from .tags import TagNode
 class BibliographyQuery(ObjectType):
 
     all_authors = DjangoPaginationConnectionField(AuthorNode)
-    author_by_id = Field(AuthorNode)
+    author_by_id = Field(AuthorNode, id=graphene.ID(required=True))
 
     all_tags = DjangoPaginationConnectionField(TagNode)
-    tag_by_id = Field(TagNode)
+    tag_by_id = Field(TagNode, id=graphene.ID(required=True))
 
     all_bibliography = DjangoPaginationConnectionField(BibliographyNode)
-    bibliography_by_id = Field(BibliographyNode)
+    bibliography_by_id = Field(BibliographyNode, id=graphene.ID(required=True))
 
-    bibliography_article_by_id = Field(BibliographyArticleNode)
-    bibliography_software_by_id = Field(BibliographySoftwareNode)
-    bibliography_poster_by_id = Field(BibliographyPosterNode)
-    bibliography_conference_by_id = Field(BibliographyConferenceNode)
+    bibliography_article_by_id = Field(
+        BibliographyArticleNode, id=graphene.ID(required=True)
+    )
+    bibliography_software_by_id = Field(
+        BibliographySoftwareNode, id=graphene.ID(required=True)
+    )
+    bibliography_poster_by_id = Field(
+        BibliographyPosterNode, id=graphene.ID(required=True)
+    )
+    bibliography_conference_by_id = Field(
+        BibliographyConferenceNode, id=graphene.ID(required=True)
+    )
 
     def resolve_author_by_id(self, info, id):
         return Author.objects.get(pk=id)

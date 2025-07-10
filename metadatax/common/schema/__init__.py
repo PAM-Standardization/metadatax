@@ -1,4 +1,5 @@
-from graphene import ObjectType, Field, Int
+import graphene
+from graphene import ObjectType, Field
 from graphene_django_pagination import DjangoPaginationConnectionField
 
 from metadatax.common.models import Contact, ContactRole
@@ -9,10 +10,10 @@ from .contact_role import ContactRoleNode, RoleEnum
 
 class CommonQuery(ObjectType):
     all_contacts = DjangoPaginationConnectionField(ContactNode)
-    contact_by_id = Field(ContactNode, id=Int())
+    contact_by_id = Field(ContactNode, id=graphene.ID(required=True))
 
     all_contact_roles = DjangoPaginationConnectionField(ContactRoleNode)
-    contact_role_by_id = Field(ContactRoleNode, id=Int())
+    contact_role_by_id = Field(ContactRoleNode, id=graphene.ID(required=True))
 
     def resolve_contact_by_id(self, info, id: int):
         return Contact.objects.get(pk=id)

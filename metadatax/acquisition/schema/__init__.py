@@ -1,4 +1,5 @@
-from graphene import ObjectType, Field, Int
+import graphene
+from graphene import ObjectType, Field
 from graphene_django_pagination import DjangoPaginationConnectionField
 
 from metadatax.acquisition.models import (
@@ -30,43 +31,47 @@ from .site import SiteNode
 
 class AcquisitionQuery(ObjectType):
     all_campaigns = DjangoPaginationConnectionField(CampaignNode)
-    campaign_by_id = Field(CampaignNode, id=Int())
+    campaign_by_id = Field(CampaignNode, id=graphene.ID(required=True))
 
     all_channel_configurations = DjangoPaginationConnectionField(
         ChannelConfigurationNode
     )
-    channel_configuration_by_id = Field(ChannelConfigurationNode, id=Int())
+    channel_configuration_by_id = Field(
+        ChannelConfigurationNode, id=graphene.ID(required=True)
+    )
 
     all_channel_configurations_detector_specifications = (
         DjangoPaginationConnectionField(ChannelConfigurationDetectorSpecificationNode)
     )
     channel_configuration_detector_specification_by_id = Field(
-        ChannelConfigurationDetectorSpecificationNode, id=Int()
+        ChannelConfigurationDetectorSpecificationNode, id=graphene.ID(required=True)
     )
 
     all_channel_configurations_recorder_specifications = (
         DjangoPaginationConnectionField(ChannelConfigurationRecorderSpecificationNode)
     )
     channel_configuration_recorder_specification_by_id = Field(
-        ChannelConfigurationRecorderSpecificationNode, id=Int()
+        ChannelConfigurationRecorderSpecificationNode, id=graphene.ID(required=True)
     )
 
     all_deployments = DjangoPaginationConnectionField(DeploymentNode)
-    deployment_by_id = Field(DeploymentNode, id=Int())
+    deployment_by_id = Field(DeploymentNode, id=graphene.ID(required=True))
 
     all_deployment_mobile_positions = DjangoPaginationConnectionField(
         DeploymentMobilePositionNode
     )
-    deployment_mobile_position_by_id = Field(DeploymentMobilePositionNode, id=Int())
+    deployment_mobile_position_by_id = Field(
+        DeploymentMobilePositionNode, id=graphene.ID(required=True)
+    )
 
     all_projects = DjangoPaginationConnectionField(ProjectNode)
-    project_by_id = Field(ProjectNode, id=Int())
+    project_by_id = Field(ProjectNode, id=graphene.ID(required=True))
 
     all_project_types = DjangoPaginationConnectionField(ProjectTypeNode)
-    project_type_by_id = Field(ProjectTypeNode, id=Int())
+    project_type_by_id = Field(ProjectTypeNode, id=graphene.ID(required=True))
 
     all_sites = DjangoPaginationConnectionField(SiteNode)
-    site_by_id = Field(SiteNode, id=Int())
+    site_by_id = Field(SiteNode, id=graphene.ID(required=True))
 
     def resolve_campaign_by_id(self, info, id: int):
         return Campaign.objects.get(pk=id)
