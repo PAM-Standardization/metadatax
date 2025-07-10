@@ -23,5 +23,5 @@ class Contact(models.Model):
     @property
     def initial_names(self):
         names = self.first_name.split("-")
-        initial_first_name = "-".join([n[0] for n in names])
-        return f"{initial_first_name} {self.last_name}"
+        initial_first_name = "-".join([f"{n[0]}." for n in names])
+        return f"{self.last_name}, {initial_first_name}"
