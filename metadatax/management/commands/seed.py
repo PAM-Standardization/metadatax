@@ -10,7 +10,7 @@ from metadatax.acquisition.models import (
     Project,
     ChannelConfigurationRecorderSpecification,
 )
-from metadatax.common.models import Accessibility, Contact, ContactRole
+from metadatax.common.models import Accessibility, Contact, ContactRole, Institution
 from metadatax.data.models import FileFormat
 from metadatax.equipment.models import (
     PlatformType,
@@ -56,10 +56,11 @@ class Command(BaseCommand):
             contact=Contact.objects.create(name="OFB", mail="contact@ofb.test"),
             role=ContactRole.Type.MAIN_CONTACT,
         )
-        ensta = Contact.objects.create(
+        john = Contact.objects.create(name="John Doe", mail="j.doe@ensta.test")
+        ensta = Institution.objects.create(
             name="ENSTA Bretagne", mail="contact@ensta-bretagne.test"
         )
-        project.contacts.create(contact=ensta, role=ContactRole.Type.PROJECT_MANAGER)
+        project.contacts.create(contact=john, role=ContactRole.Type.PROJECT_MANAGER)
 
         phase1 = project.campaigns.create(name="Phase 1")
         site_a = project.sites.create(name="A")
@@ -101,7 +102,7 @@ class Command(BaseCommand):
             recovery_vessel=vessel,
         )
         contact_role = ContactRole.objects.create(
-            contact=ensta,
+            contact=john,
             role=ContactRole.Type.CONTACT_POINT,
         )
         for d in project.deployments.all():
@@ -114,7 +115,7 @@ class Command(BaseCommand):
                     model="LP-440",
                     serial_number="001",
                     owner=ensta,
-                    provider=Contact.objects.create(name="RTSYS"),
+                    provider=Institution.objects.create(name="RTSYS"),
                     recorder_specification=RecorderSpecification.objects.create(
                         channels_count=1
                     ),
@@ -123,7 +124,7 @@ class Command(BaseCommand):
                     model="HTI-99HF",
                     serial_number="785465",
                     owner=ensta,
-                    provider=Contact.objects.create(name="HTI"),
+                    provider=Institution.objects.create(name="HTI"),
                     hydrophone_specification=HydrophoneSpecification.objects.create(
                         sensitivity=-169.9
                     ),

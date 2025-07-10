@@ -288,7 +288,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="owned_platforms",
-                        to="common.contact",
+                        to="common.institution",
                     ),
                 ),
                 (
@@ -296,7 +296,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name="provided_platforms",
-                        to="common.contact",
+                        to="common.institution",
                     ),
                 ),
                 (
@@ -384,7 +384,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="owned_equipments",
-                to="common.contact",
+                to="common.institution",
             ),
         ),
         migrations.AddField(
@@ -393,7 +393,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="provided_equipments",
-                to="common.contact",
+                to="common.institution",
             ),
         ),
         migrations.AddField(

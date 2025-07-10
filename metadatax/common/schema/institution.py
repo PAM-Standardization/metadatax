@@ -8,6 +8,10 @@ from metadatax.common.models import Contact, Institution
 class InstitutionFilter(FilterSet):
     bibliography_authors__id = NumberFilter()
     contacts__id = NumberFilter()
+    provided_equipments__id = NumberFilter()
+    owned_equipments__id = NumberFilter()
+    provided_platforms__id = NumberFilter()
+    owned_platforms__id = NumberFilter()
 
     class Model:
         model = Contact
@@ -20,6 +24,10 @@ class InstitutionFilter(FilterSet):
             "website": ["exact", "icontains"],
             "bibliography_authors__id": ["exact", "in"],
             "contacts__id": ["exact", "in"],
+            "provided_equipments__id": ["exact", "in"],
+            "owned_equipments__id": ["exact", "in"],
+            "provided_platforms__id": ["exact", "in"],
+            "owned_platforms__id": ["exact", "in"],
         }
 
 
