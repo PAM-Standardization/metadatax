@@ -23,13 +23,18 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("name", models.CharField(max_length=255, unique=True)),
+                ("first_name", models.CharField(max_length=255)),
+                ("last_name", models.CharField(max_length=255)),
                 ("mail", models.EmailField(blank=True, max_length=255, null=True)),
                 ("website", models.URLField(blank=True, max_length=255, null=True)),
             ],
             options={
                 "db_table": "metadatax_common_contact",
             },
+        ),
+        migrations.AlterUniqueTogether(
+            name="contact",
+            unique_together={("first_name", "last_name")},
         ),
         migrations.CreateModel(
             name="ContactRole",

@@ -27,7 +27,8 @@ class RoleEnum(Scalar):
 
 class ContactRoleFilter(FilterSet):
     contact__id = NumberFilter()
-    contact__name = CharFilter()
+    contact__first_name = CharFilter()
+    contact__last_name = CharFilter()
     contact__mail = CharFilter()
     contact__website = CharFilter()
     institution__id = NumberFilter()
@@ -43,7 +44,8 @@ class ContactRoleFilter(FilterSet):
             "id": ["exact", "in"],
             "role": ["exact"],
             "contact__id": ["exact", "in"],
-            "contact__name": ["exact", "icontains"],
+            "contact__first_name": ["exact", "icontains"],
+            "contact__last_name": ["exact", "icontains"],
             "contact__mail": ["exact", "icontains"],
             "contact__website": ["exact", "icontains"],
             "institution__id": ["exact", "in"],

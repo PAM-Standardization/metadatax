@@ -16,6 +16,8 @@ class DeploymentViewSet(
         "platform__type",
     ).prefetch_related(
         "contacts",
+        "contacts__contact",
+        "contacts__institution",
     )
     serializer_class = DeploymentSerializer
     permission_classes = [
@@ -32,6 +34,9 @@ class DeploymentViewSet(
         "deployment_vessel",
         "recovery_vessel",
         "contacts__role",
-        "contacts__contact__name",
+        "contacts__contact__first_name",
+        "contacts__contact__last_name",
         "contacts__contact__mail",
+        "contacts__institution__name",
+        "contacts__institution__mail",
     ]

@@ -8,12 +8,15 @@ class ContactAdmin(admin.ModelAdmin):
     """Contact administration"""
 
     list_display = [
-        "name",
+        "initial_names",
+        "first_name",
+        "last_name",
         "mail",
         "website",
     ]
     search_fields = [
-        "name",
+        "first_name",
+        "last_name",
         "mail",
         "website",
     ]

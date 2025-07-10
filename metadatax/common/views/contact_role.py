@@ -13,7 +13,8 @@ class ContactRoleViewSet(
     permission_classes = (IsAuthenticatedOrReadOnly,)
     search_fields = (
         "role",
-        "contact__name",
+        "contact__first_name",
+        "contact__last_name",
         "contact__mail",
         "contact__website",
         "institution__name",

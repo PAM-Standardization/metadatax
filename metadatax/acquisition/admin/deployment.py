@@ -97,8 +97,11 @@ class DeploymentAdmin(JSONExportModelAdmin):
     search_fields = [
         "name",
         "project__name",
-        "contacts__contact__name",
+        "contacts__contact__first_name",
+        "contacts__contact__last_name",
         "contacts__contact__mail",
+        "contacts__institution__name",
+        "contacts__institution__mail",
     ]
     list_filter = [
         "project__accessibility",

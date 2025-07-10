@@ -53,10 +53,12 @@ class Command(BaseCommand):
         )
 
         project.contacts.create(
-            contact=Contact.objects.create(name="OFB", mail="contact@ofb.test"),
+            institution=Institution.objects.create(name="OFB", mail="contact@ofb.test"),
             role=ContactRole.Type.MAIN_CONTACT,
         )
-        john = Contact.objects.create(name="John Doe", mail="j.doe@ensta.test")
+        john = Contact.objects.create(
+            first_name="John", last_name="Doe", mail="j.doe@ensta.test"
+        )
         ensta = Institution.objects.create(
             name="ENSTA Bretagne", mail="contact@ensta-bretagne.test"
         )

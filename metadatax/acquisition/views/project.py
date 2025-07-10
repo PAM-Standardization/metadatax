@@ -11,6 +11,7 @@ class ProjectViewSet(
     queryset = Project.objects.select_related("project_type",).prefetch_related(
         "contacts",
         "contacts__contact",
+        "contacts__institution",
     )
     serializer_class = ProjectSerializer
     permission_classes = [
@@ -19,8 +20,11 @@ class ProjectViewSet(
     search_fields = [
         "name",
         "contacts__role",
-        "contacts__contact__name",
+        "contacts__contact__first_name",
+        "contacts__contact__last_name",
         "contacts__contact__mail",
+        "contacts__institution__name",
+        "contacts__institution__mail",
         "accessibility",
         "doi",
         "project_type__name",
