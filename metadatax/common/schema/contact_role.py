@@ -30,6 +30,10 @@ class ContactRoleFilter(FilterSet):
     contact__name = CharFilter()
     contact__mail = CharFilter()
     contact__website = CharFilter()
+    institution__id = NumberFilter()
+    institution__name = CharFilter()
+    institution__mail = CharFilter()
+    institution__website = CharFilter()
     deployments__id = NumberFilter()
     projects__id = NumberFilter()
 
@@ -42,6 +46,10 @@ class ContactRoleFilter(FilterSet):
             "contact__name": ["exact", "icontains"],
             "contact__mail": ["exact", "icontains"],
             "contact__website": ["exact", "icontains"],
+            "institution__id": ["exact", "in"],
+            "institution__name": ["exact", "icontains"],
+            "institution__mail": ["exact", "icontains"],
+            "institution__website": ["exact", "icontains"],
             "deployments__id": ["exact", "in"],
             "projects__id": ["exact", "in"],
         }

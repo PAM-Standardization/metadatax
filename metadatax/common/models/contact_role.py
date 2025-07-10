@@ -1,6 +1,8 @@
 from django.db import models
+from django.db.models import Q
 
 from .contact import Contact
+from .institution import Institution
 
 
 class ContactRole(models.Model):
@@ -17,9 +19,26 @@ class ContactRole(models.Model):
     class Meta:
         db_table = "metadatax_common_contactrole"
         unique_together = (("contact", "role"),)
+        constraints = [
+            models.CheckConstraint(
+                name="has_contact_or_institution",
+                check=Q(contact__isnull=False) | Q(institution__isnull=False),
+            )
+        ]
 
     def __str__(self):
-        return f"{ContactRole.Type(self.role).label}: {self.contact}"
+        return (
+            f"{ContactRole.Type(self.role).label}: {self.contact} | {self.institution}"
+        )
 
-    contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name="roles")
+    contact = models.ForeignKey(
+        Contact, on_delete=models.CASCADE, related_name="roles", blank=True, null=True
+    )
+    institution = models.ForeignKey(
+        Institution,
+        on_delete=models.CASCADE,
+        related_name="roles",
+        blank=True,
+        null=True,
+    )
     role = models.CharField(max_length=2, choices=Type.choices)

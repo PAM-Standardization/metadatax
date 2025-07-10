@@ -8,7 +8,15 @@ from metadatax.common.serializers import ContactRoleSerializer
 class ContactRoleViewSet(
     mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet
 ):
-    queryset = ContactRole.objects.all().select_related("contact")
+    queryset = ContactRole.objects.all().select_related("contact", "institution")
     serializer_class = ContactRoleSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    search_fields = ("role", "contact__name", "contact__mail", "contact__website")
+    search_fields = (
+        "role",
+        "contact__name",
+        "contact__mail",
+        "contact__website",
+        "institution__name",
+        "institution__mail",
+        "institution__website",
+    )

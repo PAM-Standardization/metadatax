@@ -227,13 +227,13 @@ class MigrationAction:
             for relation in project.responsible_parties.through.objects.filter(
                 project_id=project.id
             ):
-                contact, _ = self.Contact.objects.get_or_create(
+                institution, _ = self.Institution.objects.get_or_create(
                     name=relation.institution.name,
                     mail=relation.institution.contact,
                     website=relation.institution.website,
                 )
                 contact_role, _ = self.ContactRole.objects.get_or_create(
-                    contact=contact,
+                    institution=institution,
                     role=ContactRole.Type.MAIN_CONTACT,
                 )
                 project_contacts.append(
@@ -251,13 +251,13 @@ class MigrationAction:
             for deployment in project.deployments.all():
                 if deployment.provider is None:
                     continue
-                contact, _ = self.Contact.objects.get_or_create(
+                institution, _ = self.Institution.objects.get_or_create(
                     name=deployment.provider.name,
                     mail=deployment.provider.contact,
                     website=deployment.provider.website,
                 )
                 contact_role, _ = self.ContactRole.objects.get_or_create(
-                    contact=contact,
+                    institution=institution,
                     role=ContactRole.Type.CONTACT_POINT,
                 )
                 deployment_contacts.append(
@@ -459,7 +459,7 @@ class MigrationAction:
 class Migration(migrations.Migration):
     dependencies = [
         ("metadatax", "0024_channelconfiguration_harvesttime"),
-        ("common", "0001_initial"),
+        ("common", "0004_add_institution_to_contact_role"),
         ("acquisition", "0002_initial"),
         ("equipment", "0001_initial"),
         ("data", "0001_initial"),

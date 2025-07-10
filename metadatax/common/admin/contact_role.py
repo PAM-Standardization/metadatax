@@ -10,12 +10,16 @@ class ContactRoleAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "contact",
+        "institution",
         "role",
     ]
     search_fields = [
         "contact__name",
         "contact__mail",
         "contact__website",
+        "institution__name",
+        "institution__mail",
+        "institution__website",
     ]
     list_filter = [
         "role",
