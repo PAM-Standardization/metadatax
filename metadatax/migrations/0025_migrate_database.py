@@ -12,7 +12,8 @@ class MigrationAction:
 
         self.Contact = apps.get_model("common", "Contact")
         self.ContactRole = apps.get_model("common", "ContactRole")
-        self.migration_contact, _ = self.Contact.objects.get_or_create(
+        self.Institution = apps.get_model("common", "Institution")
+        self.migration_institution, _ = self.Institution.objects.get_or_create(
             name="[Migration]"
         )
 
@@ -226,13 +227,13 @@ class MigrationAction:
             for relation in project.responsible_parties.through.objects.filter(
                 project_id=project.id
             ):
-                contact, _ = self.Contact.objects.get_or_create(
+                institution, _ = self.Institution.objects.get_or_create(
                     name=relation.institution.name,
                     mail=relation.institution.contact,
                     website=relation.institution.website,
                 )
                 contact_role, _ = self.ContactRole.objects.get_or_create(
-                    contact=contact,
+                    institution=institution,
                     role=ContactRole.Type.MAIN_CONTACT,
                 )
                 project_contacts.append(
@@ -250,13 +251,13 @@ class MigrationAction:
             for deployment in project.deployments.all():
                 if deployment.provider is None:
                     continue
-                contact, _ = self.Contact.objects.get_or_create(
+                institution, _ = self.Institution.objects.get_or_create(
                     name=deployment.provider.name,
                     mail=deployment.provider.contact,
                     website=deployment.provider.website,
                 )
                 contact_role, _ = self.ContactRole.objects.get_or_create(
-                    contact=contact,
+                    institution=institution,
                     role=ContactRole.Type.CONTACT_POINT,
                 )
                 deployment_contacts.append(
@@ -393,7 +394,7 @@ class MigrationAction:
             self.migrate_old_hydrophone(channel.hydrophone)
 
     def migrate_old_recorder(self, old_recorder):
-        recorder_provider, _ = self.Contact.objects.get_or_create(
+        recorder_provider, _ = self.Institution.objects.get_or_create(
             name=old_recorder.model.provider.name,
             mail=old_recorder.model.provider.contact,
             website=old_recorder.model.provider.website,
@@ -401,7 +402,7 @@ class MigrationAction:
         recorder_equipment, is_new = self.Equipment.objects.get_or_create(
             model=old_recorder.model.name,
             serial_number=old_recorder.serial_number,
-            owner=self.migration_contact,
+            owner=self.migration_institution,
             provider=recorder_provider,
             name=old_recorder.name,
         )
@@ -414,7 +415,7 @@ class MigrationAction:
             recorder_equipment.save()
 
     def migrate_old_hydrophone(self, old_hydrophone):
-        hydrophone_provider, _ = self.Contact.objects.get_or_create(
+        hydrophone_provider, _ = self.Institution.objects.get_or_create(
             name=old_hydrophone.model.provider.name,
             mail=old_hydrophone.model.provider.contact,
             website=old_hydrophone.model.provider.website,
@@ -422,7 +423,7 @@ class MigrationAction:
         hydrophone_equipment, is_new = self.Equipment.objects.get_or_create(
             model=old_hydrophone.model.name,
             serial_number=old_hydrophone.serial_number,
-            owner=self.migration_contact,
+            owner=self.migration_institution,
             provider=hydrophone_provider,
         )
         if is_new or hydrophone_equipment.hydrophone_specification is None:
@@ -446,8 +447,8 @@ class MigrationAction:
             is_mobile=old_platform.type.type == "M",
         )
         platform, _ = self.Platform.objects.get_or_create(
-            owner=self.migration_contact,
-            provider=self.migration_contact,
+            owner=self.migration_institution,
+            provider=self.migration_institution,
             name=old_platform.name,
             description=old_platform.description,
             type=type,
@@ -458,7 +459,7 @@ class MigrationAction:
 class Migration(migrations.Migration):
     dependencies = [
         ("metadatax", "0024_channelconfiguration_harvesttime"),
-        ("common", "0001_initial"),
+        ("common", "0004_add_institution_to_contact_role"),
         ("acquisition", "0002_initial"),
         ("equipment", "0001_initial"),
         ("data", "0001_initial"),

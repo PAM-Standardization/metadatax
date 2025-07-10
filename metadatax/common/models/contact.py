@@ -10,11 +10,18 @@ class Contact(models.Model):
         db_table = "metadatax_common_contact"
 
     def __str__(self):
-        return self.name
+        return f"{self.first_name} {self.last_name}"
 
-    name = models.CharField(max_length=255, unique=True)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
 
     mail = models.EmailField(max_length=255, blank=True, null=True)
     website = models.URLField(max_length=255, blank=True, null=True)
 
     current_institutions = models.ManyToManyField(Institution, related_name="contacts")
+
+    @property
+    def initial_names(self):
+        names = self.first_name.split("-")
+        initial_first_name = "-".join([f"{n[0]}." for n in names])
+        return f"{self.last_name}, {initial_first_name}"

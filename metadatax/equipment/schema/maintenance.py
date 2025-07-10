@@ -12,6 +12,7 @@ class MaintenanceFilter(FilterSet):
             "id": ["exact", "in"],
             "type_id": ["exact", "in"],
             "maintainer_id": ["exact", "in"],
+            "maintainer_institution_id": ["exact", "in"],
             "platform_id": ["exact", "in"],
             "equipment_id": ["exact", "in"],
             "date": ["exact", "lt", "lte", "gt", "gte"],

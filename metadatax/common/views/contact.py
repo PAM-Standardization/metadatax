@@ -11,4 +11,4 @@ class ContactViewSet(
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    search_fields = ("name", "mail", "website")
+    search_fields = ("first_name", "last_name", "mail", "website")

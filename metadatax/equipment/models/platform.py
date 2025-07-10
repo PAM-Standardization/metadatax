@@ -1,6 +1,6 @@
 from django.db import models
 
-from metadatax.common.models import Contact
+from metadatax.common.models import Institution
 from .platform_type import PlatformType
 
 
@@ -16,8 +16,8 @@ class Platform(models.Model):
             return self.name
         return f"{self.type} (owner: {self.owner} ; provider: {self.provider})"
 
-    owner = models.ForeignKey(Contact, on_delete=models.PROTECT, related_name='owned_platforms')
-    provider = models.ForeignKey(Contact, on_delete=models.PROTECT, related_name='provided_platforms')
+    owner = models.ForeignKey(Institution, on_delete=models.PROTECT, related_name='owned_platforms')
+    provider = models.ForeignKey(Institution, on_delete=models.PROTECT, related_name='provided_platforms')
     type = models.ForeignKey(PlatformType, on_delete=models.PROTECT, related_name='platforms')
 
     name = models.CharField(max_length=100, blank=True, null=True)

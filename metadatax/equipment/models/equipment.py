@@ -3,7 +3,7 @@ from django.db.models import CheckConstraint
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
-from metadatax.common.models import Contact
+from metadatax.common.models import Institution
 from .acoustic_detector_specification import AcousticDetectorSpecification
 from .hydrophone_specification import HydrophoneSpecification
 from .recorder_specification import RecorderSpecification
@@ -32,8 +32,8 @@ class Equipment(models.Model):
 
     model = models.CharField(max_length=100)
     serial_number = models.CharField(max_length=100)
-    owner = models.ForeignKey(Contact, on_delete=models.PROTECT, related_name='owned_equipments')
-    provider = models.ForeignKey(Contact, on_delete=models.PROTECT, related_name='provided_equipments')
+    owner = models.ForeignKey(Institution, on_delete=models.PROTECT, related_name='owned_equipments')
+    provider = models.ForeignKey(Institution, on_delete=models.PROTECT, related_name='provided_equipments')
 
     sd_card_specification = models.OneToOneField(
         SDCardSpecification,

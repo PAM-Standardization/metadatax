@@ -23,7 +23,8 @@ class ContactFilter(FilterSet):
             "performed_maintenances__id": ["exact", "in"],
             "provided_equipments__id": ["exact", "in"],
             "provided_platforms__id": ["exact", "in"],
-            "name": ["exact", "icontains"],
+            "first_name": ["exact", "icontains"],
+            "last_name": ["exact", "icontains"],
             "mail": ["exact", "icontains"],
             "website": ["exact", "icontains"],
         }

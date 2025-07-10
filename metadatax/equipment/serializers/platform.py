@@ -1,13 +1,14 @@
 from rest_framework import serializers
 
-from metadatax.common.serializers import ContactSerializer
+from metadatax.common.serializers import InstitutionSerializer
 from metadatax.equipment.models import Platform
 from .platform_type import PlatformTypeSerializer
 
 
 class PlatformSerializer(serializers.ModelSerializer):
-    owner = ContactSerializer()
-    provider = ContactSerializer()
+    owner = InstitutionSerializer()
+    provider = InstitutionSerializer()
+
     type = PlatformTypeSerializer()
     
     class Meta:
