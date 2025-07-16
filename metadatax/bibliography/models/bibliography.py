@@ -44,10 +44,9 @@ class Bibliography(models.Model):
             ),
             models.CheckConstraint(
                 name="Conference has required information",
-                check=(
-                    ~Q(type="C") & ~Q(type="P") & Q(conference_information__isnull=True)
-                )
-                | Q(type="C", conference_information__isnull=False),
+                check=(~Q(type="C") & Q(conference_information__isnull=True))
+                | Q(type="C", conference_information__isnull=False)
+                | Q(type="P"),
             ),
             models.CheckConstraint(
                 name="Poster has required information",
