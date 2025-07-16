@@ -37,5 +37,5 @@ class Source(models.Model):
     )
 
     related_bibliography = models.ManyToManyField(
-        Bibliography, related_name="related_sources"
+        Bibliography, related_name="related_sources", blank=True
     )

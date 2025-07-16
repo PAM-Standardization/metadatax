@@ -24,5 +24,5 @@ class Label(models.Model):
     nickname = models.CharField(max_length=255, null=True, blank=True)
 
     related_bibliography = models.ManyToManyField(
-        Bibliography, related_name="related_labels"
+        Bibliography, related_name="related_labels", blank=True
     )

@@ -37,5 +37,5 @@ class Sound(models.Model):
 
     associated_names = models.ManyToManyField("self", related_name="associated_names")
     related_bibliography = models.ManyToManyField(
-        Bibliography, related_name="related_sounds"
+        Bibliography, related_name="related_sounds", blank=True
     )
