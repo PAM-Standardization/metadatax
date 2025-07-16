@@ -47,5 +47,5 @@ class PhysicalDescriptor(models.Model):
     description = models.TextField(null=True, blank=True)
 
     related_bibliography = models.ManyToManyField(
-        Bibliography, related_name="related_physical_descriptors"
+        Bibliography, related_name="related_physical_descriptors", blank=True
     )
