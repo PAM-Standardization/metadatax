@@ -90,7 +90,7 @@ class Bibliography(models.Model):
         null=True,
         blank=True,
     )
-    conference_information = models.OneToOneField(
+    conference_information = models.ForeignKey(
         BibliographyConference,
         related_name="bibliography",
         on_delete=models.PROTECT,

@@ -2,6 +2,9 @@ from django.db import models
 
 
 class BibliographyConference(models.Model):
+    def __str__(self):
+        return f"{self.conference_name}, {self.conference_location}"
+
     conference_name = models.CharField(
         max_length=255, help_text="Required for a conference"
     )
