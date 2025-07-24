@@ -21,9 +21,9 @@ class LabelFilter(FilterSet):
             "parent_id": ["exact", "in"],
             "children__id": ["exact", "in"],
             "nickname": ["exact", "icontains"],
-            "associated_names": [
-                "icontains",
-            ],
+            # "associated_names": [
+            #     "icontains",
+            # ], # TODO
             "acoustic_detectors__id": ["exact", "in"],
             "channel_configuration_detector_specifications__id": ["exact", "in"],
             "shape": [

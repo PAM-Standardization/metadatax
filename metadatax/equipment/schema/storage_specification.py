@@ -13,7 +13,7 @@ class StorageSpecificationFilter(FilterSet):
         fields = {
             "id": ["exact", "in"],
             "equipment__id": ["exact", "in"],
-            "capacity": ["exact", "lt", "lte", "gt", "gte"],
+            # "capacity": ["exact", "lt", "lte", "gt", "gte"], # TODO
         }
 
 

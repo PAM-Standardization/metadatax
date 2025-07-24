@@ -11,7 +11,6 @@ from metadatax.utils.schema import DeleteMutation, PostMutation
 class SoundFilter(FilterSet):
     labels__id = NumberFilter()
     children__id = NumberFilter()
-    associated_names__id = NumberFilter()
 
     class Meta:
         model = Sound
@@ -20,7 +19,6 @@ class SoundFilter(FilterSet):
             "parent_id": ["exact", "in"],
             "children__id": ["exact", "in"],
             "labels__id": ["exact", "in"],
-            "associated_names__id": ["exact", "in"],
             "english_name": ["exact", "icontains"],
             "french_name": ["exact", "icontains"],
             "code_name": ["exact", "icontains"],
