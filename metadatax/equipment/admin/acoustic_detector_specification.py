@@ -15,11 +15,12 @@ class AcousticDetectorSpecificationAdmin(admin.ModelAdmin):
         "detected_labels__nickname",
         "detected_labels__source__english_name",
         "detected_labels__sound__english_name",
-        "algorithm_name"
+        "algorithm_name",
+    ]
+    filter_horizontal = [
+        "detected_labels",
     ]
 
     @admin.display(description="Detected labels")
     def show_labels(self, instance: AcousticDetectorSpecification):
-        return ', '.join([
-            str(label) for label in instance.detected_labels.all()
-        ])
+        return ", ".join([str(label) for label in instance.detected_labels.all()])

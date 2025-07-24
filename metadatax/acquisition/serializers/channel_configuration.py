@@ -13,7 +13,7 @@ from .channel_configuration_recorder_specification import (
 class ChannelConfigurationSerializer(serializers.ModelSerializer):
     recorder_specification = ChannelConfigurationRecorderSpecificationSerializer()
     detector_specification = ChannelConfigurationDetectorSpecificationSerializer()
-    other_equipments = EquipmentSerializer(many=True)
+    storages = EquipmentSerializer(many=True)
 
     class Meta:
         model = ChannelConfiguration

@@ -6,8 +6,8 @@ from metadatax.equipment.models import Platform
 
 
 class PlatformFilter(FilterSet):
-    type = CharFilter(field_name='type__name')
-    is_mobile = BooleanFilter(field_name='type__is_mobile')
+    type = CharFilter(field_name="type__name")
+    is_mobile = BooleanFilter(field_name="type__is_mobile")
     deployments__id = NumberFilter()
     maintenances__id = NumberFilter()
 
@@ -21,7 +21,6 @@ class PlatformFilter(FilterSet):
             "maintenances__id": ["exact", "in"],
             "name": ["exact", "icontains"],
         }
-
 
 
 class PlatformNode(DjangoObjectType):

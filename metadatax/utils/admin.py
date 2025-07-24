@@ -55,7 +55,7 @@ class JSONExportModelAdmin(admin.ModelAdmin):
 
 
 def get_many_to_many(obj, field_name, related_field_name="name"):
-    """List all related field
+    """List all related custom_fields
 
     Args:
         obj (object): _description_

@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.contrib.admin import EmptyFieldListFilter
 from django.utils.translation import gettext_lazy as _
-from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
+from django_admin_multiple_choice_list_filter.list_filters import (
+    MultipleChoiceListFilter,
+)
 
 from metadatax.equipment.models import Equipment
 from metadatax.equipment.serializers import EquipmentSerializer
@@ -10,11 +12,11 @@ from metadatax.utils import JSONExportModelAdmin
 
 class EquipmentTypeFilter(MultipleChoiceListFilter):
     title = _("Type")
-    parameter_name = 'type__in'
+    parameter_name = "type__in"
 
     def lookups(self, request, model_admin):
         return [
-            ("sd_card_specification", "SD card"),
+            ("storage_specification", "Storage"),
             ("recorder_specification", "Recorder"),
             ("hydrophone_specification", "Hydrophone"),
             ("acoustic_detector_specification", "Acoustic detector"),
@@ -38,7 +40,7 @@ class EquipmentAdmin(JSONExportModelAdmin):
         "model",
         "owner",
         "provider",
-        "sd_card_specification",
+        "storage_specification",
         "recorder_specification",
         "hydrophone_specification",
         "acoustic_detector_specification",
@@ -66,3 +68,23 @@ class EquipmentAdmin(JSONExportModelAdmin):
         EquipmentTypeFilter,
         "hydrophone_specification__directivity",
     ]
+    autocomplete_fields = [
+        "owner",
+        "provider",
+        "storage_specification",
+        "recorder_specification",
+        "hydrophone_specification",
+        "acoustic_detector_specification",
+    ]
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        formfield = super().formfield_for_dbfield(db_field, request, **kwargs)
+        if (
+            db_field.name == "storage_specification"
+            or db_field.name == "recorder_specification"
+            or db_field.name == "hydrophone_specification"
+            or db_field.name == "acoustic_detector_specification"
+        ):
+            formfield.widget.can_delete_related = False
+            formfield.widget.can_change_related = False
+        return formfield

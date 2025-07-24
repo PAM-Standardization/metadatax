@@ -1,9 +1,7 @@
-from django_filters import FilterSet, NumberFilter
-from graphene import ID, relay, Scalar
-from graphene_django import DjangoObjectType
+from graphene import Scalar
 from graphql.language import ast
 
-from metadatax.ontology.models import PhysicalDescriptor, SignalShape, SignalPlurality
+from metadatax.ontology.models import SignalShape, SignalPlurality
 
 
 class SignalShapeEnum(Scalar):
@@ -42,35 +40,3 @@ class SignalPluralityEnum(Scalar):
         index = SignalPlurality.labels.index(value)
         value = SignalPlurality.values[index]
         return SignalPlurality(value)
-
-
-class PhysicalDescriptorFilter(FilterSet):
-    label__id = NumberFilter()
-
-    class Meta:
-        model = PhysicalDescriptor
-        fields = {
-            "id": ["exact", "in"],
-            "label__id": ["exact", "in"],
-            "shape": [
-                "exact",
-            ],
-            "plurality": [
-                "exact",
-            ],
-            "min_frequency": ["exact", "lt", "lte", "gt", "gte"],
-            "max_frequency": ["exact", "lt", "lte", "gt", "gte"],
-            "mean_duration": ["exact", "lt", "lte", "gt", "gte"],
-        }
-
-
-class PhysicalDescriptorNode(DjangoObjectType):
-    id = ID(required=True)
-    shape = SignalShapeEnum()
-    plurality = SignalShapeEnum()
-
-    class Meta:
-        model = PhysicalDescriptor
-        fields = "__all__"
-        filterset_class = PhysicalDescriptorFilter
-        interfaces = (relay.Node,)

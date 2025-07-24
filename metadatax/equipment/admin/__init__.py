@@ -6,4 +6,4 @@ from .maintenance_type import MaintenanceTypeAdmin
 from .platform import PlatformAdmin
 from .platform_type import PlatformTypeAdmin
 from .recorder_specification import RecorderSpecificationAdmin
-from .sd_card_specification import SDCardSpecificationAdmin
+from .storage_specification import StorageSpecificationAdmin

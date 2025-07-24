@@ -19,3 +19,6 @@ class DeploymentMobilePositionAdmin(admin.ModelAdmin):
     search_fields = [
         "deployment__name",
     ]
+    autocomplete_fields = [
+        "deployment",
+    ]

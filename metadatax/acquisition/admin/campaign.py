@@ -16,4 +16,5 @@ class CampaignAdmin(admin.ModelAdmin):
     ]
     search_fields = [
         "name",
+        "project__name",
     ]

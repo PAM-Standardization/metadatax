@@ -17,7 +17,7 @@ class ChannelConfigurationViewSet(
         "other_equipments",
         "other_equipments__owner",
         "other_equipments__provider",
-        "other_equipments__sd_card_specification",
+        "other_equipments__storage_specification",
         "other_equipments__recorder_specification",
         "other_equipments__hydrophone_specification",
         "other_equipments__acoustic_detector_specification",

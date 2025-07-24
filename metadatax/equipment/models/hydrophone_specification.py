@@ -8,7 +8,34 @@ class HydrophoneSpecification(models.Model):
     """Hydrophone Specification model"""
 
     class Meta:
-        db_table = 'metadatax_equipment_hydrophonespecification'
+        db_table = "metadatax_equipment_hydrophonespecification"
+
+    def __str__(self):
+        info = [f"sensitivity: {self.sensitivity}"]
+        optional_info = []
+        if self.directivity:
+            optional_info.append(self.directivity)
+        if self.operating_min_temperature:
+            optional_info.append(f">{self.operating_min_temperature}°C")
+        if self.operating_max_temperature:
+            optional_info.append(f"<{self.operating_max_temperature}°C")
+        if self.min_bandwidth:
+            optional_info.append(f">{self.min_bandwidth}Hz")
+        if self.max_bandwidth:
+            optional_info.append(f"<{self.max_bandwidth}Hz")
+        if self.min_dynamic_range:
+            optional_info.append(f">{self.min_dynamic_range}dB")
+        if self.max_dynamic_range:
+            optional_info.append(f"<{self.max_dynamic_range}dB")
+        if self.min_operating_depth:
+            optional_info.append(f">{self.min_operating_depth}m")
+        if self.max_operating_depth:
+            optional_info.append(f"<{self.max_operating_depth}m")
+        if self.noise_floor:
+            optional_info.append(f"noise: {self.noise_floor}dB")
+        if len(optional_info) > 0:
+            info.append(f"({', '.join(optional_info)})")
+        return ", ".join(info)
 
     sensitivity = models.FloatField()
 
@@ -32,25 +59,25 @@ class HydrophoneSpecification(models.Model):
         null=True,
         blank=True,
         help_text="Lower limiting frequency for a more or less flat response of the hydrophone, "
-                  "pre-amplification included if applicable.",
+        "pre-amplification included if applicable.",
     )
     max_bandwidth = models.FloatField(
         null=True,
         blank=True,
         help_text="Upper limiting frequency within a more or less flat response of the hydrophone, "
-                  "pre-amplification included if applicable.",
+        "pre-amplification included if applicable.",
     )
     min_dynamic_range = models.FloatField(
         null=True,
         blank=True,
         help_text="Lowest level which the hydrophone can handle (dB SPL RMS or peak), "
-                  "pre-amplification included if applicable.",
+        "pre-amplification included if applicable.",
     )
     max_dynamic_range = models.FloatField(
         null=True,
         blank=True,
         help_text="Highest level which the hydrophone can handle (dB SPL RMS or peak), "
-                  "pre-amplification included if applicable.",
+        "pre-amplification included if applicable.",
     )
     min_operating_depth = models.FloatField(
         null=True,
@@ -68,7 +95,7 @@ class HydrophoneSpecification(models.Model):
         null=True,
         blank=True,
         help_text="Self noise of the hydrophone (dB re 1µPa^2/Hz), pre-amplification included if applicable.<br>"
-                  "Average on bandwidth or a fix frequency (generally @5kHz for example). "
-                  "Possibility to 'below sea-state zero' (equivalent to around 30dB @5kHz) could be nice "
-                  "because it is often described like that.",
+        "Average on bandwidth or a fix frequency (generally @5kHz for example). "
+        "Possibility to 'below sea-state zero' (equivalent to around 30dB @5kHz) could be nice "
+        "because it is often described like that.",
     )

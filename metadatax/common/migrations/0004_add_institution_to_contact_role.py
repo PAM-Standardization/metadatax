@@ -7,22 +7,41 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0003_institution'),
+        ("common", "0003_institution"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contactrole',
-            name='institution',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='roles', to='common.institution'),
+            model_name="contactrole",
+            name="institution",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="roles",
+                to="common.institution",
+            ),
         ),
         migrations.AlterField(
-            model_name='contactrole',
-            name='contact',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='roles', to='common.contact'),
+            model_name="contactrole",
+            name="contact",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="roles",
+                to="common.contact",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='contactrole',
-            constraint=models.CheckConstraint(check=models.Q(('contact__isnull', False), ('institution__isnull', False), _connector='OR'), name='has_contact_or_institution'),
+            model_name="contactrole",
+            constraint=models.CheckConstraint(
+                check=models.Q(
+                    ("contact__isnull", False),
+                    ("institution__isnull", False),
+                    _connector="OR",
+                ),
+                name="has_contact_or_institution",
+            ),
         ),
     ]

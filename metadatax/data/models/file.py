@@ -12,6 +12,7 @@ class File(models.Model):
 
     class Meta:
         db_table = "metadatax_data_file"
+        ordering = ("filename",)
 
     def __str__(self):
         return self.filename
@@ -32,6 +33,7 @@ class File(models.Model):
         blank=True,
         null=True,
         related_name="file",
+        help_text="Each property is dedicated to one file.",
     )
     detection_properties = models.OneToOneField(
         DetectionProperties,
@@ -39,6 +41,7 @@ class File(models.Model):
         blank=True,
         null=True,
         related_name="file",
+        help_text="Each property is dedicated to one file.",
     )
     storage_location = models.TextField(
         blank=True, null=True, help_text="Description of the path to access the data."

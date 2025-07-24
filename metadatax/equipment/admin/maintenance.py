@@ -12,7 +12,7 @@ class MaintenanceAdmin(admin.ModelAdmin):
         "equipment",
         "description",
         "maintainer",
-        "maintainer_institution"
+        "maintainer_institution",
     ]
     search_fields = [
         "type__name",
@@ -21,8 +21,16 @@ class MaintenanceAdmin(admin.ModelAdmin):
         "equipment__serial_number",
         "equipment__model",
         "equipment__name",
-        "maintainer__name",
+        "maintainer__first_name",
+        "maintainer__last_name",
         "maintainer__mail",
         "maintainer_institution__name",
         "maintainer_institution__mail",
+    ]
+    autocomplete_fields = [
+        "type",
+        "maintainer",
+        "maintainer_institution",
+        "platform",
+        "equipment",
     ]

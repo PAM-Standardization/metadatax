@@ -11,7 +11,7 @@ class EquipmentViewSet(
     queryset = Equipment.objects.select_related(
         "owner",
         "provider",
-        "sd_card_specification",
+        "storage_specification",
         "recorder_specification",
         "hydrophone_specification",
         "acoustic_detector_specification",

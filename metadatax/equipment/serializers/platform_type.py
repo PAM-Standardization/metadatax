@@ -6,4 +6,4 @@ from metadatax.equipment.models import PlatformType
 class PlatformTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlatformType
-        fields = '__all__'
+        fields = "__all__"

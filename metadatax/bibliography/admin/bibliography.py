@@ -10,6 +10,13 @@ from ...utils.admin import get_many_to_many
 
 
 class BibliographyForm(forms.ModelForm):
+    status = forms.ChoiceField(
+        choices=Bibliography.Status.choices, widget=forms.RadioSelect
+    )
+    type = forms.ChoiceField(
+        choices=Bibliography.Type.choices, widget=forms.RadioSelect
+    )
+
     class Meta:
         model = Bibliography
         fields = "__all__"
@@ -21,7 +28,7 @@ class BibliographyForm(forms.ModelForm):
         if should_be_empty and data is not None:
             raise ValidationError(
                 {
-                    field_name: f"This field should stay empty for a '{biblio_type.label}' type bibliography."
+                    field_name: f"This custom_fields should stay empty for a '{biblio_type.label}' type bibliography."
                 }
             )
 
@@ -36,7 +43,7 @@ class BibliographyForm(forms.ModelForm):
             ):
                 raise ValidationError(
                     {
-                        "publication_date": "This field is required for a 'Published' bibliography."
+                        "publication_date": "This custom_fields is required for a 'Published' bibliography."
                     }
                 )
 
@@ -110,6 +117,42 @@ class BibliographyAdmin(admin.ModelAdmin):
         AuthorInline,
     ]
     form = BibliographyForm
+    fieldsets = [
+        (
+            None,
+            {"fields": ["title", "doi", "tags"]},
+        ),
+        (
+            "Publication",
+            {
+                "classes": [
+                    "wide",
+                ],
+                "fields": ["status", "publication_date"],
+            },
+        ),
+        (
+            "Type",
+            {
+                "classes": [
+                    "wide",
+                ],
+                "fields": [
+                    "type",
+                    "software_information",
+                    "article_information",
+                    "conference_information",
+                    "poster_information",
+                ],
+            },
+        ),
+    ]
+    autocomplete_fields = [
+        "software_information",
+        "article_information",
+        "conference_information",
+        "poster_information",
+    ]
 
     @admin.display(description="Tags")
     def show_tags(self, obj: Bibliography):

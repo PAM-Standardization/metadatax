@@ -7,4 +7,4 @@ from .maintenance_type import MaintenanceType
 from .platform import Platform
 from .platform_type import PlatformType
 from .recorder_specification import RecorderSpecification
-from .sd_card_specification import SDCardSpecification
+from .storage_specification import StorageSpecification

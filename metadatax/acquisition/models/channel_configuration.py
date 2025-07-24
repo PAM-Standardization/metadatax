@@ -5,6 +5,7 @@ from django.db import models
 
 from metadatax.data.models import File
 from metadatax.equipment.models import Equipment
+from metadatax.utils import custom_fields
 from .channel_configuration_detector_specification import (
     ChannelConfigurationDetectorSpecification,
 )
@@ -38,6 +39,7 @@ class ChannelConfiguration(models.Model):
         blank=True,
         null=True,
         related_name="channel_configuration",
+        help_text="Each specification is dedicated to one file.",
     )
     detector_specification = models.OneToOneField(
         ChannelConfigurationDetectorSpecification,
@@ -45,9 +47,12 @@ class ChannelConfiguration(models.Model):
         blank=True,
         null=True,
         related_name="channel_configuration",
+        help_text="Each specification is dedicated to one file.",
     )
-    other_equipments = models.ManyToManyField(
-        Equipment, blank=True, related_name="channel_configurations"
+    storages = models.ManyToManyField(
+        Equipment,
+        related_name="channel_configurations",
+        blank=True,
     )
     continuous = models.BooleanField(
         null=True,
@@ -74,13 +79,13 @@ class ChannelConfiguration(models.Model):
     )
     timezone = models.CharField(max_length=50, null=True, blank=True)
     extra_information = models.TextField(blank=True, null=True)
-    harvest_starting_date = models.DateTimeField(
+    harvest_starting_date = custom_fields.DateTimeField(
         null=True,
         blank=True,
         help_text="Harvest start date at which the channel configuration was idle to record (in UTC).",
         verbose_name="Harvest start date (UTC)",
     )
-    harvest_ending_date = models.DateTimeField(
+    harvest_ending_date = custom_fields.DateTimeField(
         null=True,
         blank=True,
         help_text="Harvest stop date at which the channel configuration finished to record in (in UTC).",

@@ -13,7 +13,6 @@ def forward_migrate_deployment(apps, _):
     site_model = apps.get_model("metadatax", "Site")
     project_model = apps.get_model("metadatax", "Project")
     for deployment in deployment_model.objects.all():
-        print(f">>> {deployment}")
         platform_type, _ = platform_type_model.objects.get_or_create(
             name=deployment.platform_type
         )

@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.html import format_html
+from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from metadatax.ontology.models import Label
 from metadatax.ontology.serializers import LabelSerializer
@@ -6,16 +8,20 @@ from metadatax.utils import JSONExportModelAdmin
 
 
 @admin.register(Label)
-class LabelAdmin(JSONExportModelAdmin):
+class LabelAdmin(JSONExportModelAdmin, DynamicArrayMixin):
     depth = 1
     model = Label
     serializer = LabelSerializer
 
     list_display = [
+        "__str__",
         "source",
         "sound",
         "nickname",
-        "show_shape",
+        "associated_names",
+        "parent",
+        "shape",
+        "plurality",
         "show_frequencies",
         "show_mean_duration",
     ]
@@ -29,25 +35,60 @@ class LabelAdmin(JSONExportModelAdmin):
         "sound__french_name",
         "sound__code_name",
         "sound__taxon",
+        "nickname",
+        "parent__nickname",
+        "parent__source__english_name",
+        "parent__sound__english_name",
+        "associated_names",
     ]
-    list_filter = ["physical_descriptor__shape", "physical_descriptor__plurality"]
+    list_filter = [
+        "shape",
+        "plurality",
+    ]
+    filter_horizontal = [
+        "related_bibliography",
+    ]
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": [
+                    "source",
+                    "sound",
+                    "nickname",
+                    "associated_names",
+                    "related_bibliography",
+                ]
+            },
+        ),
+        (
+            "Physical description",
+            {
+                "classes": [
+                    "wide",
+                ],
+                "fields": [
+                    "shape",
+                    "plurality",
+                    "min_frequency",
+                    "max_frequency",
+                    "mean_duration",
+                    "description",
+                ],
+            },
+        ),
+    ]
 
-    @admin.display(description="Shape")
-    def show_shape(self, label: Label):
-        if label.physical_descriptor is None:
-            return ""
-        return (
-            f"{label.physical_descriptor.shape} - {label.physical_descriptor.plurality}"
+    @admin.display(description="Frequencies (in Hz)")
+    def show_frequencies(self, label: Label):
+        return format_html(
+            f"""
+            min: {label.min_frequency or "-"}
+            <br/>
+            max: {label.max_frequency or "-"}
+        """
         )
 
-    @admin.display(description="Frequencies")
-    def show_frequencies(self, label: Label):
-        if label.physical_descriptor is None:
-            return ""
-        return f"{label.physical_descriptor.min_frequency} < {label.physical_descriptor.max_frequency}"
-
-    @admin.display(description="Mean duration")
+    @admin.display(description="Mean duration (in s)")
     def show_mean_duration(self, label: Label):
-        if label.physical_descriptor is None:
-            return ""
-        return label.physical_descriptor.mean_duration
+        return label.mean_duration

@@ -16,4 +16,5 @@ class SiteAdmin(admin.ModelAdmin):
     ]
     search_fields = [
         "name",
+        "project__name",
     ]

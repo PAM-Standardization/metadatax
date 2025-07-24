@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 
+from metadatax.utils import custom_fields
 from .bibliography_article import BibliographyArticle
 from .bibliography_conference import BibliographyConference
 from .bibliography_poster import BibliographyPoster
@@ -66,7 +67,7 @@ class Bibliography(models.Model):
         choices=Status.choices,
         max_length=1,
     )
-    publication_date = models.DateField(
+    publication_date = custom_fields.DateField(
         null=True, blank=True, help_text="Required for any published bibliography"
     )
 
@@ -81,6 +82,7 @@ class Bibliography(models.Model):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        help_text="Each information is dedicated to one file.",
     )
     article_information = models.OneToOneField(
         BibliographyArticle,
@@ -88,6 +90,7 @@ class Bibliography(models.Model):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        help_text="Each information is dedicated to one file.",
     )
     conference_information = models.ForeignKey(
         BibliographyConference,
@@ -102,6 +105,7 @@ class Bibliography(models.Model):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        help_text="Each information is dedicated to one file.",
     )
 
     @property

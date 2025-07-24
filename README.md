@@ -28,6 +28,7 @@ poetry run black admin meta_auth metadatax website
     INSTALLED_APPS = [
         ...,
         "django_admin_multiple_choice_list_filter",
+        'django_better_admin_arrayfield',
         "metadatax",
         "metadatax.common",
         "metadatax.bibliography",

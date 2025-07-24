@@ -10,7 +10,7 @@ class PlatformSerializer(serializers.ModelSerializer):
     provider = InstitutionSerializer()
 
     type = PlatformTypeSerializer()
-    
+
     class Meta:
         model = Platform
-        fields = '__all__'
+        fields = "__all__"

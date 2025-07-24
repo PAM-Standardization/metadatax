@@ -15,6 +15,7 @@ from django_admin_multiple_choice_list_filter.list_filters import (
 from metadatax.acquisition.models import ChannelConfiguration
 from metadatax.acquisition.serializers import ChannelConfigurationSerializer
 from metadatax.data.models import FileFormat, File, AudioProperties
+from metadatax.equipment.models import Equipment
 from metadatax.utils import JSONExportModelAdmin
 
 
@@ -98,7 +99,7 @@ class ChannelConfigurationAdmin(JSONExportModelAdmin):
         "deployment",
         "recorder_specification",
         "detector_specification",
-        "list_other_equipments",
+        "list_storages",
         "continuous",
         "duty_cycle_on",
         "duty_cycle_off",
@@ -119,9 +120,26 @@ class ChannelConfigurationAdmin(JSONExportModelAdmin):
         "continuous",
     ]
     filter_horizontal = [
-        "other_equipments",
+        "storages",
+    ]
+    autocomplete_fields = [
+        "deployment",
+        "recorder_specification",
     ]
 
-    @admin.display(description="Other equipments")
-    def list_other_equipments(self, obj: ChannelConfiguration):
-        return ", ".join([str(e) for e in obj.other_equipments.all()])
+    @admin.display(description="Storages")
+    def list_storages(self, obj: ChannelConfiguration):
+        return ", ".join([str(e) for e in obj.storages.all()])
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "storages":
+            kwargs["queryset"] = Equipment.objects.filter(
+                storage_specification__isnull=False
+            )
+            kwargs[
+                "help_text"
+            ] = """
+                Only storages are shown here.
+                If an instrument is missing, update one or add a new one in the Metadatax Equipment > Equipment table.
+            """
+        return super().formfield_for_manytomany(db_field, request, **kwargs)

@@ -7,14 +7,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0004_add_institution_to_contact_role'),
-        ('equipment', '0001_initial'),
+        ("common", "0004_add_institution_to_contact_role"),
+        ("equipment", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='maintenance',
-            name='maintainer_institution',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='performed_maintenances', to='common.institution'),
+            model_name="maintenance",
+            name="maintainer_institution",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="performed_maintenances",
+                to="common.institution",
+            ),
         ),
     ]

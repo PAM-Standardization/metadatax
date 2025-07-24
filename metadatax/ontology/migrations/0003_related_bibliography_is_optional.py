@@ -6,29 +6,45 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bibliography', '0004_update_bibliography_conference_information_constraint'),
-        ('ontology', '0002_link_to_bibliography'),
+        ("bibliography", "0004_update_bibliography_conference_information_constraint"),
+        ("ontology", "0002_link_to_bibliography"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='label',
-            name='related_bibliography',
-            field=models.ManyToManyField(blank=True, related_name='related_labels', to='bibliography.Bibliography'),
+            model_name="label",
+            name="related_bibliography",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="related_labels",
+                to="bibliography.Bibliography",
+            ),
         ),
         migrations.AlterField(
-            model_name='physicaldescriptor',
-            name='related_bibliography',
-            field=models.ManyToManyField(blank=True, related_name='related_physical_descriptors', to='bibliography.Bibliography'),
+            model_name="physicaldescriptor",
+            name="related_bibliography",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="related_physical_descriptors",
+                to="bibliography.Bibliography",
+            ),
         ),
         migrations.AlterField(
-            model_name='sound',
-            name='related_bibliography',
-            field=models.ManyToManyField(blank=True, related_name='related_sounds', to='bibliography.Bibliography'),
+            model_name="sound",
+            name="related_bibliography",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="related_sounds",
+                to="bibliography.Bibliography",
+            ),
         ),
         migrations.AlterField(
-            model_name='source',
-            name='related_bibliography',
-            field=models.ManyToManyField(blank=True, related_name='related_sources', to='bibliography.Bibliography'),
+            model_name="source",
+            name="related_bibliography",
+            field=models.ManyToManyField(
+                blank=True,
+                related_name="related_sources",
+                to="bibliography.Bibliography",
+            ),
         ),
     ]

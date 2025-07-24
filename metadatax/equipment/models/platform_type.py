@@ -5,7 +5,7 @@ class PlatformType(models.Model):
     """Platform type model"""
 
     class Meta:
-        db_table = 'metadatax_equipment_platformtype'
+        db_table = "metadatax_equipment_platformtype"
 
     def __str__(self):
         return self.name

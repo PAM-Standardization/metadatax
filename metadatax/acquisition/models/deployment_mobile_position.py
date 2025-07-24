@@ -4,6 +4,7 @@ from django.db.models.signals import pre_init
 from django.dispatch import receiver
 from rest_framework.exceptions import ValidationError
 
+from metadatax.utils import custom_fields
 from .deployment import Deployment
 
 
@@ -18,7 +19,7 @@ class DeploymentMobilePosition(models.Model):
         help_text="Related deployment",
         related_name="mobile_positions",
     )
-    datetime = models.DateTimeField(
+    datetime = custom_fields.DateTimeField(
         help_text="Datetime for the mobile platform position"
     )
     longitude = models.FloatField(help_text="Longitude of the mobile platform")

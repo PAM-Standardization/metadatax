@@ -20,7 +20,7 @@ class EquipmentFilter(FilterSet):
             "serial_number": ["exact", "icontains"],
             "owner_id": ["exact", "in"],
             "provider_id": ["exact", "in"],
-            "sd_card_specification": ["isnull"],
+            "storage_specification": ["isnull"],
             "recorder_specification": ["isnull"],
             "hydrophone_specification": ["isnull"],
             "acoustic_detector_specification": ["isnull"],

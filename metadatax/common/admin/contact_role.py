@@ -1,6 +1,15 @@
+from django import forms
 from django.contrib import admin
 
 from metadatax.common.models import ContactRole
+
+
+class ContactRoleForm(forms.ModelForm):
+    role = forms.ChoiceField(choices=ContactRole.Type.choices, widget=forms.RadioSelect)
+
+    class Meta:
+        model = ContactRole
+        fields = "__all__"
 
 
 @admin.register(ContactRole)
@@ -25,3 +34,8 @@ class ContactRoleAdmin(admin.ModelAdmin):
     list_filter = [
         "role",
     ]
+    autocomplete_fields = [
+        "contact",
+        "institution",
+    ]
+    form = ContactRoleForm

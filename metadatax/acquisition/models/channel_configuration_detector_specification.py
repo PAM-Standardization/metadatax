@@ -10,17 +10,32 @@ from metadatax.equipment.models import Equipment
 from metadatax.ontology.models import Label
 
 
-def validate_detector(value: Equipment):
-    if value.acoustic_detector_specification is None:
+def validate_detector(value: int):
+    equipment = Equipment.objects.get(id=value)
+    if equipment.acoustic_detector_specification is None:
         raise ValidationError(
-            _("Detector specification should be linked to a detector equipment"),
-            params={"value": value},
+            _("The selected equipment doesn't have acoustic detector specification"),
+            params={"equipment": equipment},
         )
 
 
 class ChannelConfigurationDetectorSpecification(models.Model):
     class Meta:
         db_table = "metadatax_acquisition_channelconfigurationdetectorspecification"
+
+    def __str__(self):
+        info = [
+            str(self.detector),
+            f"({', '.join([str(f) for f in self.output_formats.all()])})",
+            f"({', '.join([str(l) for l in self.labels.all()])})",
+        ]
+        if self.min_frequency:
+            info.append(f">{self.min_frequency}Hz")
+        if self.max_frequency:
+            info.append(f"<{self.max_frequency}Hz")
+        if self.filter:
+            info.append("filtered")
+        return " - ".join(info)
 
     detector = models.ForeignKey(
         Equipment,

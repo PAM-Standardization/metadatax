@@ -2,6 +2,7 @@ from django.db import models
 
 from metadatax.bibliography.models import Bibliography
 from metadatax.common.models import Accessibility, ContactRole
+from metadatax.utils import custom_fields
 from .financing import Financing
 from .project_type import ProjectType
 
@@ -48,11 +49,11 @@ class Project(models.Model):
         help_text="Description of the type of the project "
         "(e.g., research, marine renewable energies, long monitoring,...).",
     )
-    start_date = models.DateField(
+    start_date = custom_fields.DateField(
         blank=True,
         null=True,
     )
-    end_date = models.DateField(
+    end_date = custom_fields.DateField(
         blank=True,
         null=True,
     )

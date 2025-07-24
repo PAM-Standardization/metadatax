@@ -25,11 +25,12 @@ class ContactRole(models.Model):
                 check=Q(contact__isnull=False) | Q(institution__isnull=False),
             )
         ]
+        ordering = ("role", "contact", "institution")
 
     def __str__(self):
-        return (
-            f"{ContactRole.Type(self.role).label}: {self.contact} | {self.institution}"
-        )
+        if self.contact:
+            return f"{ContactRole.Type(self.role).label}: {self.contact}"
+        return f"{ContactRole.Type(self.role).label}: {self.institution}"
 
     contact = models.ForeignKey(
         Contact, on_delete=models.CASCADE, related_name="roles", blank=True, null=True

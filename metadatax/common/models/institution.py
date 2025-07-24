@@ -6,6 +6,7 @@ class Institution(models.Model):
 
     class Meta:
         unique_together = ("name", "city", "country")
+        ordering = ("name",)
 
     def __str__(self):
         return self.name

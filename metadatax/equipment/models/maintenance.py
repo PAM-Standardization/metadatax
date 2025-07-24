@@ -3,6 +3,7 @@ import datetime
 from django.db import models
 
 from metadatax.common.models import Contact, Institution
+from metadatax.utils import custom_fields
 from .equipment import Equipment
 from .maintenance_type import MaintenanceType
 from .platform import Platform
@@ -16,35 +17,45 @@ class Maintenance(models.Model):
             models.CheckConstraint(
                 name="maintenance_concern_platform_or_equipment",
                 check=models.Q(platform__isnull=False, equipment__isnull=True)
-                      | models.Q(platform__isnull=True, equipment__isnull=False),
+                | models.Q(platform__isnull=True, equipment__isnull=False),
             )
         ]
 
     def __str__(self):
         return f"{self.date}: {self.type}"
 
-    type = models.ForeignKey(MaintenanceType, on_delete=models.CASCADE, related_name='maintenances')
-    date = models.DateField(default=datetime.date.today)
+    type = models.ForeignKey(
+        MaintenanceType, on_delete=models.CASCADE, related_name="maintenances"
+    )
+    date = custom_fields.DateField(default=datetime.date.today)
 
     description = models.TextField(blank=True, null=True)
     maintainer = models.ForeignKey(
-        Contact, on_delete=models.PROTECT,
-        related_name='performed_maintenances',
-        blank=True, null=True,
+        Contact,
+        on_delete=models.PROTECT,
+        related_name="performed_maintenances",
+        blank=True,
+        null=True,
     )
     maintainer_institution = models.ForeignKey(
-        Institution, on_delete=models.PROTECT,
-        related_name='performed_maintenances',
-        blank=True, null=True,
+        Institution,
+        on_delete=models.PROTECT,
+        related_name="performed_maintenances",
+        blank=True,
+        null=True,
     )
 
     platform = models.ForeignKey(
-        Platform, on_delete=models.CASCADE,
-        related_name='maintenances',
-        blank=True, null=True,
+        Platform,
+        on_delete=models.CASCADE,
+        related_name="maintenances",
+        blank=True,
+        null=True,
     )
     equipment = models.ForeignKey(
-        Equipment, on_delete=models.CASCADE,
-        related_name='maintenances',
-        blank=True, null=True,
+        Equipment,
+        on_delete=models.CASCADE,
+        related_name="maintenances",
+        blank=True,
+        null=True,
     )

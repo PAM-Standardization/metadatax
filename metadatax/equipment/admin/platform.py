@@ -10,10 +10,10 @@ class PlatformAdmin(JSONExportModelAdmin):
     model = Platform
     serializer = PlatformSerializer
     list_display = [
+        "name",
         "type",
         "owner",
         "provider",
-        "name",
         "description",
     ]
     search_fields = [
@@ -24,4 +24,11 @@ class PlatformAdmin(JSONExportModelAdmin):
         "provider__name",
         "provider__mail",
     ]
-    list_filter = ["type"]
+    list_filter = [
+        "type",
+    ]
+    autocomplete_fields = [
+        "type",
+        "owner",
+        "provider",
+    ]

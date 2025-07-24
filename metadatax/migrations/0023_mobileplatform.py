@@ -9,46 +9,120 @@ from django.utils.timezone import utc
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('metadatax', '0022_auto_20240911_1902'),
+        ("metadatax", "0022_auto_20240911_1902"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='platformtype',
-            name='type',
-            field=models.TextField(blank=True, choices=[('F', 'Fix'), ('M', 'Mobile')], default='F', help_text='Whether the platform is fix or mobile', null=True),
+            model_name="platformtype",
+            name="type",
+            field=models.TextField(
+                blank=True,
+                choices=[("F", "Fix"), ("M", "Mobile")],
+                default="F",
+                help_text="Whether the platform is fix or mobile",
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='recorder',
-            name='name',
-            field=models.CharField(blank=True, help_text='Name of the recorder', max_length=255, null=True),
+            model_name="recorder",
+            name="name",
+            field=models.CharField(
+                blank=True, help_text="Name of the recorder", max_length=255, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='deployment',
-            name='latitude',
-            field=models.FloatField(blank=True, help_text='Latitude of the platform position (WGS84 decimal degrees).', null=True),
+            model_name="deployment",
+            name="latitude",
+            field=models.FloatField(
+                blank=True,
+                help_text="Latitude of the platform position (WGS84 decimal degrees).",
+                null=True,
+            ),
         ),
         migrations.AlterField(
-            model_name='deployment',
-            name='longitude',
-            field=models.FloatField(blank=True, help_text='Longitude of the platform position (WGS84 decimal degree).', null=True),
+            model_name="deployment",
+            name="longitude",
+            field=models.FloatField(
+                blank=True,
+                help_text="Longitude of the platform position (WGS84 decimal degree).",
+                null=True,
+            ),
         ),
         migrations.CreateModel(
-            name='MobilePlatform',
+            name="MobilePlatform",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('datetime', models.DateTimeField(help_text='Datetime for the mobile platform position')),
-                ('longitude', models.FloatField(help_text='Longitude of the mobile platform')),
-                ('latitude', models.FloatField(help_text='Latitude of the mobile platform')),
-                ('hydrophone_depth', models.FloatField(help_text='Hydrophone depth of the mobile platform (In positive meters)')),
-                ('heading', models.FloatField(blank=True, default=0.0, help_text='Heading of the mobile platform', null=True)),
-                ('pitch', models.FloatField(blank=True, default=0.0, help_text='Pitch of the mobile platform', null=True)),
-                ('roll', models.FloatField(blank=True, default=0.0, help_text='Roll of the mobile platform', null=True)),
-                ('deployment', models.ForeignKey(help_text='Related deployment', on_delete=django.db.models.deletion.CASCADE, to='metadatax.deployment')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "datetime",
+                    models.DateTimeField(
+                        help_text="Datetime for the mobile platform position"
+                    ),
+                ),
+                (
+                    "longitude",
+                    models.FloatField(help_text="Longitude of the mobile platform"),
+                ),
+                (
+                    "latitude",
+                    models.FloatField(help_text="Latitude of the mobile platform"),
+                ),
+                (
+                    "hydrophone_depth",
+                    models.FloatField(
+                        help_text="Hydrophone depth of the mobile platform (In positive meters)"
+                    ),
+                ),
+                (
+                    "heading",
+                    models.FloatField(
+                        blank=True,
+                        default=0.0,
+                        help_text="Heading of the mobile platform",
+                        null=True,
+                    ),
+                ),
+                (
+                    "pitch",
+                    models.FloatField(
+                        blank=True,
+                        default=0.0,
+                        help_text="Pitch of the mobile platform",
+                        null=True,
+                    ),
+                ),
+                (
+                    "roll",
+                    models.FloatField(
+                        blank=True,
+                        default=0.0,
+                        help_text="Roll of the mobile platform",
+                        null=True,
+                    ),
+                ),
+                (
+                    "deployment",
+                    models.ForeignKey(
+                        help_text="Related deployment",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="metadatax.deployment",
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
-            model_name='mobileplatform',
-            constraint=models.UniqueConstraint(fields=('deployment', 'datetime'), name='unique_position_at_datetime_for_deployment'),
+            model_name="mobileplatform",
+            constraint=models.UniqueConstraint(
+                fields=("deployment", "datetime"),
+                name="unique_position_at_datetime_for_deployment",
+            ),
         ),
     ]

@@ -4,6 +4,7 @@ from django.db import models
 
 from metadatax.common.models import ContactRole
 from metadatax.equipment.models import Platform
+from metadatax.utils import custom_fields
 from .campaign import Campaign
 from .project import Project
 from .site import Site
@@ -19,7 +20,7 @@ class Deployment(models.Model):
 
     def __str__(self):
         if self.name is not None:
-            return str(self.name)
+            return f"{self.project}: {self.name}"
         else:
             return f"{self.project}: {self.campaign.name if self.campaign else '-'} | {self.site.name if self.site else '-'}"
 
@@ -74,7 +75,7 @@ class Deployment(models.Model):
         validators=[MinValueValidator(0)],
         help_text="Underwater depth of ocean floor at the platform position (in positive meters).",
     )
-    deployment_date = models.DateTimeField(
+    deployment_date = custom_fields.DateTimeField(
         null=True,
         blank=True,
         help_text="Date and time at which the measurement system was deployed in UTC.",
@@ -86,7 +87,7 @@ class Deployment(models.Model):
         null=True,
         help_text="Name of the vehicle associated with the deployment.",
     )
-    recovery_date = models.DateTimeField(
+    recovery_date = custom_fields.DateTimeField(
         null=True,
         blank=True,
         help_text="Date and time at which the measurement system was recovered in UTC.",

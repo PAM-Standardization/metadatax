@@ -14,9 +14,9 @@ class RecorderSpecificationFilter(FilterSet):
             "id": ["exact", "in"],
             "equipment__id": ["exact", "in"],
             "channels_count": ["exact", "lt", "lte", "gt", "gte"],
-            "sd_slots_count": ["exact", "lt", "lte", "gt", "gte"],
-            "sd_maximum_capacity": ["exact", "lt", "lte", "gt", "gte"],
-            "sd_type": ["exact", "icontains"],
+            "storage_slots_count": ["exact", "lt", "lte", "gt", "gte"],
+            "storage_maximum_capacity": ["exact", "lt", "lte", "gt", "gte"],
+            "storage_type": ["exact", "icontains"],
         }
 
 

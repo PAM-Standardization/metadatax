@@ -7,13 +7,19 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bibliography', '00002_make_information_nullable_by_default'),
+        ("bibliography", "00002_make_information_nullable_by_default"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='bibliography',
-            name='conference_information',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='bibliography', to='bibliography.bibliographyconference'),
+            model_name="bibliography",
+            name="conference_information",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="bibliography",
+                to="bibliography.bibliographyconference",
+            ),
         ),
     ]

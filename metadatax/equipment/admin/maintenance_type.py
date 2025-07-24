@@ -8,8 +8,8 @@ class MaintenanceTypeAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "description",
-        "interval",
+        "_interval",
     ]
     search_fields = [
-        "name"
+        "name",
     ]

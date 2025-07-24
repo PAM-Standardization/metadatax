@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0004_add_institution_to_contact_role'),
+        ("common", "0004_add_institution_to_contact_role"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='contact',
-            options={'ordering': ['last_name', 'first_name']},
+            name="contact",
+            options={"ordering": ["last_name", "first_name"]},
         ),
     ]

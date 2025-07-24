@@ -15,6 +15,7 @@ class Source(models.Model):
             )
         ]
         db_table = "metadatax_ontology_source"
+        ordering = ["english_name"]
 
     def __str__(self):
         return self.english_name

@@ -2,14 +2,14 @@ from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
 from graphene_django import DjangoObjectType
 
-from metadatax.equipment.models import SDCardSpecification
+from metadatax.equipment.models import StorageSpecification
 
 
-class SDCardSpecificationFilter(FilterSet):
+class StorageSpecificationFilter(FilterSet):
     equipment__id = NumberFilter()
 
     class Meta:
-        model = SDCardSpecification
+        model = StorageSpecification
         fields = {
             "id": ["exact", "in"],
             "equipment__id": ["exact", "in"],
@@ -17,11 +17,11 @@ class SDCardSpecificationFilter(FilterSet):
         }
 
 
-class SDCardSpecificationNode(DjangoObjectType):
+class StorageSpecificationNode(DjangoObjectType):
     id = ID(required=True)
 
     class Meta:
-        model = SDCardSpecification
+        model = StorageSpecification
         fields = "__all__"
-        filterset_class = SDCardSpecificationFilter
+        filterset_class = StorageSpecificationFilter
         interfaces = (relay.Node,)

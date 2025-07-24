@@ -20,3 +20,6 @@ class ContactAdmin(admin.ModelAdmin):
         "mail",
         "website",
     ]
+    filter_horizontal = [
+        "current_institutions",
+    ]

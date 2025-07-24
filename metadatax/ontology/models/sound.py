@@ -15,6 +15,7 @@ class Sound(models.Model):
             )
         ]
         db_table = "metadatax_ontology_sound"
+        ordering = ["english_name"]
 
     def __str__(self):
         return self.english_name
@@ -35,7 +36,6 @@ class Sound(models.Model):
         on_delete=models.SET_NULL,
     )
 
-    associated_names = models.ManyToManyField("self", related_name="associated_names")
     related_bibliography = models.ManyToManyField(
         Bibliography, related_name="related_sounds", blank=True
     )

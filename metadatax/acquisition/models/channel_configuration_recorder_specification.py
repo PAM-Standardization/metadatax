@@ -9,25 +9,40 @@ from metadatax.data.models import FileFormat
 from metadatax.equipment.models import Equipment
 
 
-def validate_recorder(value: Equipment):
-    if value.recorder_specification is None:
+def validate_recorder(value: int):
+    recorder = Equipment.objects.get(id=value)
+    if recorder.recorder_specification is None:
         raise ValidationError(
-            _("Recorder specification should be linked to a recorder equipment"),
-            params={"value": value},
+            _("The selected equipment doesn't have recorder specification"),
+            params={"recorder": recorder},
         )
 
 
-def validate_hydrophone(value: Equipment):
-    if value.hydrophone_specification is None:
+def validate_hydrophone(value: int):
+    hydrophone = Equipment.objects.get(id=value)
+    if hydrophone.hydrophone_specification is None:
         raise ValidationError(
-            _("Hydrophone specification should be linked to a hydrophone equipment"),
-            params={"value": value},
+            _("The selected equipment doesn't have hydrophone specification"),
+            params={"hydrophone": hydrophone},
         )
 
 
 class ChannelConfigurationRecorderSpecification(models.Model):
     class Meta:
         db_table = "metadatax_acquisition_channelconfigurationrecorderspecification"
+
+    def __str__(self):
+        info = [
+            str(self.recorder),
+            str(self.hydrophone),
+            f"({', '.join([str(f) for f in self.recording_formats.all()])})",
+            f"{self.sampling_frequency}Hz",
+            f"{self.gain}dB",
+            f"{self.sample_depth}bits",
+        ]
+        if self.channel_name:
+            info.append(f"channel {self.channel_name}")
+        return " - ".join(info)
 
     recorder = models.ForeignKey(
         Equipment,

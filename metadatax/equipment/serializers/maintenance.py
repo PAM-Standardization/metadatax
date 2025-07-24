@@ -12,4 +12,4 @@ class MaintenanceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Maintenance
-        exclude = ['platform', 'equipment']
+        exclude = ["platform", "equipment"]

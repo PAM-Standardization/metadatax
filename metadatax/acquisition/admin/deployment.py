@@ -151,6 +151,12 @@ class DeploymentAdmin(JSONExportModelAdmin):
     filter_horizontal = [
         "contacts",
     ]
+    autocomplete_fields = [
+        "project",
+        "site",
+        "platform",
+        "campaign",
+    ]
 
     @admin.display(description="Contacts")
     def list_contacts(self, obj: Deployment) -> str:

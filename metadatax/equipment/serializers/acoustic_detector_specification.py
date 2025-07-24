@@ -9,4 +9,4 @@ class AcousticDetectorSpecificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AcousticDetectorSpecification
-        fields = '__all__'
+        fields = "__all__"

@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy
 
 
 class User(AbstractUser):
-    """Custom user with institution field"""
+    """Custom user with institution custom_fields"""
 
     email = EmailField(gettext_lazy("email address"), unique=True)
     institution = CharField(blank=True, null=True, max_length=255)

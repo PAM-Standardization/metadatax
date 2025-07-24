@@ -8,7 +8,7 @@ from metadatax.acquisition.models import ChannelConfiguration
 class ChannelConfigurationFilter(FilterSet):
 
     files__id = NumberFilter()
-    other_equipments__id = NumberFilter()
+    storages__id = NumberFilter()
 
     class Meta:
         model = ChannelConfiguration
@@ -25,7 +25,7 @@ class ChannelConfigurationFilter(FilterSet):
             "harvest_starting_date": ["exact", "lt", "lte", "gt", "gte"],
             "harvest_ending_date": ["exact", "lt", "lte", "gt", "gte"],
             "files__id": ["exact", "in"],
-            "other_equipments__id": ["exact", "in"],
+            "storages__id": ["exact", "in"],
         }
 
 

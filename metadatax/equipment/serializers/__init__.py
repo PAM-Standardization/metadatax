@@ -6,4 +6,4 @@ from .maintenance_type import MaintenanceTypeSerializer
 from .platform import PlatformSerializer
 from .platform_type import PlatformTypeSerializer
 from .recorder_specification import RecorderSpecificationSerializer
-from .sd_card_specification import SDCardSpecificationSerializer
+from .storage_specification import StorageSpecificationSerializer

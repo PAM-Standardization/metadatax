@@ -1,5 +1,4 @@
 """Acquisition metadata administration"""
-
 from django.contrib import admin
 
 from metadatax.acquisition.models import ChannelConfigurationDetectorSpecification
@@ -28,6 +27,13 @@ class ChannelConfigurationDetectorSpecificationAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         "output_formats__name",
+    ]
+    autocomplete_fields = [
+        "detector",
+        "output_formats",
+    ]
+    filter_horizontal = [
+        "labels",
     ]
 
     @admin.display(description="Output formats")

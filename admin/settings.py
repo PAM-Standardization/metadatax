@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     "django_filters",
     "rest_framework",
     "rest_framework.authtoken",
+    "django_better_admin_arrayfield",
+    "durationwidget",
     "django_admin_multiple_choice_list_filter",
     "metadatax.apps.MetadataxConfig",
     "metadatax.common.apps.MetadataxCommonConfig",
@@ -83,7 +85,7 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(BASE_DIR, "templates"),
-            os.path.join(BASE_DIR, "metadatax", "templates", "metadatax"),
+            os.path.join(BASE_DIR, "metadatax", "utils", "templates"),
             os.path.join(BASE_DIR, "website", "templates"),
             os.path.join(BASE_DIR, "website", "templates", "website"),
         ],
@@ -138,7 +140,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Default primary key field type
+# Default primary key custom_fields type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

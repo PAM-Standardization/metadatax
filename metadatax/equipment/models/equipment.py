@@ -1,13 +1,13 @@
 from django.db import models
-from django.db.models import CheckConstraint
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
 
 from metadatax.common.models import Institution
+from metadatax.utils import custom_fields
 from .acoustic_detector_specification import AcousticDetectorSpecification
 from .hydrophone_specification import HydrophoneSpecification
 from .recorder_specification import RecorderSpecification
-from .sd_card_specification import SDCardSpecification
+from .storage_specification import StorageSpecification
 
 
 class Equipment(models.Model):
@@ -16,14 +16,7 @@ class Equipment(models.Model):
     class Meta:
         unique_together = ["model", "serial_number"]
         db_table = "metadatax_equipment_equipment"
-        constraints = [
-            CheckConstraint(
-                name="sd_card_is_only_sd_card",
-                check=models.Q(sd_card_specification__isnull=False, recorder_specification__isnull=True,
-                               hydrophone_specification__isnull=True, acoustic_detector_specification__isnull=True)
-                      | models.Q(sd_card_specification__isnull=True),
-            )
-        ]
+        ordering = ("name", "model", "serial_number")
 
     def __str__(self):
         if self.name is not None:
@@ -32,35 +25,27 @@ class Equipment(models.Model):
 
     model = models.CharField(max_length=100)
     serial_number = models.CharField(max_length=100)
-    owner = models.ForeignKey(Institution, on_delete=models.PROTECT, related_name='owned_equipments')
-    provider = models.ForeignKey(Institution, on_delete=models.PROTECT, related_name='provided_equipments')
-
-    sd_card_specification = models.OneToOneField(
-        SDCardSpecification,
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True
+    owner = models.ForeignKey(
+        Institution, on_delete=models.PROTECT, related_name="owned_equipments"
     )
-    recorder_specification = models.OneToOneField(
-        RecorderSpecification,
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True
-    )
-    hydrophone_specification = models.OneToOneField(
-        HydrophoneSpecification,
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True
-    )
-    acoustic_detector_specification = models.OneToOneField(
-        AcousticDetectorSpecification,
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True
+    provider = models.ForeignKey(
+        Institution, on_delete=models.PROTECT, related_name="provided_equipments"
     )
 
-    purchase_date = models.DateField(null=True, blank=True)
+    storage_specification = models.ForeignKey(
+        StorageSpecification, on_delete=models.PROTECT, blank=True, null=True
+    )
+    recorder_specification = models.ForeignKey(
+        RecorderSpecification, on_delete=models.PROTECT, blank=True, null=True
+    )
+    hydrophone_specification = models.ForeignKey(
+        HydrophoneSpecification, on_delete=models.PROTECT, blank=True, null=True
+    )
+    acoustic_detector_specification = models.ForeignKey(
+        AcousticDetectorSpecification, on_delete=models.PROTECT, blank=True, null=True
+    )
+
+    purchase_date = custom_fields.DateField(null=True, blank=True)
     name = models.CharField(max_length=100, blank=True, null=True)
     battery_slots_count = models.IntegerField(null=True, blank=True)
     battery_type = models.CharField(max_length=100, null=True, blank=True)
@@ -69,10 +54,10 @@ class Equipment(models.Model):
 
 @receiver(post_delete, sender=Equipment)
 def delete_specifications(sender, instance: Equipment, **kwargs):
-    if instance.sd_card_specification is not None:
-        instance.sd_card_specification.delete()
-    if instance.recorder_specification is not None: (
-        instance.recorder_specification.delete())
+    if instance.storage_specification is not None:
+        instance.storage_specification.delete()
+    if instance.recorder_specification is not None:
+        (instance.recorder_specification.delete())
     if instance.hydrophone_specification is not None:
         instance.hydrophone_specification.delete()
     if instance.acoustic_detector_specification is not None:
