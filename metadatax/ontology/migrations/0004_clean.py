@@ -33,10 +33,6 @@ class Migration(migrations.Migration):
             model_name="sound",
             name="associated_names",
         ),
-        migrations.AlterUniqueTogether(
-            name="label",
-            unique_together={("source", "sound")},
-        ),
         migrations.AddField(
             model_name="label",
             name="associated_names",
