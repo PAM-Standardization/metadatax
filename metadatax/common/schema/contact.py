@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import relay, ID
-from graphene_django import DjangoObjectType
 
 from metadatax.common.models import Contact
+from metadatax.utils.schema import MxObjectType
 
 
 class ContactFilter(FilterSet):
@@ -30,7 +30,7 @@ class ContactFilter(FilterSet):
         }
 
 
-class ContactNode(DjangoObjectType):
+class ContactNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

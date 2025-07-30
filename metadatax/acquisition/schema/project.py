@@ -1,10 +1,10 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.acquisition.models import Project
 from metadatax.common.schema import AccessibilityEnum
 from .financing import FinancingEnum
+from ...utils.schema import MxObjectType
 
 
 class ProjectFilter(FilterSet):
@@ -36,7 +36,7 @@ class ProjectFilter(FilterSet):
         }
 
 
-class ProjectNode(DjangoObjectType):
+class ProjectNode(MxObjectType):
     id = ID(required=True)
     accessibility = AccessibilityEnum()
     financing = FinancingEnum()
@@ -44,5 +44,6 @@ class ProjectNode(DjangoObjectType):
     class Meta:
         model = Project
         fields = "__all__"
-        filterset_class = ProjectFilter
+        filter_fields = {}
+        # filterset_class = ProjectFilter
         interfaces = (relay.Node,)

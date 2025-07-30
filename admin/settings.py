@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "django_better_admin_arrayfield",
     "durationwidget",
+    "graphene_django_optimizer",
     "django_admin_multiple_choice_list_filter",
     "metadatax.apps.MetadataxConfig",
     "metadatax.common.apps.MetadataxCommonConfig",

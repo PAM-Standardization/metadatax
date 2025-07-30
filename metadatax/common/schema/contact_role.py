@@ -1,9 +1,9 @@
 from django_filters import FilterSet, NumberFilter, CharFilter
 from graphene import ID, relay, Scalar
-from graphene_django import DjangoObjectType
 from graphql.language import ast
 
 from metadatax.common.models import ContactRole
+from metadatax.utils.schema import MxObjectType
 
 
 class RoleEnum(Scalar):
@@ -57,7 +57,7 @@ class ContactRoleFilter(FilterSet):
         }
 
 
-class ContactRoleNode(DjangoObjectType):
+class ContactRoleNode(MxObjectType):
     id = ID(required=True)
     role = RoleEnum()
 

@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.data.models import DetectionProperties
+from metadatax.utils.schema import MxObjectType
 
 
 class DetectionPropertiesFilter(FilterSet):
@@ -18,7 +18,7 @@ class DetectionPropertiesFilter(FilterSet):
         }
 
 
-class DetectionPropertiesNode(DjangoObjectType):
+class DetectionPropertiesNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

@@ -29,6 +29,7 @@ poetry run black admin meta_auth metadatax website
         ...,
         "django_admin_multiple_choice_list_filter",
         'django_better_admin_arrayfield',
+        "graphene_django_optimizer",
         "metadatax",
         "metadatax.common",
         "metadatax.bibliography",

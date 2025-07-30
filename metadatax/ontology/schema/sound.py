@@ -1,11 +1,10 @@
 import graphene
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.ontology.models import Sound
 from metadatax.ontology.serializers import SoundSerializer
-from metadatax.utils.schema import DeleteMutation, PostMutation
+from metadatax.utils.schema import DeleteMutation, PostMutation, MxObjectType
 
 
 class SoundFilter(FilterSet):
@@ -26,7 +25,7 @@ class SoundFilter(FilterSet):
         }
 
 
-class SoundNode(DjangoObjectType):
+class SoundNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

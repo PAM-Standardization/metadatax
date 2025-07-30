@@ -1,6 +1,23 @@
 import graphene
+import graphene_django_optimizer as gql_optimizer
+from graphene import ID
+from graphene_django import DjangoObjectType
 from graphene_django.rest_framework.mutation import SerializerMutation
 from rest_framework import serializers
+
+
+class MxObjectType(DjangoObjectType):
+    """Dataset schema"""
+
+    id = ID(required=True)
+
+    class Meta:
+        # pylint: disable=missing-class-docstring, too-few-public-methods
+        abstract = True
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        return gql_optimizer.query(queryset, info)
 
 
 class PostMutation(SerializerMutation):

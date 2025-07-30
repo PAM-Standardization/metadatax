@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.acquisition.models import ProjectType
+from metadatax.utils.schema import MxObjectType
 
 
 class ProjectTypeFilter(FilterSet):
@@ -18,7 +18,7 @@ class ProjectTypeFilter(FilterSet):
         }
 
 
-class ProjectTypeNode(DjangoObjectType):
+class ProjectTypeNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

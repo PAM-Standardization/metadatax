@@ -1,9 +1,9 @@
 from django_filters import NumberFilter
 from django_filters.rest_framework import FilterSet
 from graphene import relay
-from graphene_django import DjangoObjectType
 
 from metadatax.bibliography.models import Author
+from metadatax.utils.schema import MxObjectType
 
 
 class AuthorFilter(FilterSet):
@@ -20,7 +20,7 @@ class AuthorFilter(FilterSet):
         }
 
 
-class AuthorNode(DjangoObjectType):
+class AuthorNode(MxObjectType):
     class Meta:
         model = Author
         fields = "__all__"

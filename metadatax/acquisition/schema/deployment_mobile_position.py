@@ -1,8 +1,8 @@
 from django_filters import FilterSet
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.acquisition.models import DeploymentMobilePosition
+from metadatax.utils.schema import MxObjectType
 
 
 class DeploymentMobilePositionFilter(FilterSet):
@@ -21,7 +21,7 @@ class DeploymentMobilePositionFilter(FilterSet):
         }
 
 
-class DeploymentMobilePositionNode(DjangoObjectType):
+class DeploymentMobilePositionNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

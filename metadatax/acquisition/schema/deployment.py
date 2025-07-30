@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.acquisition.models import Deployment
+from metadatax.utils.schema import MxObjectType
 
 
 class DeploymentFilter(FilterSet):
@@ -33,7 +33,7 @@ class DeploymentFilter(FilterSet):
         }
 
 
-class DeploymentNode(DjangoObjectType):
+class DeploymentNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

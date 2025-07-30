@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter, CharFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.acquisition.models import ChannelConfigurationRecorderSpecification
+from metadatax.utils.schema import MxObjectType
 
 
 class ChannelConfigurationRecorderSpecificationFilter(FilterSet):
@@ -19,7 +19,7 @@ class ChannelConfigurationRecorderSpecificationFilter(FilterSet):
         }
 
 
-class ChannelConfigurationRecorderSpecificationNode(DjangoObjectType):
+class ChannelConfigurationRecorderSpecificationNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

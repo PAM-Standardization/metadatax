@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.data.models import FileFormat
+from metadatax.utils.schema import MxObjectType
 
 
 class FileFormatFilter(FilterSet):
@@ -21,7 +21,7 @@ class FileFormatFilter(FilterSet):
         }
 
 
-class FileFormatNode(DjangoObjectType):
+class FileFormatNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

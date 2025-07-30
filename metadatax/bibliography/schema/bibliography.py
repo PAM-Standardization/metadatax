@@ -1,9 +1,9 @@
 from django_filters import FilterSet, CharFilter
 from graphene import ID, relay, Scalar
-from graphene_django import DjangoObjectType
 from graphql.language import ast
 
 from metadatax.bibliography.models import Bibliography
+from metadatax.utils.schema import MxObjectType
 
 
 class StatusEnum(Scalar):
@@ -60,7 +60,7 @@ class BibliographyFilter(FilterSet):
         }
 
 
-class BibliographyNode(DjangoObjectType):
+class BibliographyNode(MxObjectType):
     id = ID(required=True)
     type = TypeEnum(required=True)
     status = StatusEnum()

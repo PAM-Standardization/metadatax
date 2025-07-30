@@ -1,10 +1,10 @@
 from graphene import relay, ID
-from graphene_django import DjangoObjectType
 
 from metadatax.bibliography.models import BibliographyArticle
+from metadatax.utils.schema import MxObjectType
 
 
-class BibliographyArticleNode(DjangoObjectType):
+class BibliographyArticleNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

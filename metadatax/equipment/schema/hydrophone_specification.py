@@ -1,9 +1,9 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.equipment.models import HydrophoneSpecification
 from metadatax.equipment.schema.hydrophone_directivity import HydrophoneDirectivityEnum
+from metadatax.utils.schema import MxObjectType
 
 
 class HydrophoneSpecificationFilter(FilterSet):
@@ -28,7 +28,7 @@ class HydrophoneSpecificationFilter(FilterSet):
         }
 
 
-class HydrophoneSpecificationNode(DjangoObjectType):
+class HydrophoneSpecificationNode(MxObjectType):
     id = ID(required=True)
     directivity = HydrophoneDirectivityEnum()
 

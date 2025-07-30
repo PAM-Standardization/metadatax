@@ -1,8 +1,8 @@
 from django_filters import NumberFilter, FilterSet
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.acquisition.models import Site
+from metadatax.utils.schema import MxObjectType
 
 
 class SiteFilter(FilterSet):
@@ -18,7 +18,7 @@ class SiteFilter(FilterSet):
         }
 
 
-class SiteNode(DjangoObjectType):
+class SiteNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

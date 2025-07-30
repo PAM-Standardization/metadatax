@@ -1,9 +1,9 @@
 from django_filters import FilterSet, CharFilter, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.common.schema import AccessibilityEnum
 from metadatax.data.models import File
+from metadatax.utils.schema import MxObjectType
 
 
 class FileFilter(FilterSet):
@@ -25,7 +25,7 @@ class FileFilter(FilterSet):
         }
 
 
-class FileNode(DjangoObjectType):
+class FileNode(MxObjectType):
     id = ID(required=True)
     accessibility = AccessibilityEnum()
 

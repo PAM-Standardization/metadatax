@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.equipment.models import StorageSpecification
+from metadatax.utils.schema import MxObjectType
 
 
 class StorageSpecificationFilter(FilterSet):
@@ -17,7 +17,7 @@ class StorageSpecificationFilter(FilterSet):
         }
 
 
-class StorageSpecificationNode(DjangoObjectType):
+class StorageSpecificationNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

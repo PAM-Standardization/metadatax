@@ -1,9 +1,9 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.ontology.models import Label
 from .physical_descriptor import SignalShapeEnum, SignalPluralityEnum
+from ...utils.schema import MxObjectType
 
 
 class LabelFilter(FilterSet):
@@ -38,7 +38,7 @@ class LabelFilter(FilterSet):
         }
 
 
-class LabelNode(DjangoObjectType):
+class LabelNode(MxObjectType):
     id = ID(required=True)
     shape = SignalShapeEnum()
     plurality = SignalPluralityEnum()

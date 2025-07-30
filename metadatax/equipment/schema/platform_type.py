@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.equipment.models import PlatformType
+from metadatax.utils.schema import MxObjectType
 
 
 class PlatformTypeFilter(FilterSet):
@@ -18,7 +18,7 @@ class PlatformTypeFilter(FilterSet):
         }
 
 
-class PlatformTypeNode(DjangoObjectType):
+class PlatformTypeNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

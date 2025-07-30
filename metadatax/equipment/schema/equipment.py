@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.equipment.models import Equipment
+from metadatax.utils.schema import MxObjectType
 
 
 class EquipmentFilter(FilterSet):
@@ -37,7 +37,7 @@ class EquipmentFilter(FilterSet):
         }
 
 
-class EquipmentNode(DjangoObjectType):
+class EquipmentNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

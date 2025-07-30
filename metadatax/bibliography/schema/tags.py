@@ -1,10 +1,10 @@
 from graphene import relay, ID
-from graphene_django import DjangoObjectType
 
 from metadatax.bibliography.models import Tag
+from metadatax.utils.schema import MxObjectType
 
 
-class TagNode(DjangoObjectType):
+class TagNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.equipment.models import AcousticDetectorSpecification
+from metadatax.utils.schema import MxObjectType
 
 
 class AcousticDetectorSpecificationFilter(FilterSet):
@@ -21,7 +21,7 @@ class AcousticDetectorSpecificationFilter(FilterSet):
         }
 
 
-class AcousticDetectorSpecificationNode(DjangoObjectType):
+class AcousticDetectorSpecificationNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

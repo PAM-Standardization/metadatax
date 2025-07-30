@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.acquisition.models import Campaign
+from metadatax.utils.schema import MxObjectType
 
 
 class CampaignFilter(FilterSet):
@@ -18,7 +18,7 @@ class CampaignFilter(FilterSet):
         }
 
 
-class CampaignNode(DjangoObjectType):
+class CampaignNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:

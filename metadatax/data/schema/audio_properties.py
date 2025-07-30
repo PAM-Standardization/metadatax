@@ -1,8 +1,8 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-from graphene_django import DjangoObjectType
 
 from metadatax.data.models import AudioProperties
+from metadatax.utils.schema import MxObjectType
 
 
 class AudioPropertiesFilter(FilterSet):
@@ -20,7 +20,7 @@ class AudioPropertiesFilter(FilterSet):
         }
 
 
-class AudioPropertiesNode(DjangoObjectType):
+class AudioPropertiesNode(MxObjectType):
     id = ID(required=True)
 
     class Meta:
