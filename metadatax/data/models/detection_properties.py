@@ -4,6 +4,7 @@ from django.db import models
 class DetectionProperties(models.Model):
     class Meta:
         db_table = "metadatax_data_detectionproperties"
+        verbose_name_plural = "DetectionProperties"
 
     start = models.DateTimeField(
         help_text="Start of the detection file covering (in UTC).",

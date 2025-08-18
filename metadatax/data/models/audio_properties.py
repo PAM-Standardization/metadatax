@@ -5,6 +5,7 @@ from django.db import models
 class AudioProperties(models.Model):
     class Meta:
         db_table = "metadatax_data_audioproperties"
+        verbose_name_plural = "Audio Properties"
 
     sampling_frequency = models.IntegerField(
         validators=[MinValueValidator(0)],
