@@ -8,6 +8,12 @@ class RecorderSpecification(models.Model):
 
     class Meta:
         db_table = "metadatax_equipment_recorderspecification"
+        unique_together = (
+            "channels_count",
+            "storage_slots_count",
+            "storage_maximum_capacity",
+            "storage_type",
+        )
 
     def __str__(self):
         info = [f"{self.channels_count} channels"]

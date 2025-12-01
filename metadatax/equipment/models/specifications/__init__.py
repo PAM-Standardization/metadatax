@@ -1,0 +1,5 @@
+from .acoustic_detector_specification import AcousticDetectorSpecification
+from .hydrophone_directivity import HydrophoneDirectivity
+from .hydrophone_specification import HydrophoneSpecification
+from .recorder_specification import RecorderSpecification
+from .storage_specification import StorageSpecification
