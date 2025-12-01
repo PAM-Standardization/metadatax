@@ -21,7 +21,18 @@ from metadatax.utils import JSONExportModelAdmin
 
 class ChannelConfigurationForm(forms.ModelForm):
     csv_audio_file = forms.FileField(
-        help_text="Conflicting files will be ignored",
+        help_text="Conflicting files will be ignored. "
+                  "The file should contains the following columns: "
+                  "name* (file name),  "
+                  "format* (file format)," 
+                  "initial_timestamp*, "
+                  "duration*, "
+                  "sampling_frequency*, "
+                  "storage_location, "
+                  "file_size, "
+                  "accessibility (C - Confidential, R - upon Request, O - Open), "
+                  "sample_depth, "
+        ,
         validators=[validators.FileExtensionValidator(["csv"])],
         required=False,
     )
