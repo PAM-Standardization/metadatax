@@ -28,7 +28,7 @@ class BibliographyForm(forms.ModelForm):
         if should_be_empty and data is not None:
             raise ValidationError(
                 {
-                    field_name: f"This custom_fields should stay empty for a '{biblio_type.label}' type bibliography."
+                    field_name: f"This {field_name} should stay empty for a '{biblio_type.label}' type bibliography."
                 }
             )
 
@@ -49,55 +49,17 @@ class BibliographyForm(forms.ModelForm):
 
         b_type: Optional[Bibliography.Type] = self.cleaned_data.get("type")
         if b_type is not None:
-            t = Bibliography.Type
-
             self._check_field_empty(
-                t.SOFTWARE, "software_information", should_be_empty=False
+                b_type, "software_information", should_be_empty=b_type!=Bibliography.Type.SOFTWARE
             )
             self._check_field_empty(
-                t.SOFTWARE, "article_information", should_be_empty=True
+                b_type, "article_information", should_be_empty=b_type!=Bibliography.Type.ARTICLE
             )
             self._check_field_empty(
-                t.SOFTWARE, "conference_information", should_be_empty=True
+                b_type, "conference_information", should_be_empty=b_type!=Bibliography.Type.CONFERENCE and b_type!=Bibliography.Type.POSTER
             )
             self._check_field_empty(
-                t.SOFTWARE, "poster_information", should_be_empty=True
-            )
-
-            self._check_field_empty(
-                t.ARTICLE, "software_information", should_be_empty=True
-            )
-            self._check_field_empty(
-                t.ARTICLE, "article_information", should_be_empty=False
-            )
-            self._check_field_empty(
-                t.ARTICLE, "conference_information", should_be_empty=True
-            )
-            self._check_field_empty(
-                t.ARTICLE, "poster_information", should_be_empty=True
-            )
-
-            self._check_field_empty(
-                t.CONFERENCE, "software_information", should_be_empty=True
-            )
-            self._check_field_empty(
-                t.CONFERENCE, "article_information", should_be_empty=True
-            )
-            self._check_field_empty(
-                t.CONFERENCE, "conference_information", should_be_empty=False
-            )
-            self._check_field_empty(
-                t.CONFERENCE, "poster_information", should_be_empty=True
-            )
-
-            self._check_field_empty(
-                t.POSTER, "software_information", should_be_empty=True
-            )
-            self._check_field_empty(
-                t.POSTER, "article_information", should_be_empty=True
-            )
-            self._check_field_empty(
-                t.POSTER, "poster_information", should_be_empty=False
+                b_type, "poster_information", should_be_empty=b_type!=Bibliography.Type.POSTER
             )
 
         return self.cleaned_data
