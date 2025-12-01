@@ -1,10 +1,9 @@
 """Acquisition models for metadata app"""
 from datetime import timedelta
 
-from blackd.middlewares import F
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import Min, ExpressionWrapper, Max
+from django.db.models import Min, ExpressionWrapper, Max, F
 
 from metadatax.data.models import File
 from metadatax.equipment.models import Equipment
