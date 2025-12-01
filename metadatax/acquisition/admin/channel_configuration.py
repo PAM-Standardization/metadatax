@@ -118,6 +118,8 @@ class ChannelConfigurationAdmin(JSONExportModelAdmin):
         "timezone",
         "harvest_starting_date",
         "harvest_ending_date",
+        "recording_start_date",
+        "recording_end_date",
     ]
     search_fields = [
         "deployment__name",

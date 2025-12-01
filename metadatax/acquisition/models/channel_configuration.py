@@ -1,7 +1,10 @@
 """Acquisition models for metadata app"""
+from datetime import timedelta
 
+from blackd.middlewares import F
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Min, ExpressionWrapper, Max
 
 from metadatax.data.models import File
 from metadatax.equipment.models import Equipment
@@ -97,3 +100,16 @@ class ChannelConfiguration(models.Model):
         through="ChannelConfigurationFiles",
         related_name="channel_configurations",
     )
+
+    @property
+    def recording_start_date(self):
+        return self.files.aggregate(start=Min('audio_properties__initial_timestamp'))['start']
+
+    @property
+    def recording_end_date(self):
+        return self.files.annotate(
+            fake_end=ExpressionWrapper(
+                F('start') + timedelta(seconds=1) * F('duration'),
+                output_field=models.DateTimeField()
+            )
+        ).aggregate(end=Max('end'))['end']
