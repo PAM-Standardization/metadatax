@@ -133,13 +133,20 @@ class ByteFormField(SimpleArrayField):
         )
         self.base_field.required = False
 
-    def get_validate_data(self, value: [str]) -> (Optional[int], str):
+    def clean(self, value):
         value, unit = value
-        return (int(value) if value else value, unit)
+        if value is None or value == '':
+            return None
+        return [int(value), unit]
 
     def validate(self, value):
         errors = []
-        value, unit = self.get_validate_data(value)
+        if value in self.empty_values:
+            if self.required:
+                raise ValidationError(self.error_messages['required'], code='required')
+            return
+
+        value, unit = value
         try:
             forms.IntegerField(
                 required=self.required, min_value=1, max_value=999
@@ -169,7 +176,12 @@ class ByteFormField(SimpleArrayField):
 
     def run_validators(self, value: [str]):
         errors = []
-        value, unit = self.get_validate_data(value)
+        if value in self.empty_values:
+            if self.required:
+                raise ValidationError(self.error_messages['required'], code='required')
+            return
+
+        value, unit = value
         try:
             forms.IntegerField(
                 required=self.required, min_value=1, max_value=999
@@ -198,6 +210,7 @@ class ByteFormField(SimpleArrayField):
             )
         if errors:
             raise ValidationError(errors)
+
 
 
 class ByteWidget(MultiWidget):

@@ -8,12 +8,12 @@ class MetadataxAdminSite(admin.AdminSite):
 
     app_ordering = {
         "metadatax": 0,
-        "metadatax.common": 1,
-        "metadatax.ontology": 1,
-        "metadatax.bibliography": 1,
-        "metadatax.acquisition": 1,
-        "metadatax.data": 1,
-        "metadatax.equipment": 1,
+        "common": 1,
+        "ontology": 1,
+        "bibliography": 1,
+        "acquisition": 1,
+        "data": 1,
+        "equipment": 1,
         "meta_auth": 3,
         "auth": 3,
         "admin": 3,

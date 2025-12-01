@@ -9,6 +9,18 @@ class HydrophoneSpecification(models.Model):
 
     class Meta:
         db_table = "metadatax_equipment_hydrophonespecification"
+        unique_together = (
+            "directivity",
+            "operating_min_temperature",
+            "operating_max_temperature",
+            "min_bandwidth",
+            "max_bandwidth",
+            "min_dynamic_range",
+            "max_dynamic_range",
+            "min_operating_depth",
+            "max_operating_depth",
+            "noise_floor",
+        )
 
     def __str__(self):
         info = [f"sensitivity: {self.sensitivity}"]
@@ -36,8 +48,6 @@ class HydrophoneSpecification(models.Model):
         if len(optional_info) > 0:
             info.append(f"({', '.join(optional_info)})")
         return ", ".join(info)
-
-    sensitivity = models.FloatField()
 
     directivity = models.TextField(
         choices=HydrophoneDirectivity.choices,

@@ -8,6 +8,7 @@ class StorageSpecification(models.Model):
 
     class Meta:
         db_table = "metadatax_equipment_storagespecification"
+        unique_together = ("capacity", "type")
         ordering = ("-capacity",)
 
     def __str__(self):

@@ -121,7 +121,7 @@ class DeploymentAdmin(JSONExportModelAdmin):
             "Location",
             {
                 "classes": [
-                    "wide",
+                    "wide"
                 ],
                 "fields": [
                     "site",
@@ -137,7 +137,7 @@ class DeploymentAdmin(JSONExportModelAdmin):
             "Deployment & Recovery",
             {
                 "classes": [
-                    "wide",
+                    "wide"
                 ],
                 "fields": [
                     "campaign",

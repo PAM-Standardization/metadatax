@@ -1,5 +1,6 @@
 from .acoustic_detector_specification import AcousticDetectorSpecificationSerializer
 from .equipment import EquipmentSerializer
+from .equipment_model import EquipmentModelSerializer, EquipmentModelSpecificationSerializer
 from .hydrophone_specification import HydrophoneSpecificationSerializer
 from .maintenance import MaintenanceSerializer
 from .maintenance_type import MaintenanceTypeSerializer
