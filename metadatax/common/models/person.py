@@ -1,13 +1,15 @@
 from django.db import models
 
 from .institution import Institution
+from .relations import PersonInstitutionRelation
+from .team import Team
 
 
-class Contact(models.Model):
-    """Contact model"""
+class Person(models.Model):
+    """Person model"""
 
     class Meta:
-        db_table = "metadatax_common_contact"
+        db_table = "mx_common_person"
         unique_together = ("first_name", "last_name")
         ordering = ["last_name", "first_name"]
 
@@ -20,10 +22,12 @@ class Contact(models.Model):
     mail = models.EmailField(max_length=255, blank=True, null=True)
     website = models.URLField(max_length=255, blank=True, null=True)
 
-    current_institutions = models.ManyToManyField(Institution, related_name="contacts")
+    institutions = models.ManyToManyField(Institution, related_name="persons", through=PersonInstitutionRelation)
+    teams = models.ManyToManyField(Team, related_name="persons", through=PersonInstitutionRelation)
 
     @property
     def initial_names(self):
         names = self.first_name.split("-")
         initial_first_name = "-".join([f"{n[0]}." for n in names])
         return f"{self.last_name}, {initial_first_name}"
+

@@ -8,7 +8,7 @@ class AuthorInline(admin.TabularInline):
     extra = 0
     model = Author
 
-    autocomplete_fields = ["contact"]
+    autocomplete_fields = ["person"]
     filter_vertical = [
         "institutions",
     ]

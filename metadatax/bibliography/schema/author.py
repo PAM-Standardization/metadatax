@@ -15,7 +15,7 @@ class AuthorFilter(FilterSet):
             "id": ["exact", "in"],
             "order": ["exact", "lt", "lte", "gt", "gte"],
             "bibliography_id": ["exact", "in"],
-            "contact_id": ["exact", "in"],
+            "person_id": ["exact", "in"],
             "institutions": ["exact", "in"],
         }
 

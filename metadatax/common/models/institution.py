@@ -5,6 +5,7 @@ class Institution(models.Model):
     """Scientist institution model"""
 
     class Meta:
+        db_table = 'mx_common_institution'
         unique_together = ("name", "city", "country")
         ordering = ("name",)
 
@@ -21,4 +22,10 @@ class Institution(models.Model):
 
     @property
     def location(self):
-        return f"{self.city}, {self.country}"
+        if self.city and self.country:
+            return f"{self.city}, {self.country}"
+        if self.country:
+            return self.country
+        if self.city:
+            return self.city
+        return None

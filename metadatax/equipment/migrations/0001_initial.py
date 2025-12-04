@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("common", "0001_initial"),
+        ("common", "0003_institution"),
         ("ontology", "0001_initial"),
     ]
 

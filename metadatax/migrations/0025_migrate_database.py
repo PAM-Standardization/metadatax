@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-from metadatax.common.models import ContactRole
+from metadatax.common.models.enums import Role
 
 
 class MigrationAction:
@@ -234,7 +234,7 @@ class MigrationAction:
                 )
                 contact_role, _ = self.ContactRole.objects.get_or_create(
                     institution=institution,
-                    role=ContactRole.Type.MAIN_CONTACT,
+                    role=Role.MAIN_CONTACT,
                 )
                 project_contacts.append(
                     self.ProjectContactThrough(
@@ -258,7 +258,7 @@ class MigrationAction:
                 )
                 contact_role, _ = self.ContactRole.objects.get_or_create(
                     institution=institution,
-                    role=ContactRole.Type.CONTACT_POINT,
+                    role=Role.CONTACT_POINT,
                 )
                 deployment_contacts.append(
                     self.DeploymentContactThrough(

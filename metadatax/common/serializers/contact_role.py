@@ -1,16 +1,11 @@
 from rest_framework import serializers
 
-from metadatax.common.models import ContactRole
-from metadatax.utils import EnumField
-from .contact import ContactSerializer
-from .institution import InstitutionSerializer
+from metadatax.common.models.relations import ContactRelation
 
 
 class ContactRoleSerializer(serializers.ModelSerializer):
-    contact = ContactSerializer()
-    institution = InstitutionSerializer()
-    role = EnumField(ContactRole.Type)
+    # TODO!
 
     class Meta:
-        model = ContactRole
+        model = ContactRelation
         fields = "__all__"

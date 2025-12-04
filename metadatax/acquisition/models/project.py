@@ -1,7 +1,8 @@
 from django.db import models
 
 from metadatax.bibliography.models import Bibliography
-from metadatax.common.models import Accessibility, ContactRole
+from metadatax.common.models.enums import Accessibility
+from metadatax.common.models.relations import ContactRelation
 from metadatax.utils import custom_fields
 from .financing import Financing
 from .project_type import ProjectType
@@ -21,7 +22,7 @@ class Project(models.Model):
         max_length=255, unique=True, help_text="Name of the project"
     )
     contacts = models.ManyToManyField(
-        ContactRole,
+        ContactRelation,
         help_text="Should have at least one 'Main Contact'",
         related_name="projects",
     )  # TODO: constraint

@@ -1,7 +1,7 @@
 """Acquisition models for metadata app"""
 from django.db import models
 
-from metadatax.common.models import Accessibility
+from metadatax.common.models.enums import Accessibility
 from .audio_properties import AudioProperties
 from .detection_properties import DetectionProperties
 from .file_format import FileFormat

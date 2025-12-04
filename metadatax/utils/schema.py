@@ -28,17 +28,17 @@ class PostMutation(SerializerMutation):
 
     @classmethod
     def __init_subclass_with_meta__(
-        cls,
-        lookup_field=None,
-        serializer_class=None,
-        model_class=None,
-        model_operations=("create", "update"),
-        only_fields=(),
-        exclude_fields=(),
-        convert_choices_to_enum=True,
-        _meta=None,
-        optional_fields=(),
-        **options
+            cls,
+            lookup_field=None,
+            serializer_class=None,
+            model_class=None,
+            model_operations=("create", "update"),
+            only_fields=(),
+            exclude_fields=(),
+            convert_choices_to_enum=True,
+            _meta=None,
+            optional_fields=(),
+            **options
     ):
         return super().__init_subclass_with_meta__(
             lookup_field,
@@ -76,14 +76,14 @@ class DeleteMutation(graphene.Mutation):
 
     @classmethod
     def __init_subclass_with_meta__(
-        cls,
-        interfaces=(),
-        resolver=None,
-        output=None,
-        arguments=None,
-        model_class=None,
-        _meta=None,
-        **options
+            cls,
+            interfaces=(),
+            resolver=None,
+            output=None,
+            arguments=None,
+            model_class=None,
+            _meta=None,
+            **options
     ):
         cls.model_class = model_class
         super().__init_subclass_with_meta__(
@@ -98,3 +98,12 @@ class DeleteMutation(graphene.Mutation):
         obj = cls.model_class.objects.get(pk=kwargs["id"])
         obj.delete()
         return cls(ok=True)
+
+
+class ByIdField(graphene.Field):
+
+    def __init__(self, type_, args=None, *extra_args, **kwargs):
+        super().__init__(type_, args, id=graphene.ID(required=True), resolver=self.resolve, *extra_args, **kwargs)
+
+    def resolve(self, info, id: int):
+        return self.type.get_node(info, id)

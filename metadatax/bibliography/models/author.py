@@ -1,6 +1,6 @@
 from django.db import models
 
-from metadatax.common.models import Contact, Institution
+from metadatax.common.models import Person, Institution
 from .bibliography import Bibliography
 
 
@@ -9,7 +9,7 @@ class Author(models.Model):
         unique_together = (("order", "bibliography"),)
 
     def __str__(self):
-        return f"{self.order} {self.contact}"
+        return f"{self.order} {self.person}"
 
     order = models.PositiveIntegerField()
     bibliography = models.ForeignKey(
@@ -17,8 +17,8 @@ class Author(models.Model):
         on_delete=models.CASCADE,
         related_name="authors",
     )
-    contact = models.ForeignKey(
-        to=Contact,
+    person = models.ForeignKey(
+        to=Person,
         on_delete=models.CASCADE,
         related_name="authors",
         blank=True,

@@ -1,7 +1,7 @@
 from graphene import Scalar
 from graphql.language import ast
 
-from metadatax.common.models import Accessibility
+from metadatax.common.models.enums import Accessibility
 
 
 class AccessibilityEnum(Scalar):

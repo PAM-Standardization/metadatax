@@ -9,7 +9,9 @@ from metadatax.acquisition.models import (
     Project,
     ChannelConfigurationRecorderSpecification,
 )
-from metadatax.common.models import Accessibility, Contact, ContactRole, Institution
+from metadatax.common.models import Person, Institution
+from metadatax.common.models.enums import Accessibility, Role
+from metadatax.common.models.relations import ContactRelation
 from metadatax.data.models import FileFormat
 from metadatax.equipment.models import (
     PlatformType,
@@ -43,15 +45,15 @@ class Command(BaseCommand):
 
         project.contacts.create(
             institution=Institution.objects.create(name="OFB", mail="contact@ofb.test"),
-            role=ContactRole.Type.MAIN_CONTACT,
+            role=Role.MAIN_CONTACT,
         )
-        john = Contact.objects.create(
+        john = Person.objects.create(
             first_name="John", last_name="Doe", mail="j.doe@ensta.test"
         )
         ensta = Institution.objects.create(
             name="ENSTA Bretagne", mail="contact@ensta-bretagne.test"
         )
-        project.contacts.create(contact=john, role=ContactRole.Type.PROJECT_MANAGER)
+        project.contacts.create(contact=john, role=Role.PROJECT_MANAGER)
 
         phase1 = project.campaigns.create(name="Phase 1")
         site_a = project.sites.create(name="A")
@@ -92,9 +94,9 @@ class Command(BaseCommand):
             recovery_date=timezone.make_aware(datetime(2022, 8, 23, 11, 19)),
             recovery_vessel=vessel,
         )
-        contact_role = ContactRole.objects.create(
+        contact_role = ContactRelation.objects.create(
             contact=john,
-            role=ContactRole.Type.CONTACT_POINT,
+            role=Role.CONTACT_POINT,
         )
         for d in project.deployments.all():
             d.contacts.add(contact_role)

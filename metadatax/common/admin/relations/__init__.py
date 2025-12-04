@@ -1,0 +1,2 @@
+from .contact_relation import ContactRelationInline
+from .person_institution_relation import PersonInstitutionRelationInline
