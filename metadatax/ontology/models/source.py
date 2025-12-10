@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Q, F
+from django_extended.models.constraints import NoSelfParentConstraint
 
 from metadatax.bibliography.models import Bibliography
 
@@ -9,9 +9,8 @@ class Source(models.Model):
 
     class Meta:
         constraints = [
-            models.CheckConstraint(
+            NoSelfParentConstraint(
                 name="source_cannot_be_self_parent",
-                check=~Q(parent_id=F("id")),
             )
         ]
         db_table = "metadatax_ontology_source"

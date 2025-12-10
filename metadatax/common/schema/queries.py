@@ -1,7 +1,7 @@
 from graphene import ObjectType
 from graphene_django_pagination import DjangoPaginationConnectionField
-
 from metadatax.utils.schema import ByIdField
+
 from .nodes import *
 
 

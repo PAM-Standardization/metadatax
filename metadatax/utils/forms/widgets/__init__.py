@@ -1,1 +1,0 @@
-from .autocomplete_select_widget import AdminAutocompleteSelectWidget

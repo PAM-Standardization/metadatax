@@ -9,9 +9,7 @@ from metadatax.acquisition.models import (
     Project,
     ChannelConfigurationRecorderSpecification,
 )
-from metadatax.common.models import Person, Institution
-from metadatax.common.models.enums import Accessibility, Role
-from metadatax.common.models.relations import ContactRelation
+from metadatax.common.models import Person, Institution, Accessibility, Role, ContactRelation
 from metadatax.data.models import FileFormat
 from metadatax.equipment.models import (
     PlatformType,

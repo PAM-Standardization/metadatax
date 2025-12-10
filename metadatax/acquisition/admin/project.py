@@ -2,11 +2,11 @@ from django import forms
 from django.contrib import admin
 from django.forms import widgets
 from django.utils.safestring import mark_safe
-
+from django_extended.admin import JSONExportModelAdmin
 from metadatax.acquisition.models import Project, Financing
 from metadatax.acquisition.serializers import ProjectExportSerializer
-from metadatax.common.models.enums import Accessibility
-from metadatax.utils import JSONExportModelAdmin
+from metadatax.common.models import Accessibility
+
 from .campaign import CampaignInline
 from .site import SiteInline
 

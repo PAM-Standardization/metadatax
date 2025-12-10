@@ -11,12 +11,12 @@ from django.utils.translation import gettext_lazy as _
 from django_admin_multiple_choice_list_filter.list_filters import (
     MultipleChoiceListFilter,
 )
+from django_extended.admin import JSONExportModelAdmin
 
 from metadatax.acquisition.models import ChannelConfiguration
 from metadatax.acquisition.serializers import ChannelConfigurationSerializer
 from metadatax.data.models import FileFormat, File, AudioProperties
 from metadatax.equipment.models import Equipment
-from metadatax.utils import JSONExportModelAdmin
 
 
 class ChannelConfigurationForm(forms.ModelForm):

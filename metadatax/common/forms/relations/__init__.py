@@ -1,2 +1,0 @@
-from .contact_relation import ContactRelationForm
-from .person_institution_relation import PersonInstitutionRelationForm

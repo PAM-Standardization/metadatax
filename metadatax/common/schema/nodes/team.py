@@ -1,12 +1,10 @@
-from graphene import relay, ID
+from django_extended.schema.interfaces import ExtendedInterface
+from django_extended.schema.types import ExtendedNode
 
 from metadatax.common.models import Team
-from metadatax.utils.schema import MxObjectType
 
 
-class TeamNode(MxObjectType):
-    id = ID(required=True)
-
+class TeamNode(ExtendedNode):
     class Meta:
         model = Team
         fields = "__all__"
@@ -14,4 +12,4 @@ class TeamNode(MxObjectType):
             "id": ["exact", "in"],
             "name": ["exact", "icontains"],
         }
-        interfaces = (relay.Node,)
+        interfaces = (ExtendedInterface,)

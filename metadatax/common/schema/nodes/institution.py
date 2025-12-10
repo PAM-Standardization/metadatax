@@ -1,12 +1,10 @@
-from graphene import relay, ID
+from django_extended.schema.interfaces import ExtendedInterface
+from django_extended.schema.types import ExtendedNode
 
 from metadatax.common.models import Institution
-from metadatax.utils.schema import MxObjectType
 
 
-class InstitutionNode(MxObjectType):
-    id = ID(required=True)
-
+class InstitutionNode(ExtendedNode):
     class Meta:
         model = Institution
         fields = "__all__"
@@ -18,4 +16,4 @@ class InstitutionNode(MxObjectType):
             "mail": ["exact", "icontains"],
             "website": ["exact", "icontains"],
         }
-        interfaces = (relay.Node,)
+        interfaces = (ExtendedInterface,)

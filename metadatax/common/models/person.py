@@ -1,7 +1,7 @@
 from django.db import models
 
 from .institution import Institution
-from .relations import PersonInstitutionRelation
+from .person_institution_relation import PersonInstitutionRelation
 from .team import Team
 
 
@@ -30,4 +30,3 @@ class Person(models.Model):
         names = self.first_name.split("-")
         initial_first_name = "-".join([f"{n[0]}." for n in names])
         return f"{self.last_name}, {initial_first_name}"
-

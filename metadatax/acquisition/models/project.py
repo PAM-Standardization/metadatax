@@ -1,10 +1,9 @@
 from django.db import models
 
 from metadatax.bibliography.models import Bibliography
-from metadatax.common.models.enums import Accessibility
-from metadatax.common.models.relations import ContactRelation
+from metadatax.common.models import Accessibility, ContactRelation
 from metadatax.utils import custom_fields
-from .financing import Financing
+from .__enums__ import Financing
 from .project_type import ProjectType
 
 
@@ -33,7 +32,7 @@ class Project(models.Model):
         blank=True,
         null=True,
         help_text="Accessibility level of the data. If the availability is not sure or non-uniform within the project, "
-        "the default value is upon request.",
+                  "the default value is upon request.",
     )
     doi = models.CharField(
         max_length=255,
@@ -48,7 +47,7 @@ class Project(models.Model):
         on_delete=models.SET_NULL,
         related_name="projects",
         help_text="Description of the type of the project "
-        "(e.g., research, marine renewable energies, long monitoring,...).",
+                  "(e.g., research, marine renewable energies, long monitoring,...).",
     )
     start_date = custom_fields.DateField(
         blank=True,

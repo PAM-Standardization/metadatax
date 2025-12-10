@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from metadatax.common.models.relations import ContactRelation
+from metadatax.common.models import ContactRelation
 
 
 class ContactRoleSerializer(serializers.ModelSerializer):

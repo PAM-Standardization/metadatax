@@ -1,7 +1,9 @@
+from .__enums__ import BibliographyType, BibliographyStatus
+
 from .author import Author
 from .bibliography import Bibliography
-from .bibliography_article import BibliographyArticle
-from .bibliography_conference import BibliographyConference
-from .bibliography_poster import BibliographyPoster
-from .bibliography_software import BibliographySoftware
-from .tag import Tag
+
+from .article import Article
+from .software import Software
+from .conference import Conference
+from .poster import Poster

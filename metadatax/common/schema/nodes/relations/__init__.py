@@ -1,2 +1,0 @@
-from .contact_relation import ContactRelation
-from .person_institution_relation import PersonInstitutionRelationNode

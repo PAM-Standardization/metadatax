@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from metadatax.common.models.relations import ContactRelation
+from metadatax.common.models import ContactRelation
 from metadatax.equipment.models import Platform
 from metadatax.utils import custom_fields
 from .campaign import Campaign
@@ -50,8 +50,8 @@ class Deployment(models.Model):
         blank=True,
         null=True,
         help_text="Conceptual location. "
-        "A site may group together several platforms in relatively close proximity, "
-        "or describes a location where regular deployments are carried out.",
+                  "A site may group together several platforms in relatively close proximity, "
+                  "or describes a location where regular deployments are carried out.",
     )
     campaign = models.ForeignKey(
         to=Campaign,

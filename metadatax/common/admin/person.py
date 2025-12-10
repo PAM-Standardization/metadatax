@@ -1,12 +1,12 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
+from django_extended.admin import ExtendedModelAdmin
 
 from metadatax.common.models import Person
-from .relations import PersonInstitutionRelationInline
+from .inlines import PersonInstitutionRelationInline
 
 
 @admin.register(Person)
-class PersonAdmin(admin.ModelAdmin):
+class PersonAdmin(ExtendedModelAdmin):
     """Person administration"""
 
     list_display = [
@@ -38,9 +38,7 @@ class PersonAdmin(admin.ModelAdmin):
     @admin.display(description="Institutions")
     def institutions_list(self, obj: Person) -> str:
         """Display readable information about institutions"""
-        print(obj.institution_relations)
-        return mark_safe("<br/>".join([
+        return self.safe_list([
             f"{rel.institution} ({rel.team.name})" if rel.team else rel.institution
             for rel in obj.institution_relations.all()
-        ]))
-
+        ])

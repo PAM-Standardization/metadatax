@@ -1,9 +1,9 @@
 from django_filters import FilterSet, NumberFilter
 from graphene import ID, relay
-
 from metadatax.acquisition.models import Project
 from metadatax.common.schema import AccessibilityEnum
-from .financing import FinancingEnum
+
+from .enums import FinancingEnum
 from ...utils.schema import MxObjectType
 
 

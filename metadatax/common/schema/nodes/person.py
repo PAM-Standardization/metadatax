@@ -1,15 +1,13 @@
+from django_extended.schema.interfaces import ExtendedInterface
+from django_extended.schema.types import ExtendedNode
 import graphene
 import graphene_django_optimizer
-from graphene import relay, ID
 
 from metadatax.common.models import Person
-from metadatax.utils.schema import MxObjectType
-from .relations import PersonInstitutionRelationNode
+from .person_institution_relation import PersonInstitutionRelationNode
 
 
-class PersonNode(MxObjectType):
-    id = ID(required=True)
-
+class PersonNode(ExtendedNode):
     class Meta:
         model = Person
         fields = "__all__"
@@ -20,7 +18,7 @@ class PersonNode(MxObjectType):
             "mail": ["exact", "icontains"],
             "website": ["exact", "icontains"],
         }
-        interfaces = (relay.Node,)
+        interfaces = (ExtendedInterface,)
 
     institution_relations = graphene.List(PersonInstitutionRelationNode)
 
@@ -28,4 +26,3 @@ class PersonNode(MxObjectType):
     def resolve_institution_relations(self: Person, info):
         """Resolve institution_relations"""
         return self.institution_relations.all()
-

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.forms import widgets
 
-from metadatax.common.models.enums import Accessibility
+from metadatax.common.models import Accessibility
 from metadatax.data.models import File
 
 

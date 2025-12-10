@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
+from django_extended.admin import JSONExportModelAdmin
 
 from metadatax.ontology.models import Label
 from metadatax.ontology.serializers import LabelSerializer
-from metadatax.utils import JSONExportModelAdmin
 
 
 @admin.register(Label)

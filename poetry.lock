@@ -163,6 +163,25 @@ files = [
 Django = ">=1.11"
 
 [[package]]
+name = "django-extended"
+version = "0.0.0"
+description = "Extended class for Django usage"
+optional = false
+python-versions = ">=3.9,<4.0"
+groups = ["main"]
+files = []
+develop = true
+
+[package.dependencies]
+Django = "^3.2"
+djangorestframework = "^3.12.4"
+graphene-django = "^3.2.3"
+
+[package.source]
+type = "directory"
+url = "../django-extended"
+
+[[package]]
 name = "django-filter"
 version = "23.5"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
@@ -979,4 +998,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "b24e9674196a6a4114707c6fc76fe15cd794b6e65b7c2300ea72894d82943886"
+content-hash = "faf868c2c2c6f15332d6540677cab386327b2d407aa3a80b7e7905f92cc43247"

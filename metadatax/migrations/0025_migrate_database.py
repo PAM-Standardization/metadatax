@@ -2,7 +2,7 @@
 
 from django.db import migrations
 
-from metadatax.common.models.enums import Role
+from metadatax.common.models import Role
 
 
 class MigrationAction:
