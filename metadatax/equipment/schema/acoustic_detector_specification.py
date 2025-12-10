@@ -13,6 +13,8 @@ class AcousticDetectorSpecificationFilter(FilterSet):
         fields = {
             "id": ["exact", "in"],
             "detected_labels__id": ["exact", "in"],
+            "detected_labels__nickname": ["exact", "icontains"],
+            "detected_labels__source__english_name": ["exact", "icontains"],
             "min_frequency": ["exact", "lt", "lte", "gt", "gte"],
             "max_frequency": ["exact", "lt", "lte", "gt", "gte"],
             "algorithm_name": ["exact", "icontains"],

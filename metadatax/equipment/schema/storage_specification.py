@@ -6,10 +6,12 @@ from metadatax.utils.schema import MxObjectType
 
 
 class StorageSpecificationFilter(FilterSet):
+
     class Meta:
         model = StorageSpecification
         fields = {
             "id": ["exact", "in"],
+            "type": ["exact", "icontains"],
             # "capacity": ["exact", "lt", "lte", "gt", "gte"], # TODO
         }
 

@@ -6,6 +6,7 @@ from metadatax.utils.schema import MxObjectType
 
 
 class RecorderSpecificationFilter(FilterSet):
+
     class Meta:
         model = RecorderSpecification
         fields = {

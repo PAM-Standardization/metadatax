@@ -7,6 +7,7 @@ from metadatax.utils.schema import MxObjectType
 
 
 class HydrophoneSpecificationFilter(FilterSet):
+
     class Meta:
         model = HydrophoneSpecification
         fields = {
