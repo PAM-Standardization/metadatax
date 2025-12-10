@@ -1,5 +1,6 @@
 import graphene
 from graphene import relay
+
 from metadatax.bibliography.models import Bibliography, Article, Poster, Software, Conference
 from metadatax.bibliography.schema import ArticleNode, SoftwareNode, ConferenceNode, PosterNode
 
@@ -42,5 +43,3 @@ class BibliographyUnion(graphene.types.Union):
 class BibliographyUnionConnection(relay.Connection):
     class Meta:
         node = BibliographyUnion
-
-    pass

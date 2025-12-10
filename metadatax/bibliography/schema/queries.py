@@ -1,9 +1,9 @@
 import graphene
 from graphene import ObjectType, relay
 from graphene_django_pagination import DjangoPaginationConnectionField
-from metadatax.bibliography.models import Article, Software, Conference, Poster
-from metadatax.utils.schema import ByIdField
+from django_extended.schema.fields import ByIdField
 
+from metadatax.bibliography.models import Article, Software, Conference, Poster
 from .unions import BibliographyUnionConnection, BibliographyUnion
 from .nodes import *
 

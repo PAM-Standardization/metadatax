@@ -15,12 +15,6 @@ class Article(Bibliography):
 
     class Meta:
         proxy = True
-        # constraints = [
-        #     CheckConstraint(
-        #         name="Article has required information",
-        #         check=Q(journal__isnull=False)
-        #     ),
-        # ]
 
     def __str__(self):
         info = []

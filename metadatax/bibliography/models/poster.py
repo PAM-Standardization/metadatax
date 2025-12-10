@@ -15,15 +15,6 @@ class Poster(Conference):
 
     class Meta:
         proxy = True
-        # constraints = [
-        #     CheckConstraint(
-        #         name="Poster has required information",
-        #         check=Q(
-        #             conference_name__isnull=False,
-        #             conference_location__isnull=False,
-        #         )
-        #     ),
-        # ]
 
     def __str__(self):
         if self.poster_url:

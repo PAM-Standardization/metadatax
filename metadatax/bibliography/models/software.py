@@ -15,14 +15,6 @@ class Software(Bibliography):
 
     class Meta:
         proxy = True
-        # constraints = [
-        #     CheckConstraint(
-        #         name="Software has required information",
-        #         check=Q(
-        #             publication_place__isnull=False,
-        #         )
-        #     ),
-        # ]
 
     def __str__(self):
         info = []

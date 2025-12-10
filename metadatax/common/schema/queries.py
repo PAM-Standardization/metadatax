@@ -1,12 +1,11 @@
 from graphene import ObjectType
 from graphene_django_pagination import DjangoPaginationConnectionField
-from metadatax.utils.schema import ByIdField
+from django_extended.schema.fields import ByIdField
 
 from .nodes import *
 
 
 class CommonQuery(ObjectType):
-
     # Person
     all_persons = DjangoPaginationConnectionField(PersonNode)
     person_by_id = ByIdField(PersonNode)

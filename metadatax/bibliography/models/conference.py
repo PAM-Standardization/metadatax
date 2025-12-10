@@ -15,15 +15,6 @@ class Conference(Bibliography):
 
     class Meta:
         proxy = True
-        # constraints = [
-        #     CheckConstraint(
-        #         name="Conference has required information",
-        #         check=Q(
-        #             conference_name__isnull=False,
-        #             conference_location__isnull=False,
-        #         )
-        #     ),
-        # ]
 
     def __str__(self):
         return f"{super().__str__()}, {self.conference_name}, {self.conference_location}"

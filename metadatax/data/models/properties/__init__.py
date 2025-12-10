@@ -1,0 +1,2 @@
+from .audio_properties import AudioProperties
+from .detection_properties import DetectionProperties

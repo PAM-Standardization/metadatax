@@ -3,7 +3,7 @@ from django.db import models
 
 class DetectionProperties(models.Model):
     class Meta:
-        db_table = "metadatax_data_detectionproperties"
+        db_table = "mx_data_detectionproperties"
         verbose_name_plural = "DetectionProperties"
 
     start = models.DateTimeField(
