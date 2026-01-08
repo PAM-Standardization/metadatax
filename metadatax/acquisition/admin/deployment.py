@@ -14,6 +14,7 @@ from django_extended.admin import JSONExportModelAdmin
 
 from metadatax.acquisition.models import Deployment, DeploymentMobilePosition
 from metadatax.acquisition.serializers import DeploymentExportSerializer
+from .inlines import DeploymentContactInline
 
 
 class DeploymentForm(forms.ModelForm):
@@ -53,7 +54,7 @@ class DeploymentForm(forms.ModelForm):
             return 0
 
     def create_mobile_platform(
-        self, instance, file, headers
+            self, instance, file, headers
     ) -> DeploymentMobilePosition:
         tz = timezone.get_current_timezone()
         return DeploymentMobilePosition(
@@ -113,7 +114,6 @@ class DeploymentAdmin(JSONExportModelAdmin):
                 "fields": [
                     "name",
                     "project",
-                    "contacts",
                 ]
             },
         ),
@@ -156,6 +156,9 @@ class DeploymentAdmin(JSONExportModelAdmin):
         "site",
         "platform",
         "campaign",
+    ]
+    inlines = [
+        DeploymentContactInline
     ]
 
     @admin.display(description="Contacts")

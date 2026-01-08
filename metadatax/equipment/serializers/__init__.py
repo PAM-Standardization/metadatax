@@ -1,10 +1,8 @@
-from .acoustic_detector_specification import AcousticDetectorSpecificationSerializer
+from .specifications import *
+
 from .equipment import EquipmentSerializer
 from .equipment_model import EquipmentModelSerializer, EquipmentModelSpecificationSerializer
-from .hydrophone_specification import HydrophoneSpecificationSerializer
 from .maintenance import MaintenanceSerializer
 from .maintenance_type import MaintenanceTypeSerializer
 from .platform import PlatformSerializer
 from .platform_type import PlatformTypeSerializer
-from .recorder_specification import RecorderSpecificationSerializer
-from .storage_specification import StorageSpecificationSerializer

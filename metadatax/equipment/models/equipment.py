@@ -1,6 +1,7 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
-from metadatax.common.models import Institution
 from metadatax.utils import custom_fields
 from .equipment_model import EquipmentModel
 
@@ -10,7 +11,7 @@ class Equipment(models.Model):
 
     class Meta:
         unique_together = ["model", "serial_number"]
-        db_table = "metadatax_equipment_equipment"
+        db_table = "mx_equipment_equipment"
         ordering = ("name", "model", "serial_number")
 
     def __str__(self):
@@ -20,9 +21,20 @@ class Equipment(models.Model):
 
     model = models.ForeignKey(EquipmentModel, related_name="equipments", on_delete=models.PROTECT)
     serial_number = models.CharField(max_length=100)
-    owner = models.ForeignKey(
-        Institution, on_delete=models.PROTECT, related_name="owned_equipments"
+
+    owner_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.PROTECT,
+        limit_choices_to={
+            "model__in": [
+                "common.Person",
+                "common.Team",
+                "common.Institution",
+            ]
+        },
     )
+    owner_id = models.PositiveBigIntegerField()
+    owner = GenericForeignKey("owner_type", "owner_id")
 
     purchase_date = custom_fields.DateField(null=True, blank=True)
     name = models.CharField(max_length=100, blank=True, null=True)

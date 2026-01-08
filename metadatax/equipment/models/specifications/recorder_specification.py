@@ -7,7 +7,7 @@ class RecorderSpecification(models.Model):
     """Recorder Specification model"""
 
     class Meta:
-        db_table = "metadatax_equipment_recorderspecification"
+        db_table = "mx_equipment_recorderspecification"
         unique_together = (
             "channels_count",
             "storage_slots_count",

@@ -9,7 +9,7 @@ class Site(models.Model):
     class Meta:
         unique_together = ["name", "project"]
         ordering = ["project", "name"]
-        db_table = "metadatax_acquisition_site"
+        db_table = "mx_acquisition_site"
 
     def __str__(self):
         return f"{self.project.name} {self.name}"
@@ -17,8 +17,8 @@ class Site(models.Model):
     name = models.CharField(
         max_length=255,
         help_text="Name of the platform conceptual location. "
-        "A site may group together several platforms in relatively close proximity, "
-        "or describes a location where regular deployments are carried out.",
+                  "A site may group together several platforms in relatively close proximity, "
+                  "or describes a location where regular deployments are carried out.",
     )
     """Name of the generic location"""
     project = models.ForeignKey(

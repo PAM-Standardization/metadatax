@@ -7,7 +7,7 @@ class AcousticDetectorSpecification(models.Model):
     """Acoustic detector specification model"""
 
     class Meta:
-        db_table = "metadatax_equipment_acousticdetectorspecification"
+        db_table = "mx_equipment_acousticdetectorspecification"
 
     def __str__(self):
         info = []
@@ -19,7 +19,7 @@ class AcousticDetectorSpecification(models.Model):
             info.append(f"<{self.max_frequency}Hz")
         if self.detected_labels.exists():
             info.append(
-                f"labels: {', '.join([ str(label) for label in self.detected_labels.all()])}"
+                f"labels: {', '.join([str(label) for label in self.detected_labels.all()])}"
             )
         return " - ".join(info)
 

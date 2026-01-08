@@ -12,7 +12,7 @@ class Project(models.Model):
 
     class Meta:
         ordering = ["name"]
-        db_table = "metadatax_acquisition_project"
+        db_table = "mx_acquisition_project"
 
     def __str__(self):
         return self.name
@@ -22,9 +22,9 @@ class Project(models.Model):
     )
     contacts = models.ManyToManyField(
         ContactRelation,
-        help_text="Should have at least one 'Main Contact'",
+        help_text="Should have at least one 'Main Contact'",  # TODO: constraint
         related_name="projects",
-    )  # TODO: constraint
+    )
 
     accessibility = models.CharField(
         choices=Accessibility.choices,
@@ -68,5 +68,7 @@ class Project(models.Model):
     )
 
     related_bibliography = models.ManyToManyField(
-        Bibliography, related_name="related_projects"
+        Bibliography,
+        related_name="related_projects",
+        blank=True
     )

@@ -7,7 +7,7 @@ class ProjectType(models.Model):
 
     class Meta:
         ordering = ["name"]
-        db_table = "metadatax_acquisition_projecttype"
+        db_table = "mx_acquisition_projecttype"
 
     def __str__(self):
         return self.name

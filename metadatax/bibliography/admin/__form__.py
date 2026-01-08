@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django_extended.forms import ExtendedForm
-from metadatax.common.forms.tagged_item import TaggedItemForm
 
+from metadatax.common.forms import TaggedItemForm
 from metadatax.bibliography.models import Bibliography, BibliographyStatus
 
 

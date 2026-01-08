@@ -6,7 +6,7 @@ from metadatax.utils.custom_fields.duration import duration_to_readable_year_mon
 
 class MaintenanceType(models.Model):
     class Meta:
-        db_table = "metadatax_equipment_maintenancetype"
+        db_table = "mx_equipment_maintenancetype"
 
     def __str__(self):
         s = self.name

@@ -1,3 +1,5 @@
+from .__enums__ import *
+
 from .equipment import Equipment
 from .equipment_model import EquipmentModel, EquipmentModelSpecification
 from .maintenance import Maintenance

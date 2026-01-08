@@ -13,7 +13,7 @@ class Sound(models.Model):
                 name="sound_cannot_be_self_parent",
             )
         ]
-        db_table = "metadatax_ontology_sound"
+        db_table = "mx_ontology_sound"
         ordering = ["english_name"]
 
     def __str__(self):

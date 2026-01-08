@@ -1,14 +1,7 @@
 from .__enums__ import *
 
 from .campaign import Campaign
-from .channel_configuration import ChannelConfiguration
-from .channel_configuration_detector_specification import (
-    ChannelConfigurationDetectorSpecification,
-)
-from .channel_configuration_files import ChannelConfigurationFiles
-from .channel_configuration_recorder_specification import (
-    ChannelConfigurationRecorderSpecification,
-)
+from .channel_configuration import ChannelConfiguration, ChannelConfigurationFiles
 from .deployment import Deployment
 from .deployment_mobile_position import DeploymentMobilePosition
 from .project import Project

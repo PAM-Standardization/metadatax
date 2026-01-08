@@ -3,10 +3,12 @@ from rest_framework import serializers
 
 from metadatax.common.serializers import InstitutionSerializer
 from metadatax.equipment.models import EquipmentModel, EquipmentModelSpecification
-from .acoustic_detector_specification import AcousticDetectorSpecificationSerializer
-from .hydrophone_specification import HydrophoneSpecificationSerializer
-from .recorder_specification import RecorderSpecificationSerializer
-from .storage_specification import StorageSpecificationSerializer
+from .specifications import (
+    AcousticDetectorSpecificationSerializer,
+    HydrophoneSpecificationSerializer,
+    RecorderSpecificationSerializer,
+    StorageSpecificationSerializer,
+)
 
 
 class EquipmentModelSpecificationSerializer(serializers.ModelSerializer):

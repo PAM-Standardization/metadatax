@@ -1,0 +1,4 @@
+from .acoustic_detector_specification import AcousticDetectorSpecificationSerializer
+from .hydrophone_specification import HydrophoneSpecificationSerializer
+from .recorder_specification import RecorderSpecificationSerializer
+from .storage_specification import StorageSpecificationSerializer

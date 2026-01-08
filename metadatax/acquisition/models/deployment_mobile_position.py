@@ -11,7 +11,7 @@ from .deployment import Deployment
 class DeploymentMobilePosition(models.Model):
     class Meta:
         unique_together = ["deployment", "datetime"]
-        db_table = "metadatax_acquisition_deploymentmobileposition"
+        db_table = "mx_acquisition_deploymentmobileposition"
 
     deployment = models.ForeignKey(
         to=Deployment,

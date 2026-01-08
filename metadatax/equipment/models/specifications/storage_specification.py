@@ -7,7 +7,7 @@ class StorageSpecification(models.Model):
     """Storage Specification model"""
 
     class Meta:
-        db_table = "metadatax_equipment_storagespecification"
+        db_table = "mx_equipment_storagespecification"
         unique_together = ("capacity", "type")
         ordering = ("-capacity",)
 

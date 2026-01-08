@@ -1,14 +1,14 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from .hydrophone_directivity import HydrophoneDirectivity
+from ..__enums__ import HydrophoneDirectivity
 
 
 class HydrophoneSpecification(models.Model):
     """Hydrophone Specification model"""
 
     class Meta:
-        db_table = "metadatax_equipment_hydrophonespecification"
+        db_table = "mx_equipment_hydrophonespecification"
         unique_together = (
             "directivity",
             "operating_min_temperature",

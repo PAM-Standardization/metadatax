@@ -3,12 +3,11 @@
 import django.db.models.deletion
 from django.db import migrations, models
 
-import metadatax.acquisition.models.channel_configuration_detector_specification
-import metadatax.acquisition.models.channel_configuration_recorder_specification
+import metadatax.acquisition.models.channel_configuration_specifications.detector_specification
+import metadatax.acquisition.models.channel_configuration_specifications.recorder_specification
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -61,7 +60,7 @@ class Migration(migrations.Migration):
                 related_name="channel_configuration_hydrophone_specifications",
                 to="equipment.equipment",
                 validators=[
-                    metadatax.acquisition.models.channel_configuration_recorder_specification.validate_hydrophone
+                    metadatax.acquisition.models.channel_configuration_specifications.recorder_specification.validate_hydrophone
                 ],
             ),
         ),
@@ -73,7 +72,7 @@ class Migration(migrations.Migration):
                 related_name="channel_configuration_recorder_specifications",
                 to="equipment.equipment",
                 validators=[
-                    metadatax.acquisition.models.channel_configuration_recorder_specification.validate_recorder
+                    metadatax.acquisition.models.channel_configuration_specifications.recorder_specification.validate_recorder
                 ],
             ),
         ),
@@ -105,7 +104,7 @@ class Migration(migrations.Migration):
                 related_name="channel_configuration_detector_specifications",
                 to="equipment.equipment",
                 validators=[
-                    metadatax.acquisition.models.channel_configuration_detector_specification.validate_detector
+                    metadatax.acquisition.models.channel_configuration_specifications.detector_specification.validate_detector
                 ],
             ),
         ),

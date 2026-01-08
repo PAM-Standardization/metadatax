@@ -8,10 +8,8 @@ from django.db.models import Min, ExpressionWrapper, Max, F
 from metadatax.data.models import File
 from metadatax.equipment.models import Equipment
 from metadatax.utils import custom_fields
-from .channel_configuration_detector_specification import (
+from .channel_configuration_specifications import (
     ChannelConfigurationDetectorSpecification,
-)
-from .channel_configuration_recorder_specification import (
     ChannelConfigurationRecorderSpecification,
 )
 from .deployment import Deployment
@@ -24,7 +22,7 @@ class ChannelConfiguration(models.Model):
         ordering = [
             "deployment",
         ]
-        db_table = "metadatax_acquisition_channelconfiguration"
+        db_table = "mx_acquisition_channelconfiguration"
 
     def __str__(self):
         return f"{self.deployment} [{self.id}]"
@@ -112,3 +110,14 @@ class ChannelConfiguration(models.Model):
                 output_field=models.DateTimeField()
             )
         ).aggregate(end=Max('end'))['end']
+
+
+class ChannelConfigurationFiles(models.Model):
+    class Meta:
+        unique_together = ["channel_configuration", "file"]
+        db_table = "mx_acquisition_channelconfigurationfiles"
+
+    channel_configuration = models.ForeignKey(
+        ChannelConfiguration, on_delete=models.CASCADE
+    )
+    file = models.ForeignKey(File, on_delete=models.CASCADE)

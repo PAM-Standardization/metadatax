@@ -3,7 +3,7 @@ from django.db import models
 from django_better_admin_arrayfield.models.fields import ArrayField
 
 from metadatax.bibliography.models import Bibliography
-from .physical_descriptor import SignalShape, SignalPlurality
+from .__enums__ import SignalShape, SignalPlurality
 from .sound import Sound
 from .source import Source
 
@@ -12,7 +12,7 @@ class Label(models.Model):
     """Ontology label: association of a source and a sound"""
 
     class Meta:
-        db_table = "metadatax_ontology_label"
+        db_table = "mx_ontology_label"
         unique_together = ("source", "sound", "nickname")
         ordering = ("source", "sound", "nickname")
 

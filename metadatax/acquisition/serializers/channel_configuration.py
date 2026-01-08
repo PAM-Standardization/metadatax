@@ -2,10 +2,8 @@ from rest_framework import serializers
 
 from metadatax.acquisition.models import ChannelConfiguration
 from metadatax.equipment.serializers import EquipmentSerializer
-from .channel_configuration_detector_specification import (
+from .channel_configuration_specifications import (
     ChannelConfigurationDetectorSpecificationSerializer,
-)
-from .channel_configuration_recorder_specification import (
     ChannelConfigurationRecorderSpecificationSerializer,
 )
 

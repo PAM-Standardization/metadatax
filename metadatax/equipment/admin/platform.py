@@ -12,15 +12,13 @@ class PlatformAdmin(JSONExportModelAdmin):
     list_display = [
         "name",
         "type",
-        "owner",
+        # "owner", TODO
         "provider",
         "description",
     ]
     search_fields = [
         "name",
         "type__name",
-        "owner__name",
-        "owner__mail",
         "provider__name",
         "provider__mail",
     ]
@@ -29,6 +27,6 @@ class PlatformAdmin(JSONExportModelAdmin):
     ]
     autocomplete_fields = [
         "type",
-        "owner",
+        # "owner", TODO
         "provider",
     ]

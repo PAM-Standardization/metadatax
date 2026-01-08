@@ -9,7 +9,6 @@ class EquipmentViewSet(
     mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet
 ):
     queryset = Equipment.objects.select_related(
-        "owner",
         "model",
     )
     serializer_class = EquipmentSerializer

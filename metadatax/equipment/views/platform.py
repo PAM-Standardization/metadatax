@@ -9,7 +9,6 @@ class PlatformViewSet(
     mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet
 ):
     queryset = Platform.objects.select_related(
-        "owner",
         "provider",
         "type",
     )

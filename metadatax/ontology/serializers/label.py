@@ -1,9 +1,9 @@
+from django_extended.serializers.fields import EnumField
 from rest_framework import serializers
 
 from metadatax.ontology.models import Label, SignalShape, SignalPlurality
 from metadatax.ontology.serializers.sound import SoundSerializer
 from metadatax.ontology.serializers.source import SourceSerializer
-from metadatax.utils import EnumField
 
 
 class LabelSerializer(serializers.ModelSerializer):

@@ -10,7 +10,7 @@ class EquipmentModel(models.Model):
 
     class Meta:
         unique_together = ["name", "provider"]
-        db_table = "metadatax_equipment_equipmentmodel"
+        db_table = "mx_equipment_equipmentmodel"
         ordering = ("name",)
 
     def __str__(self):
@@ -28,6 +28,7 @@ class EquipmentModel(models.Model):
 
 class EquipmentModelSpecification(models.Model):
     class Meta:
+        db_table = "mx_equipment_equipmentmodel_specification"
         indexes = [
             models.Index(fields=["specification_type", "specification_id"]),
         ]

@@ -13,7 +13,7 @@ class Source(models.Model):
                 name="source_cannot_be_self_parent",
             )
         ]
-        db_table = "metadatax_ontology_source"
+        db_table = "mx_ontology_source"
         ordering = ["english_name"]
 
     def __str__(self):

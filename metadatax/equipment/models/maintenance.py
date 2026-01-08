@@ -12,12 +12,12 @@ from .platform import Platform
 class Maintenance(models.Model):
     class Meta:
         unique_together = ["type", "date", "platform", "equipment"]
-        db_table = "metadatax_equipment_maintenance"
+        db_table = "mx_equipment_maintenance"
         constraints = [
             models.CheckConstraint(
                 name="maintenance_concern_platform_or_equipment",
                 check=models.Q(platform__isnull=False, equipment__isnull=True)
-                | models.Q(platform__isnull=True, equipment__isnull=False),
+                      | models.Q(platform__isnull=True, equipment__isnull=False),
             )
         ]
 

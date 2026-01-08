@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django_extended.admin import ExtendedModelAdmin
 
+from metadatax.common.admin.filters import TaggedFilter
 from metadatax.bibliography.models import Article, BibliographyType
 from .__form__ import BibliographyForm
 from .inlines import AuthorInline
@@ -24,6 +25,9 @@ class ArticleAdmin(ExtendedModelAdmin):
         "title",
         "doi",
         "journal",
+    ]
+    list_filter = [
+        TaggedFilter,
     ]
     inlines = [
         AuthorInline,

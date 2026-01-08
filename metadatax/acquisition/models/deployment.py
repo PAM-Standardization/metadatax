@@ -16,7 +16,7 @@ class Deployment(models.Model):
     class Meta:
         unique_together = ["project", "name", "site", "campaign"]
         ordering = ["project", "name"]
-        db_table = "metadatax_acquisition_deployment"
+        db_table = "mx_acquisition_deployment"
 
     def __str__(self):
         if self.name is not None:

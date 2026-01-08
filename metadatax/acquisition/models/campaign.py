@@ -9,7 +9,7 @@ class Campaign(models.Model):
     class Meta:
         unique_together = ["name", "project"]
         ordering = ["project", "name"]
-        db_table = "metadatax_acquisition_campaign"
+        db_table = "mx_acquisition_campaign"
 
     def __str__(self):
         return f"{self.project.name} {self.name}"

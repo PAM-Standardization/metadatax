@@ -1,10 +1,10 @@
+from django_extended.viewsets import ModelFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from metadatax.ontology.models import Label
 from metadatax.ontology.serializers import LabelSerializer
-from metadatax.utils import ModelFilter
 
 
 class LabelViewSet(viewsets.ModelViewSet):

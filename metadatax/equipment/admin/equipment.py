@@ -37,7 +37,7 @@ class EquipmentAdmin(JSONExportModelAdmin):
     list_display = [
         "serial_number",
         "model",
-        "owner",
+        # "owner", TODO
         "purchase_date",
         "name",
         "sensitivity",
@@ -45,8 +45,6 @@ class EquipmentAdmin(JSONExportModelAdmin):
     search_fields = [
         "serial_number",
         "model__name",
-        "owner__name",
-        "owner__mail",
         "model__provider__name",
         "model__provider__mail",
         "name",
@@ -57,5 +55,5 @@ class EquipmentAdmin(JSONExportModelAdmin):
         "model__specification_relations__specification_type__model",
     ]
     autocomplete_fields = [
-        "owner",
+        # "owner", TODO
     ]
