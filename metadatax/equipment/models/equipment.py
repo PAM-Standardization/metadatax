@@ -15,9 +15,7 @@ class Equipment(models.Model):
         ordering = ("name", "model", "serial_number")
 
     def __str__(self):
-        if self.name is not None:
-            return f"{self.name} (owner: {self.owner})"
-        return f"{self.model} ({self.serial_number} ; owner: {self.owner})"
+        return f"{self.model} ({self.name or f"#{self.serial_number}"})"
 
     model = models.ForeignKey(EquipmentModel, related_name="equipments", on_delete=models.PROTECT)
     serial_number = models.CharField(max_length=100)

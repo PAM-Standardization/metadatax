@@ -5,6 +5,7 @@ from django_admin_multiple_choice_list_filter.list_filters import (
 )
 from django_extended.admin import JSONExportModelAdmin
 
+from metadatax.equipment.forms.equipment import EquipmentForm
 from metadatax.equipment.models import Equipment
 from metadatax.equipment.serializers import EquipmentSerializer
 
@@ -34,6 +35,7 @@ class EquipmentTypeFilter(MultipleChoiceListFilter):
 class EquipmentAdmin(JSONExportModelAdmin):
     model = Equipment
     serializer = EquipmentSerializer
+    form = EquipmentForm
     list_display = [
         "serial_number",
         "model",
@@ -54,6 +56,16 @@ class EquipmentAdmin(JSONExportModelAdmin):
     list_filter = [
         "model__specification_relations__specification_type__model",
     ]
-    autocomplete_fields = [
-        # "owner", TODO
+
+    fieldsets = [
+        (
+            None, {"fields": [
+                "model",
+                "serial_number",
+                "owner",
+                "purchase_date",
+                "name",
+                "sensitivity",
+            ]}
+        )
     ]

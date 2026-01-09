@@ -12,7 +12,7 @@ class DeploymentContactForm(ContactRelationForm):
 
 class DeploymentContactInline(admin.TabularInline):
     model = Deployment.contacts.through
-    extra = 0
+    extra = 1
     verbose_name = 'Contact'
     verbose_name_plural = 'Contacts'
     form = DeploymentContactForm

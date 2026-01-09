@@ -3,9 +3,9 @@ from datetime import timedelta
 
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import Min, ExpressionWrapper, Max, F
+from django.db.models import Min, ExpressionWrapper, F
 
-from metadatax.data.models import File
+from metadatax.data.models import File, AudioProperties, DetectionProperties
 from metadatax.equipment.models import Equipment
 from metadatax.utils import custom_fields
 from .channel_configuration_specifications import (
@@ -100,16 +100,32 @@ class ChannelConfiguration(models.Model):
 
     @property
     def recording_start_date(self):
-        return self.files.aggregate(start=Min('audio_properties__initial_timestamp'))['start']
+        audio_start = AudioProperties.objects.filter(
+            id__in=self.files.filter(property_type__model="AudioProperties".lower()).values_list("id", flat=True)
+        ).aggregate(start=Min('initial_timestamp'))['start']
+        detection_start = DetectionProperties.objects.filter(
+            id__in=self.files.filter(property_type__model="DetectionProperties".lower()).values_list("id", flat=True)
+        ).aggregate(start=Min('start'))['start']
+        if not audio_start:
+            return detection_start
+        return min(audio_start, detection_start)
 
     @property
     def recording_end_date(self):
-        return self.files.annotate(
+        audio_end = AudioProperties.objects.filter(
+            id__in=self.files.filter(property_type__model="AudioProperties".lower()).values_list("id", flat=True)
+        ).annotate(
             fake_end=ExpressionWrapper(
-                F('start') + timedelta(seconds=1) * F('duration'),
+                F('initial_timestamp') + timedelta(seconds=1) * F('duration'),
                 output_field=models.DateTimeField()
             )
-        ).aggregate(end=Max('end'))['end']
+        ).aggregate(end=Min('fake_end'))['end']
+        detection_end = DetectionProperties.objects.filter(
+            id__in=self.files.filter(property_type__model="DetectionProperties".lower()).values_list("id", flat=True)
+        ).aggregate(end=Min('end'))['end']
+        if not audio_end:
+            return detection_end
+        return max(audio_end, detection_end)
 
 
 class ChannelConfigurationFiles(models.Model):

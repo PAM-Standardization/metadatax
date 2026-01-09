@@ -53,6 +53,7 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         (
             "Internal Storage",
             {
+                "classes": ("collapse",),
                 "fields": [
                     "capacity",
                     "type"
@@ -62,6 +63,7 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         (
             "Recorder",
             {
+                "classes": ("collapse",),
                 "fields": [
                     "channels_count",
                     "storage_slots_count",
@@ -73,6 +75,7 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         (
             "Hydrophone",
             {
+                "classes": ("collapse",),
                 "fields": [
                     "directivity",
                     "operating_min_temperature",
@@ -90,6 +93,7 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         (
             "Acoustic Detector",
             {
+                "classes": ("collapse",),
                 "fields": [
                     "detected_labels",
                     "min_frequency",

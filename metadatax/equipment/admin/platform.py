@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django_extended.admin import JSONExportModelAdmin
 
+from metadatax.equipment.forms.platform import PlatformForm
 from metadatax.equipment.models import Platform
 from metadatax.equipment.serializers.platform import PlatformSerializer
 
@@ -9,6 +10,7 @@ from metadatax.equipment.serializers.platform import PlatformSerializer
 class PlatformAdmin(JSONExportModelAdmin):
     model = Platform
     serializer = PlatformSerializer
+    form = PlatformForm
     list_display = [
         "name",
         "type",
@@ -27,6 +29,16 @@ class PlatformAdmin(JSONExportModelAdmin):
     ]
     autocomplete_fields = [
         "type",
-        # "owner", TODO
         "provider",
+    ]
+    fieldsets = [
+        (None, {
+            'fields': [
+                "owner",
+                "provider",
+                "type",
+                "name",
+                "description",
+            ],
+        }),
     ]

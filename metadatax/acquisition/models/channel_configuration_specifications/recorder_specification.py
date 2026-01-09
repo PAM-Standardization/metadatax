@@ -80,6 +80,5 @@ class ChannelConfigurationRecorderSpecification(models.Model):
         max_length=5,
         blank=True,
         null=True,
-        default="A",
         help_text="Name of the channel used for recording.",
     )

@@ -14,7 +14,7 @@ class EquipmentModel(models.Model):
         ordering = ("name",)
 
     def __str__(self):
-        return f"{self.provider.name} - {self.name}"
+        return f"{self.provider.name} {self.name}"
 
     name = models.CharField(max_length=100)
     provider = models.ForeignKey(
