@@ -68,13 +68,13 @@ class HydrophoneSpecification(models.Model):
     min_bandwidth = models.FloatField(
         null=True,
         blank=True,
-        help_text="Lower limiting frequency for a more or less flat response of the hydrophone, "
+        help_text="Lower limiting frequency (in Hz) for a more or less flat response of the hydrophone, "
                   "pre-amplification included if applicable.",
     )
     max_bandwidth = models.FloatField(
         null=True,
         blank=True,
-        help_text="Upper limiting frequency within a more or less flat response of the hydrophone, "
+        help_text="Upper limiting frequency (in Hz) within a more or less flat response of the hydrophone, "
                   "pre-amplification included if applicable.",
     )
     min_dynamic_range = models.FloatField(
