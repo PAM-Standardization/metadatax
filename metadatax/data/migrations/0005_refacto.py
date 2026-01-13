@@ -32,6 +32,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('contenttypes', '0002_remove_content_type_name'),
         ('data', '0004_alter_verbose_name_plural_for_properties'),
+        ('metadatax', '0027_reset_indexes')
     ]
 
     operations = [

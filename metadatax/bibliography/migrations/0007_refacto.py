@@ -81,7 +81,8 @@ def migrate_tags(apps, _):
 
     new_tags = []
     new_items = []
-    biblio_ct = ct_model.objects.get(
+    print(ct_model.objects.all())
+    biblio_ct, _ = ct_model.objects.get_or_create(
         app_label='bibliography',
         model='bibliography',
     )
@@ -104,8 +105,8 @@ def reverse_migrate_tags(apps, _):
     old_tag_model = apps.get_model("bibliography", "Tag")
     tagged_item_model = apps.get_model("common", "TaggedItem")
     ct_model = apps.get_model("contenttypes", "ContentType")
-
-    biblio_ct = ct_model.objects.get(
+    print(ct_model.objects.all())
+    biblio_ct, _ = ct_model.get_or_create.get(
         app_label='bibliography',
         model='bibliography',
     )

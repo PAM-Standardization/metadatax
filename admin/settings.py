@@ -172,7 +172,7 @@ AUTHENTICATION_BACKENDS = ["meta_auth.backend.EmailBackend"]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "metadatax",
+        "NAME": os.environ.get("DB_NAME") or "metadatax",
         "USER": os.environ.get("DB_USERNAME"),
         "PASSWORD": os.environ.get("DB_PASSWORD"),
         "HOST": "127.0.0.1",

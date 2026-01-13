@@ -1,4 +1,3 @@
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from .properties import DetectionProperties
@@ -8,7 +7,7 @@ from .file import File
 class DetectionFileManager(models.Manager):
 
     def get_queryset(self):
-        return super().get_queryset().filter(property_type=ContentType.objects.get_for_model(DetectionProperties))
+        return super().get_queryset().filter(property_type__model="DetectionProperties".lower())
 
 
 class DetectionFile(File):

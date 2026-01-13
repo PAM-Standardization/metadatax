@@ -1,4 +1,3 @@
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from .properties import AudioProperties
@@ -8,7 +7,7 @@ from .file import File
 class AudioFileManager(models.Manager):
 
     def get_queryset(self):
-        return super().get_queryset().filter(property_type=ContentType.objects.get_for_model(AudioProperties))
+        return super().get_queryset().filter(property_type__model="AudioProperties".lower())
 
 
 class AudioFile(File):

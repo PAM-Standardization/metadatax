@@ -12,21 +12,21 @@ from metadatax.equipment.models import Platform
 class PlatformForm(forms.ModelForm):
     # Additional typing
     instance: Optional[Platform]
+    owner = forms.CharField()  # Temporary placeholder
 
     class Meta:
         model = Platform
         exclude = ("owner_type", "owner_id")
 
-    owner = ContentTypeAutocompleteSelectField(models=[Person, Team, Institution])
-
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, initial=None, error_class=ErrorList,
                  label_suffix=None, empty_permitted=False, instance=None, use_required_attribute=None, renderer=None):
-        if instance is not None:
-            initial = {
-                "owner": instance.owner,
-            }
         super().__init__(data, files, auto_id, prefix, initial, error_class, label_suffix, empty_permitted, instance,
                          use_required_attribute, renderer)
+        # Only execute query when form is instantiated
+        self.fields['owner'] = ContentTypeAutocompleteSelectField(
+            models=[Person, Team, Institution],
+            initial=instance.owner if instance is not None else None,
+        )
 
     def save(self, commit=True):
         self.instance.owner_type = ContentType.objects.get_for_model(self.cleaned_data['owner'])

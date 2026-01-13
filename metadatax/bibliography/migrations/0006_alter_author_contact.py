@@ -5,17 +5,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('common', '0008_refacto_common'),
         ('bibliography', '0005_clean'),
+        ('metadatax', '0027_reset_indexes')
     ]
 
     operations = [
         migrations.AlterField(
             model_name='author',
             name='contact',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='authors', to='common.person'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='authors', to='common.person'),
         ),
         migrations.RenameField(
             model_name='author',

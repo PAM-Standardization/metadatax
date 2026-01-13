@@ -8,7 +8,7 @@ from metadatax.common.models import Role, Institution, Team, ContactRelation, Pe
 
 class ContactRelationForm(forms.ModelForm):
     role = EnumAutocompleteSelectField(enum=Role)
-    contact = ContentTypeAutocompleteSelectField(models=[Person, Team, Institution])
+    contact = forms.CharField()  # Temporary placeholder
 
     class Meta:
         abstract = True
@@ -18,10 +18,14 @@ class ContactRelationForm(forms.ModelForm):
         if instance is not None:
             initial = {
                 "role": instance.contactrelation.role,
-                "contact": instance.contactrelation.contact,
             }
         super().__init__(data, files, auto_id, prefix, initial, error_class, label_suffix, empty_permitted, instance,
                          use_required_attribute, renderer)
+        # Only execute query when form is instantiated
+        self.fields['contact'] = ContentTypeAutocompleteSelectField(
+            models=[Person, Team, Institution],
+            initial=instance.contactrelation.contact if instance is not None else None,
+        )
 
     def save(self, commit=True):
         self.instance.contactrelation = ContactRelation.objects.get_or_create(

@@ -4,21 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('common', '0008_refacto_common'),
         ('acquisition', '0005_clean'),
+        ('metadatax', '0027_reset_indexes')
     ]
 
     operations = [
         migrations.AlterField(
             model_name='deployment',
             name='contacts',
-            field=models.ManyToManyField(blank=True, help_text='Contacts related to the deployment.', related_name='deployments', to='common.ContactRelation'),
+            field=models.ManyToManyField(blank=True, help_text='Contacts related to the deployment.',
+                                         related_name='deployments', to='common.ContactRelation'),
         ),
         migrations.AlterField(
             model_name='project',
             name='contacts',
-            field=models.ManyToManyField(help_text="Should have at least one 'Main Contact'", related_name='projects', to='common.ContactRelation'),
+            field=models.ManyToManyField(help_text="Should have at least one 'Main Contact'", related_name='projects',
+                                         to='common.ContactRelation'),
         ),
     ]
