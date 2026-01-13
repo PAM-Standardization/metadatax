@@ -4,7 +4,6 @@ from django.core import management
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from meta_auth.models import User
 from metadatax.acquisition.models import (
     ProjectType,
     Project,
@@ -30,19 +29,9 @@ class Command(BaseCommand):
         management.call_command("flush", interactive=False)
         self.stdout.write(" ✓")
 
-        # Create users
-        self.stdout.write("[CREATE] Users...", ending="      ")
-        self.create_admin()
-
         # Create projects
         self.stdout.write("[CREATE] Projects...", ending="  ")
         self.create_CETIROISE_project()
-
-    def create_admin(self):
-        User.objects.create_user(
-            "admin", "admin@test.fr", "admin", is_superuser=True, is_staff=True
-        )
-        self.stdout.write("admin ✓\n")
 
     def create_CETIROISE_project(self):
         project_type, _ = ProjectType.objects.get_or_create(name="research")
