@@ -94,7 +94,7 @@ class Migration(migrations.Migration):
         ("common", "0006_clean"),
         ("contenttypes", "0002_remove_content_type_name"),
         ("equipment", "0003_clean"),
-        ('metadatax', '0027_reset_indexes')
+        ("metadatax", "0027_reset_indexes"),
     ]
 
     operations = [
@@ -189,7 +189,7 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="equipments",
                 to="equipment.equipmentmodel",
-                null=True
+                null=True,
             ),
         ),
         migrations.AddField(

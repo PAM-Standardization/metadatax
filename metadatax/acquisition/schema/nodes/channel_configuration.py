@@ -1,12 +1,17 @@
-from django_extension.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.acquisition.models import ChannelConfiguration
 from metadatax.equipment.schema import EquipmentNode
+from .channel_configuration_specifications import ChannelConfigurationDetectorSpecificationNode, \
+    ChannelConfigurationRecorderSpecificationNode
 
 
 class ChannelConfigurationNode(ExtendedNode):
     storages = graphene.List(EquipmentNode)
+
+    recorder_specification = ChannelConfigurationRecorderSpecificationNode()
+    detector_specification = ChannelConfigurationDetectorSpecificationNode()
 
     class Meta:
         model = ChannelConfiguration
