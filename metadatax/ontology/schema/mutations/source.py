@@ -1,19 +1,19 @@
-from django_extended.schema.mutations import ModelDeleteMutation, ModelPostMutation
-import graphene
+from django import forms
+from django_extension.schema.mutations import ModelDeleteMutation, ExtendedModelFormMutation
 
 from metadatax.ontology.models import Source
-from metadatax.ontology.serializers import SourceSerializer
-from ..nodes import SourceNode
 
 
-class PostSourceMutation(ModelPostMutation):
-    data = graphene.Field(SourceNode)
-
+class SourceForm(forms.ModelForm):
     class Meta:
-        serializer_class = SourceSerializer
-        model_class = Source
-        model_operations = ["create", "update"]
-        lookup_field = "id"
+        model = Source
+        exclude = ('related_bibliography',)
+
+
+class PostSourceMutation(ExtendedModelFormMutation):
+    class Meta:
+        model = Source
+        form_class = SourceForm
 
 
 class DeleteSourceMutation(ModelDeleteMutation):

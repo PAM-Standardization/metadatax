@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.common.models import Institution
 
@@ -16,4 +15,3 @@ class InstitutionNode(ExtendedNode):
             "mail": ["exact", "icontains"],
             "website": ["exact", "icontains"],
         }
-        interfaces = (ExtendedInterface,)

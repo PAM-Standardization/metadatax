@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django import forms
 from django.forms.utils import ErrorList
-from django_extended.forms.fields import EnumAutocompleteSelectField, ContentTypeAutocompleteSelectField
+from django_extension.forms.fields import EnumAutocompleteSelectField, ContentTypeAutocompleteSelectField
 
 from metadatax.common.models import Role, Institution, Team, ContactRelation, Person
 

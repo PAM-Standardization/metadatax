@@ -1,19 +1,19 @@
-from django_extended.schema.mutations import ModelPostMutation, ModelDeleteMutation
-import graphene
+from django import forms
+from django_extension.schema.mutations import ModelDeleteMutation, ExtendedModelFormMutation
 
 from metadatax.ontology.models import Sound
-from metadatax.ontology.serializers import SoundSerializer
-from ..nodes import SoundNode
 
 
-class PostSoundMutation(ModelPostMutation):
-    data = graphene.Field(SoundNode)
-
+class SoundForm(forms.ModelForm):
     class Meta:
-        serializer_class = SoundSerializer
-        model_class = Sound
-        model_operations = ["create", "update"]
-        lookup_field = "id"
+        model = Sound
+        exclude = ('related_bibliography',)
+
+
+class PostSoundMutation(ExtendedModelFormMutation):
+    class Meta:
+        model = Sound
+        form_class=SoundForm
 
 
 class DeleteSoundMutation(ModelDeleteMutation):

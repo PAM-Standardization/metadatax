@@ -1,10 +1,9 @@
 """Acquisition models for metadata app"""
 
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
-from metadatax.acquisition.models import ChannelConfigurationRecorderSpecification
+from metadatax.acquisition.models.channel_configuration_specifications import ChannelConfigurationRecorderSpecification
 from metadatax.data.schema import FileFormatNode
 
 
@@ -21,4 +20,3 @@ class ChannelConfigurationRecorderSpecificationNode(ExtendedNode):
             "gain": ["exact", "lt", "lte", "gt", "gte"],
             "channel_name": ["exact", "icontains"],
         }
-        interfaces = (ExtendedInterface,)

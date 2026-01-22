@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.acquisition.models import Site
 
@@ -13,4 +12,3 @@ class SiteNode(ExtendedNode):
             "name": ["exact", "icontains"],
             "project_id": ["exact", "in"],
         }
-        interfaces = (ExtendedInterface,)

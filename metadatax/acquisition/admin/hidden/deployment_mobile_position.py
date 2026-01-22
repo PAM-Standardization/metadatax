@@ -1,11 +1,13 @@
 from django.contrib import admin
-from django_extended.admin import HiddenModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.acquisition.models import DeploymentMobilePosition
 
 
 @admin.register(DeploymentMobilePosition)
-class DeploymentMobilePositionAdmin(HiddenModelAdmin):
+class DeploymentMobilePositionAdmin(ExtendedModelAdmin):
+    hidden = True
+
     list_display = [
         "id",
         "deployment",

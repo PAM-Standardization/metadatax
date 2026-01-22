@@ -1,5 +1,5 @@
-from graphene import relay
 import graphene.types
+from graphene import relay
 
 from metadatax.common.models import Person, Team, Institution
 from metadatax.common.schema import InstitutionNode, TeamNode, PersonNode

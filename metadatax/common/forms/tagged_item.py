@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.contenttypes.models import ContentType
 from django.forms.utils import ErrorList
-from django_extended.forms import ExtendedForm
+from django_extension.forms import ExtendedForm
 from metadatax.common.models import Tag, TaggedItem
 
 

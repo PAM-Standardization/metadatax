@@ -1,4 +1,4 @@
-from django_extended.viewsets import ModelFilter
+from django_extension.filters import ModelFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly

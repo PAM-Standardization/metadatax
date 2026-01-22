@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.common.schema.unions import ContactUnion
 from metadatax.equipment.models import Equipment
@@ -19,7 +18,6 @@ class EquipmentNode(ExtendedNode):
             "name": ["exact", "icontains"],
             "sensitivity": ["exact", "lt", "lte", "gt", "gte", "isnull"],
         }
-        interfaces = (ExtendedInterface,)
 
     owner = ContactUnion()
 

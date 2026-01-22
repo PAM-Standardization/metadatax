@@ -1,4 +1,4 @@
-import graphene
+from django_extension.schema.types import ExtendedEnumType
 
 from metadatax.equipment.models import HydrophoneDirectivity
 
@@ -7,6 +7,12 @@ __all__ = [
 ]
 
 
-class HydrophoneDirectivityEnum(graphene.Enum):
+class HydrophoneDirectivityEnum(ExtendedEnumType):
     class Meta:
         enum = HydrophoneDirectivity
+
+    OmniDirectional = 'OMNI'
+    BiDirectional = 'BI'
+    UniDirectional = 'UNI'
+    Cardioid = 'CAR'
+    Supercardioid = 'SCAR'

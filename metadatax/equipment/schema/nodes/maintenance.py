@@ -1,6 +1,5 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.common.schema import PersonNode, InstitutionNode
 from metadatax.equipment.models import Maintenance
@@ -25,4 +24,3 @@ class MaintenanceNode(ExtendedNode):
             "equipment_id": ["exact", "in"],
             "date": ["exact", "lt", "lte", "gt", "gte"],
         }
-        interfaces = (ExtendedInterface,)

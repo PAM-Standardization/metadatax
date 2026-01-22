@@ -3,7 +3,7 @@ from typing import Optional
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.forms.utils import ErrorList
-from django_extended.forms.fields import ContentTypeAutocompleteSelectField
+from django_extension.forms.fields import ContentTypeAutocompleteSelectField
 
 from metadatax.common.models import Person, Team, Institution
 from metadatax.equipment.models import Equipment

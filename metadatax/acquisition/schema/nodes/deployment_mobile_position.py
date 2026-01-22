@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.acquisition.models import DeploymentMobilePosition
 
@@ -19,4 +18,3 @@ class DeploymentMobilePositionNode(ExtendedNode):
             "pitch": ["exact", "lt", "lte", "gt", "gte"],
             "roll": ["exact", "lt", "lte", "gt", "gte"],
         }
-        interfaces = (ExtendedInterface,)

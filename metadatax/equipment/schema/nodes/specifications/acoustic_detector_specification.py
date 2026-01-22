@@ -1,6 +1,5 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.equipment.models import AcousticDetectorSpecification
 from metadatax.ontology.schema import LabelNode
@@ -18,4 +17,3 @@ class AcousticDetectorSpecificationNode(ExtendedNode):
             "max_frequency": ["exact", "lt", "lte", "gt", "gte"],
             "algorithm_name": ["exact", "icontains"],
         }
-        interfaces = (ExtendedInterface,)

@@ -1,4 +1,4 @@
-from django_extended.models import ExtendedEnum
+from django_extension.models import ExtendedEnum
 
 
 class Accessibility(ExtendedEnum):

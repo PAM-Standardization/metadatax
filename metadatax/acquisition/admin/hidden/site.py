@@ -1,11 +1,13 @@
 from django.contrib import admin
-from django_extended.admin import HiddenModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.acquisition.models import Site
 
 
 @admin.register(Site)
-class SiteAdmin(HiddenModelAdmin):
+class SiteAdmin(ExtendedModelAdmin):
+    hidden = True
+
     list_display = [
         "name",
     ]

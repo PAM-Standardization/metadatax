@@ -1,7 +1,6 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
 import graphene_django_optimizer
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.common.schema import AccessibilityEnum
 from metadatax.data.models import AudioFile
@@ -20,7 +19,6 @@ class AudioFileNode(ExtendedNode):
             "file_size": ["exact", "lt", "lte", "gt", "gte"],
             "accessibility": ["exact"],
         }
-        interfaces = (ExtendedInterface,)
 
     sampling_frequency = graphene.Int(required=True)
 

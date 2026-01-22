@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django_extended.admin import ExtendedModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.bibliography.models import Article, BibliographyType, Conference
 from .__form__ import BibliographyForm

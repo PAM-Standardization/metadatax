@@ -1,6 +1,5 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.common.schema import InstitutionNode
 from metadatax.common.schema.unions import ContactUnion
@@ -21,7 +20,6 @@ class PlatformNode(ExtendedNode):
             "provider_id": ["exact", "in"],
             "name": ["exact", "icontains"],
         }
-        interfaces = (ExtendedInterface,)
 
     owner = ContactUnion()
 

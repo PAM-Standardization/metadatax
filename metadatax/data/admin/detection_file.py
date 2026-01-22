@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.forms import widgets
 from django.forms.utils import ErrorList
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.common.models import Accessibility
 from metadatax.data.models import DetectionFile, DetectionProperties
@@ -48,7 +49,7 @@ class DetectionFileForm(forms.ModelForm):
 
 
 @admin.register(DetectionFile)
-class DetectionFileAdmin(admin.ModelAdmin):
+class DetectionFileAdmin(ExtendedModelAdmin):
     form = DetectionFileForm
     list_display = [
         "filename",

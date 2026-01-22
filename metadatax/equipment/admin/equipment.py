@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django_admin_multiple_choice_list_filter.list_filters import (
     MultipleChoiceListFilter,
 )
-from django_extended.admin import JSONExportModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.equipment.forms.equipment import EquipmentForm
 from metadatax.equipment.models import Equipment
@@ -32,8 +32,8 @@ class EquipmentTypeFilter(MultipleChoiceListFilter):
 
 
 @admin.register(Equipment)
-class EquipmentAdmin(JSONExportModelAdmin):
-    model = Equipment
+class EquipmentAdmin(ExtendedModelAdmin):
+    actions = ["export",]
     serializer = EquipmentSerializer
     form = EquipmentForm
     list_display = [

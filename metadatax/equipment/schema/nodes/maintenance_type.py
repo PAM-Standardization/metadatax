@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.equipment.models import MaintenanceType
 
@@ -13,4 +12,3 @@ class MaintenanceTypeNode(ExtendedNode):
             "name": ["exact", "icontains"],
             "interval": ["exact", "lt", "lte", "gt", "gte"],
         }
-        interfaces = (ExtendedInterface,)

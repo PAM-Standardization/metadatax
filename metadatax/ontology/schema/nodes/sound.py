@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.ontology.models import Sound
 
@@ -16,4 +15,3 @@ class SoundNode(ExtendedNode):
             "code_name": ["exact", "icontains"],
             "taxon": ["exact", "icontains"],
         }
-        interfaces = (ExtendedInterface,)

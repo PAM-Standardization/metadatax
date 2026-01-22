@@ -1,6 +1,5 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.acquisition.models import Deployment
 from .deployment_mobile_position import DeploymentMobilePositionNode
@@ -28,4 +27,3 @@ class DeploymentNode(ExtendedNode):
             "recovery_vessel": ["exact", "icontains"],
             "description": ["icontains"],
         }
-        interfaces = (ExtendedInterface,)

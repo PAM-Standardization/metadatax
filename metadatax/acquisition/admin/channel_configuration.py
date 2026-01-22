@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django_admin_multiple_choice_list_filter.list_filters import (
     MultipleChoiceListFilter,
 )
-from django_extended.admin import JSONExportModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.acquisition.forms import ChannelConfigurationForm
 from metadatax.acquisition.models import ChannelConfiguration
@@ -43,10 +43,10 @@ class ChannelConfigurationTypeFilter(MultipleChoiceListFilter):
 
 
 @admin.register(ChannelConfiguration)
-class ChannelConfigurationAdmin(JSONExportModelAdmin):
+class ChannelConfigurationAdmin(ExtendedModelAdmin):
     """ChannelConfiguration presentation in DjangoAdmin"""
 
-    model = ChannelConfiguration
+    actions = ["export",]
     form = ChannelConfigurationForm
     serializer = ChannelConfigurationSerializer
     list_display = [

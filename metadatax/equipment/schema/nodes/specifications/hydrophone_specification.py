@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.equipment.models import HydrophoneSpecification
 from ...enums import HydrophoneDirectivityEnum
@@ -24,4 +23,3 @@ class HydrophoneSpecificationNode(ExtendedNode):
             "max_operating_depth": ["exact", "lt", "lte", "gt", "gte"],
             "noise_floor": ["exact", "lt", "lte", "gt", "gte"],
         }
-        interfaces = (ExtendedInterface,)

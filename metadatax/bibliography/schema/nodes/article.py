@@ -1,6 +1,5 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.bibliography.models import Article
 from metadatax.bibliography.schema import BibliographyTypeEnum
@@ -35,4 +34,3 @@ class ArticleNode(ExtendedNode):
             "status": ["exact"],
             "publication_date": ["exact", "lt", "lte", "gt", "gte"],
         }
-        interfaces = (ExtendedInterface,)

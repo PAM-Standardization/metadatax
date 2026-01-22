@@ -1,7 +1,7 @@
 import graphene
 from graphene import ObjectType, relay
 from graphene_django_pagination import DjangoPaginationConnectionField
-from django_extended.schema.fields import ByIdField
+from django_extension.schema.fields import ByIdField
 
 from .nodes import *
 from .unions import FileUnionConnection, FileUnion

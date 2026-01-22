@@ -1,11 +1,13 @@
 from django.contrib import admin
-from django_extended.admin import HiddenModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.equipment.models import MaintenanceType
 
 
 @admin.register(MaintenanceType)
-class MaintenanceTypeAdmin(HiddenModelAdmin):
+class MaintenanceTypeAdmin(ExtendedModelAdmin):
+    hidden = True
+
     list_display = [
         "name",
         "description",

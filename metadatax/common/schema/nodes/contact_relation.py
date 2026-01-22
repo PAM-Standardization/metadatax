@@ -1,11 +1,10 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.common.models import Person, Team, Institution, ContactRelation
+from .institution import InstitutionNode
 from .person import PersonNode
 from .team import TeamNode
-from .institution import InstitutionNode
 from ..enums import RoleEnum
 
 
@@ -17,7 +16,6 @@ class ContactRelationNode(ExtendedNode):
         exclude = ("contact_id",)
         filter_fields = {
         }
-        interfaces = (ExtendedInterface,)
 
     contact_type = graphene.NonNull(graphene.String)
 

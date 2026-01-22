@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.common.models import Tag
 
@@ -12,4 +11,3 @@ class TagNode(ExtendedNode):
             "id": ["exact", "in"],
             "name": ["exact", "icontains"],
         }
-        interfaces = (ExtendedInterface,)

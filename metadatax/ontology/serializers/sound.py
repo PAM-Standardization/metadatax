@@ -10,10 +10,6 @@ class SoundSerializer(serializers.ModelSerializer):
         read_only=True,
         many=True,
     )
-    associated_names = serializers.PrimaryKeyRelatedField(
-        read_only=True,
-        many=True,
-    )
 
     class Meta:
         model = Sound

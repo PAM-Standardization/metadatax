@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     "metadatax.acquisition.apps.MetadataxAcquisitionConfig",
     "metadatax.equipment.apps.MetadataxEquipmentConfig",
     "metadatax.ontology.apps.OntologyConfig",
-    "django_extended"
+    "django_extension"
 ]
 
 MIDDLEWARE = [
@@ -158,7 +158,7 @@ OAUTH2_PROVIDER = {
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_FILTER_BACKENDS": ["django_extended.viewsets.ModelFilter"],
+    "DEFAULT_FILTER_BACKENDS": ["django_extension.filters.ModelFilter"],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
 }

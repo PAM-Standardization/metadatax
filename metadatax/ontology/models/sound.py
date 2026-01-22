@@ -1,5 +1,5 @@
 from django.db import models
-from django_extended.models.constraints import NoSelfParentConstraint
+from django_extension.models.constraints import NoSelfParentConstraint
 
 from metadatax.bibliography.models import Bibliography
 

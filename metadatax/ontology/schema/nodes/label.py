@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.ontology.models import Label
 from metadatax.ontology.schema.enums import SignalShapeEnum, SignalPluralityEnum
@@ -27,4 +26,3 @@ class LabelNode(ExtendedNode):
             "max_frequency": ["exact", "lt", "lte", "gt", "gte"],
             "mean_duration": ["exact", "lt", "lte", "gt", "gte"],
         }
-        interfaces = (ExtendedInterface,)

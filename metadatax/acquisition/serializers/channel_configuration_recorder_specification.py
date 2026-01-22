@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from metadatax.acquisition.models import ChannelConfigurationRecorderSpecification
+from metadatax.acquisition.models.channel_configuration_specifications import ChannelConfigurationRecorderSpecification
 from metadatax.data.models import FileFormat
 from metadatax.equipment.serializers import EquipmentSerializer
 

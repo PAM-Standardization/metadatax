@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from django_extended.admin import JSONExportModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.equipment.forms.equipment_model import EquipmentModelForm
 from metadatax.equipment.models import EquipmentModel, AcousticDetectorSpecification, HydrophoneSpecification, \
@@ -9,8 +9,8 @@ from metadatax.equipment.serializers import EquipmentModelSerializer
 
 
 @admin.register(EquipmentModel)
-class EquipmentModelAdmin(JSONExportModelAdmin):
-    model = EquipmentModel
+class EquipmentModelAdmin(ExtendedModelAdmin):
+    actions = ["export",]
     serializer = EquipmentModelSerializer
     form = EquipmentModelForm
     list_display = [

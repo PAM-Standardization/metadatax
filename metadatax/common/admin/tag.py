@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django_extended.admin import ExtendedModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.common.models import Tag
 

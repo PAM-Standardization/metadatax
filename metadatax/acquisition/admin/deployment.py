@@ -10,7 +10,7 @@ from django.core import validators
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.utils import timezone
 from django.utils.safestring import mark_safe
-from django_extended.admin import JSONExportModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.acquisition.models import Deployment, DeploymentMobilePosition
 from metadatax.acquisition.serializers import DeploymentExportSerializer
@@ -72,10 +72,10 @@ class DeploymentForm(forms.ModelForm):
 
 
 @admin.register(Deployment)
-class DeploymentAdmin(JSONExportModelAdmin):
+class DeploymentAdmin(ExtendedModelAdmin):
     """Deployment presentation in DjangoAdmin"""
+    actions = ["export",]
 
-    model = Deployment
     serializer = DeploymentExportSerializer
     form = DeploymentForm
     list_display = [

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.forms import widgets
 from django.utils.safestring import mark_safe
-from django_extended.admin import JSONExportModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.acquisition.models import Project, Financing
 from metadatax.acquisition.serializers import ProjectExportSerializer
@@ -23,8 +23,9 @@ class ProjectForm(forms.ModelForm):
 
 
 @admin.register(Project)
-class ProjectAdmin(JSONExportModelAdmin):
+class ProjectAdmin(ExtendedModelAdmin):
     """Project presentation in DjangoAdmin"""
+    actions = ["export",]
 
     serializer = ProjectExportSerializer
     form = ProjectForm

@@ -1,6 +1,5 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.acquisition.models import Project
 from metadatax.common.schema import AccessibilityEnum, ContactRelationNode
@@ -25,4 +24,3 @@ class ProjectNode(ExtendedNode):
             "project_goal": ["exact", "icontains"],
             "financing": ["exact"],
         }
-        interfaces = (ExtendedInterface,)

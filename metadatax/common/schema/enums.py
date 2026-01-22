@@ -1,4 +1,4 @@
-import graphene
+from django_extension.schema.types import ExtendedEnumType
 
 from metadatax.common.models import Role, Accessibility
 
@@ -8,11 +8,24 @@ __all__ = [
 ]
 
 
-class RoleEnum(graphene.Enum):
+class RoleEnum(ExtendedEnumType):
     class Meta:
         enum = Role
 
+    MainContact = 'MC'
+    Funder = 'F'
+    ProjectOwner = 'PO'
+    ProjectManager = 'PM'
+    DatasetSupplier = 'DS'
+    DatasetProducer = 'DP'
+    ProductionDatabase = 'PD'
+    ContactPoint = 'CP'
 
-class AccessibilityEnum(graphene.Enum):
+
+class AccessibilityEnum(ExtendedEnumType):
     class Meta:
         enum = Accessibility
+
+    Confidential = 'C'
+    UponRequest = 'R'
+    OpenAccess = 'O'

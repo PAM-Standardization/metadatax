@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 import graphene
 
 from metadatax.acquisition.models import ChannelConfiguration
@@ -24,4 +23,3 @@ class ChannelConfigurationNode(ExtendedNode):
             "harvest_starting_date": ["exact", "lt", "lte", "gt", "gte"],
             "harvest_ending_date": ["exact", "lt", "lte", "gt", "gte"],
         }
-        interfaces = (ExtendedInterface,)

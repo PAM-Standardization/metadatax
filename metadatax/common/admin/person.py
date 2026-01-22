@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django_extended.admin import ExtendedModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.common.models import Person
 from .inlines import PersonInstitutionRelationInline
@@ -38,7 +38,7 @@ class PersonAdmin(ExtendedModelAdmin):
     @admin.display(description="Institutions")
     def institutions_list(self, obj: Person) -> str:
         """Display readable information about institutions"""
-        return self.safe_list([
-            f"{rel.institution} ({rel.team.name})" if rel.team else rel.institution
-            for rel in obj.institution_relations.all()
-        ])
+        return self.list_queryset(
+            obj.institution_relations.all(),
+            to_str=lambda rel: f"{rel.institution} ({rel.team.name})" if rel.team else rel.institution
+        )

@@ -22,7 +22,7 @@ django-durationwidget = "^1.0.5"
 graphene-django-optimizer = "^0.10.0"
 #django-extended = { path = '../django-extended/dist/django_extended-0.0.0.tar.gz'}
 #django-extended = { path = '../django-extended', develop = true }
-django-extended = {path = "../django-extended", develop = true}
+django-extension = {path = "../django-extension", develop = true}
 
 [tool.poetry.group.dev.dependencies]
 drf-yasg = "^1.21.7"

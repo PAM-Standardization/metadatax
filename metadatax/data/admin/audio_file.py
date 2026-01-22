@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.forms import widgets
 from django.forms.utils import ErrorList
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.common.models import Accessibility
 from metadatax.data.models import AudioFile, AudioProperties
@@ -56,7 +57,7 @@ class AudioFileForm(forms.ModelForm):
 
 
 @admin.register(AudioFile)
-class AudioFileAdmin(admin.ModelAdmin):
+class AudioFileAdmin(ExtendedModelAdmin):
     form = AudioFileForm
     list_display = [
         "filename",

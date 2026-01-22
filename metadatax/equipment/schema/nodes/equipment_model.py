@@ -1,6 +1,5 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.equipment.models import EquipmentModel
 from metadatax.equipment.schema.nodes import EquipmentSpecificationUnion
@@ -17,7 +16,6 @@ class EquipmentModelNode(ExtendedNode):
             "battery_type": ["exact", "in"],
             "cables": ["exact", "in"],
         }
-        interfaces = (ExtendedInterface,)
 
     specifications = graphene.List(EquipmentSpecificationUnion)
 

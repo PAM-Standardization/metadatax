@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django_extended.admin import JSONExportModelAdmin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.equipment.forms.platform import PlatformForm
 from metadatax.equipment.models import Platform
@@ -7,8 +7,8 @@ from metadatax.equipment.serializers.platform import PlatformSerializer
 
 
 @admin.register(Platform)
-class PlatformAdmin(JSONExportModelAdmin):
-    model = Platform
+class PlatformAdmin(ExtendedModelAdmin):
+    actions = ["export",]
     serializer = PlatformSerializer
     form = PlatformForm
     list_display = [

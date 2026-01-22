@@ -1,4 +1,4 @@
-from django_extended.serializers.fields import EnumField
+from django_extension.serializers.fields import EnumField
 from rest_framework import serializers
 
 from metadatax.equipment.models import HydrophoneDirectivity, HydrophoneSpecification

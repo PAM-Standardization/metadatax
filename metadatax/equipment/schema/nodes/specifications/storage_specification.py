@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.equipment.models import StorageSpecification
 
@@ -13,4 +12,3 @@ class StorageSpecificationNode(ExtendedNode):
             "type": ["exact", "icontains"],
             # "capacity": ["exact", "lt", "lte", "gt", "gte"], # TODO
         }
-        interfaces = (ExtendedInterface,)

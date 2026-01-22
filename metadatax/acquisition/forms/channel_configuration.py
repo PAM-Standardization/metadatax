@@ -7,7 +7,7 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction, IntegrityError
-from django_extended.forms.widgets import AdminAutocompleteSelectWidget, AdminAutocompleteSelectMultipleWidget
+from django_extension.forms.widgets import AdminAutocompleteSelectWidget, AdminAutocompleteSelectMultipleWidget
 
 from metadatax.acquisition.models import ChannelConfiguration
 from metadatax.acquisition.models.channel_configuration_specifications import ChannelConfigurationRecorderSpecification, \

@@ -1,6 +1,6 @@
+from django_extension.schema.fields import ByIdField
 from graphene import ObjectType
 from graphene_django_pagination import DjangoPaginationConnectionField
-from django_extended.schema.fields import ByIdField
 
 from .nodes import *
 

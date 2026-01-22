@@ -1,5 +1,4 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.equipment.models import RecorderSpecification
 
@@ -15,4 +14,3 @@ class RecorderSpecificationNode(ExtendedNode):
             # "storage_maximum_capacity": ["exact", "lt", "lte", "gt", "gte"], # TODO
             "storage_type": ["exact", "icontains"],
         }
-        interfaces = [ExtendedInterface]

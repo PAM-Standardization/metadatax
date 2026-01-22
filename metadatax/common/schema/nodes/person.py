@@ -1,7 +1,6 @@
-from django_extended.schema.interfaces import ExtendedInterface
-from django_extended.schema.types import ExtendedNode
 import graphene
 import graphene_django_optimizer
+from django_extension.schema.types import ExtendedNode
 
 from metadatax.common.models import Person
 from .person_institution_relation import PersonInstitutionRelationNode
@@ -18,7 +17,6 @@ class PersonNode(ExtendedNode):
             "mail": ["exact", "icontains"],
             "website": ["exact", "icontains"],
         }
-        interfaces = (ExtendedInterface,)
 
     institution_relations = graphene.List(PersonInstitutionRelationNode)
 
