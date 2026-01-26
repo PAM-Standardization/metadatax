@@ -3,7 +3,6 @@
 import django.db.models.deletion
 from django.db import migrations, models
 
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -136,8 +135,16 @@ class Migration(migrations.Migration):
             unique_together=set(),
         ),
         migrations.RunSQL(
-            sql="\n            UPDATE mx_common_contactrelation\n            SET\n                contact_id=old_contact_id,\n                contact_type_id=ct.id\n            FROM django_content_type as ct\n            WHERE contact_id is not null AND ct.app_label='common' AND ct.model='common.Person';\n            UPDATE mx_common_contactrelation\n            SET\n                contact_id=institution_id,\n                contact_type_id=ct.id\n            FROM django_content_type as ct\n            WHERE institution_id is not null AND ct.app_label='common' AND ct.model='common.Institution';\n            ",
-            reverse_sql="\n            UPDATE mx_common_contactrelation\n            SET old_contact_id=contact_id\n            FROM django_content_type as ct\n            WHERE ct.app_label='common' AND ct.model='common.Person' AND ct.id=contact_type_id;\n            UPDATE mx_common_contactrelation\n            SET institution_id=contact_id\n            FROM django_content_type as ct\n            WHERE ct.app_label='common' AND ct.model='common.Institution' AND ct.id=contact_type_id;\n            ",
+            sql="""UPDATE mx_common_contactrelation
+                   SET contact_id=institution_id,
+                       contact_type_id=ct.id FROM django_content_type as ct
+                   WHERE institution_id is not null AND ct.app_label='common' AND ct.model='institution';
+            UPDATE mx_common_contactrelation
+            SET contact_id=old_contact_id,
+                contact_type_id=ct.id FROM django_content_type as ct
+            WHERE old_contact_id is not null AND ct.app_label='common' AND ct.model='person';
+            COMMIT;""",
+            reverse_sql="\n            UPDATE mx_common_contactrelation\n            SET old_contact_id=contact_id\n            FROM django_content_type as ct\n            WHERE ct.app_label='common' AND ct.model='person' AND ct.id=contact_type_id;\n            UPDATE mx_common_contactrelation\n            SET institution_id=contact_id\n            FROM django_content_type as ct\n            WHERE ct.app_label='common' AND ct.model='institution' AND ct.id=contact_type_id;\n            ",
         ),
         migrations.RemoveField(
             model_name='contactrelation',

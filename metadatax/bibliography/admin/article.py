@@ -63,7 +63,7 @@ class ArticleAdmin(ExtendedModelAdmin):
 
     @admin.display(description='Tags')
     def show_tags(self, obj: Article):
-        return self.safe_queryset(obj.tags)
+        return self.list_queryset(obj.tags)
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)

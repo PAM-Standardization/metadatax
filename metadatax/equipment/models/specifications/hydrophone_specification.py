@@ -49,6 +49,19 @@ class HydrophoneSpecification(models.Model):
             info.append(f"({', '.join(optional_info)})")
         return ", ".join(info)
 
+
+    def __eq__(self, other: "HydrophoneSpecification") -> bool:
+        return (self.directivity == other.directivity and
+                self.operating_min_temperature == other.operating_min_temperature and
+                self.operating_max_temperature == other.operating_max_temperature and
+                self.min_bandwidth == other.min_bandwidth and
+                self.max_bandwidth == other.max_bandwidth and
+                self.min_dynamic_range == other.min_dynamic_range and
+                self.max_dynamic_range == other.max_dynamic_range and
+                self.min_operating_depth == other.min_operating_depth and
+                self.max_operating_depth == other.max_operating_depth and
+                self.noise_floor == other.noise_floor)
+
     directivity = models.TextField(
         choices=HydrophoneDirectivity.choices,
         blank=True,

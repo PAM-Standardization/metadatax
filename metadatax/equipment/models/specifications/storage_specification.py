@@ -19,5 +19,10 @@ class StorageSpecification(models.Model):
             info.append(self.type)
         return ", ".join(info)
 
+
+    def __eq__(self, other: "StorageSpecification") -> bool:
+        return (self.capacity == other.capacity and
+                self.type == other.type)
+
     capacity = custom_fields.ByteField()
     type = models.CharField(max_length=100, blank=True, null=True)

@@ -39,7 +39,7 @@ class EquipmentAdmin(ExtendedModelAdmin):
     list_display = [
         "serial_number",
         "model",
-        # "owner", TODO
+        "owner",
         "purchase_date",
         "name",
         "sensitivity",
@@ -69,3 +69,7 @@ class EquipmentAdmin(ExtendedModelAdmin):
             ]}
         )
     ]
+
+    @admin.display()
+    def owner(self, equipment: Equipment):
+        return f"{equipment.owner.__class__.__name__}: {equipment.owner}"

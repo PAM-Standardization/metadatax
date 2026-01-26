@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 from metadatax.ontology.models import Label
 
@@ -22,6 +23,21 @@ class AcousticDetectorSpecification(models.Model):
                 f"labels: {', '.join([str(label) for label in self.detected_labels.all()])}"
             )
         return " - ".join(info)
+
+    def __eq__(self, other: "AcousticDetectorSpecification") -> bool:
+        # Check detected_labels
+        self_labels_not_in_other = self.detected_labels.filter(
+            ~Q(id__in=other.detected_labels.values_list("id", flat=True)))
+        if self_labels_not_in_other.exists():
+            return False
+        other_labels_not_in_self = other.detected_labels.filter(
+            ~Q(id__in=self.detected_labels.values_list("id", flat=True)))
+        if other_labels_not_in_self.exists():
+            return False
+
+        return (self.min_frequency == other.min_frequency and
+                self.max_frequency == other.max_frequency and
+                self.algorithm_name == other.algorithm_name)
 
     detected_labels = models.ManyToManyField(Label, related_name="acoustic_detectors")
 

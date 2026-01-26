@@ -40,5 +40,5 @@ class PersonAdmin(ExtendedModelAdmin):
         """Display readable information about institutions"""
         return self.list_queryset(
             obj.institution_relations.all(),
-            to_str=lambda rel: f"{rel.institution} ({rel.team.name})" if rel.team else rel.institution
+            to_str=lambda rel: f"{rel.institution} ({rel.team.name})" if rel.team else str(rel.institution)
         )

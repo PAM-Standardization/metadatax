@@ -168,8 +168,6 @@ class ChannelConfigurationForm(forms.ModelForm):
         if not field or not commit:
             return
 
-        print(model, field, should_exists, models_fields)
-
         if should_exists:
             if getattr(self.instance, field):
                 model.objects.filter(pk=getattr(self.instance, field).pk).update(**models_fields)

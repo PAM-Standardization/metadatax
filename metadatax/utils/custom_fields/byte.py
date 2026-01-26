@@ -57,6 +57,8 @@ class Byte:
         return f"{self.value} {self.unit}"
 
     def __eq__(self, other: "Byte") -> bool:
+        if other is None and self.value is None:
+            return True
         if not isinstance(other, Byte):
             return False
         return self.value == other.value and self.unit == other.unit

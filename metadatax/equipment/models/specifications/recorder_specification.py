@@ -28,6 +28,13 @@ class RecorderSpecification(models.Model):
             info.append(f"({', '.join(storage_info)})")
         return ", ".join(info)
 
+
+    def __eq__(self, other: "RecorderSpecification") -> bool:
+        return (self.channels_count == other.channels_count and
+                self.storage_slots_count == other.storage_slots_count and
+                self.storage_maximum_capacity == other.storage_maximum_capacity and
+                self.storage_type == other.storage_type)
+
     channels_count = models.IntegerField(
         blank=True,
         null=True,

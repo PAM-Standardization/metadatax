@@ -14,7 +14,7 @@ class PlatformAdmin(ExtendedModelAdmin):
     list_display = [
         "name",
         "type",
-        # "owner", TODO
+        "owner",
         "provider",
         "description",
     ]
@@ -42,3 +42,7 @@ class PlatformAdmin(ExtendedModelAdmin):
             ],
         }),
     ]
+
+    @admin.display()
+    def owner(self, platform: Platform):
+        return f"{platform.owner.__class__.__name__}: {platform.owner}"

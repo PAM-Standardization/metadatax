@@ -16,3 +16,4 @@ class OntologyQuery(ObjectType):
     # Source
     all_sources = DjangoPaginationConnectionField(SourceNode)
     source_by_id = ByIdField(SourceNode)
+
