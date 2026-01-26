@@ -46,7 +46,6 @@ class ChannelConfigurationTypeFilter(MultipleChoiceListFilter):
 class ChannelConfigurationAdmin(ExtendedModelAdmin):
     """ChannelConfiguration presentation in DjangoAdmin"""
 
-    actions = ["export",]
     form = ChannelConfigurationForm
     serializer = ChannelConfigurationSerializer
     list_display = [
@@ -200,4 +199,4 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
             reverse('admin:acquisition_channelconfiguration_change', kwargs={'object_id': object.id})
         )
 
-    actions = [duplicate_event, ]
+    actions = [duplicate_event, "export",]

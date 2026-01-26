@@ -21,8 +21,8 @@ django-better-admin-arrayfield = "^1.4.2"
 django-durationwidget = "^1.0.5"
 graphene-django-optimizer = "^0.10.0"
 #django-extended = { path = '../django-extended/dist/django_extended-0.0.0.tar.gz'}
-#django-extended = { path = '../django-extended', develop = true }
-django-extension = {path = "../django-extension", develop = true}
+#django-extension = {path = "../django-extension", develop = true}
+django-extension = {url = "https://github.com/Project-OSmOSE/django-extension/releases/download/v0.1.0/django_extension-0.1.0.tar.gz"}
 
 [tool.poetry.group.dev.dependencies]
 drf-yasg = "^1.21.7"
