@@ -28,12 +28,16 @@ class Platform(models.Model):
                 "common.Institution",
             ]
         },
+        blank=True, null=True
     )
-    owner_id = models.PositiveBigIntegerField()
+    owner_id = models.PositiveBigIntegerField(
+        blank=True, null=True
+    )
     owner = GenericForeignKey("owner_type", "owner_id")
 
     provider = models.ForeignKey(
-        Institution, on_delete=models.PROTECT, related_name="provided_platforms"
+        Institution, on_delete=models.PROTECT, related_name="provided_platforms",
+        blank=True, null=True
     )
     type = models.ForeignKey(
         PlatformType, on_delete=models.PROTECT, related_name="platforms"

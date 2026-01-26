@@ -26,10 +26,15 @@ class PlatformForm(forms.ModelForm):
         self.fields['owner'] = ContentTypeAutocompleteSelectField(
             models=[Person, Team, Institution],
             initial=instance.owner if instance is not None else None,
+            required=False,
         )
 
     def save(self, commit=True):
-        self.instance.owner_type = ContentType.objects.get_for_model(self.cleaned_data['owner'])
-        self.instance.owner_id = self.cleaned_data['owner'].pk
+        if self.cleaned_data.get('owner') is not None:
+            self.instance.owner_type = ContentType.objects.get_for_model(self.cleaned_data['owner'])
+            self.instance.owner_id = self.cleaned_data['owner'].pk
+        else:
+            self.instance.owner_type = None
+            self.instance.owner_id = None
 
         return super().save(commit)

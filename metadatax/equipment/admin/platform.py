@@ -45,4 +45,6 @@ class PlatformAdmin(ExtendedModelAdmin):
 
     @admin.display()
     def owner(self, platform: Platform):
+        if platform.owner is None:
+            return self.get_empty_value_display()
         return f"{platform.owner.__class__.__name__}: {platform.owner}"
