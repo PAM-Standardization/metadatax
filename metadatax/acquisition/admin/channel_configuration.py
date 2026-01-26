@@ -2,7 +2,11 @@
 import re
 
 from django.contrib import admin, messages
+from django.contrib.postgres.aggregates import ArrayAgg
 from django.db import transaction
+from django.db.models import F, Value
+from django.db.models.fields import CharField
+from django.db.models.functions import Concat
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -197,6 +201,25 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
 
         return HttpResponseRedirect(
             reverse('admin:acquisition_channelconfiguration_change', kwargs={'object_id': object.id})
+        )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related(
+            "storages",
+            "storages__model",
+            "recorder_specification__recording_formats",
+            "detector_specification__output_formats",
+            "detector_specification__labels",
+        ).select_related(
+            "deployment",
+            "recorder_specification",
+            "recorder_specification__recorder",
+            "recorder_specification__recorder__model",
+            "recorder_specification__hydrophone",
+            "recorder_specification__hydrophone__model",
+            "detector_specification",
+            "detector_specification__detector",
+            "detector_specification__detector__model",
         )
 
     actions = [duplicate_event, "export",]
