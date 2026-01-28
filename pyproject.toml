@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "metadatax"
-version = "0.4.15"
+version = "0.4.16"
 description = "PAM acquisition metadata"
 authors = ["Your Name <you@example.com>"]
 license = "GPL-3.0"
