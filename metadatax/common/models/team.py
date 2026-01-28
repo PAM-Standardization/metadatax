@@ -16,3 +16,6 @@ class Team(models.Model):
 
     name = models.CharField(max_length=255)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
+
+    mail = models.EmailField(max_length=255, blank=True, null=True)
+    website = models.URLField(max_length=255, blank=True, null=True)

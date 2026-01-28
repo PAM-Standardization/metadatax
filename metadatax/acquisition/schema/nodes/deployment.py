@@ -2,11 +2,15 @@ import graphene
 from django_extension.schema.types import ExtendedNode
 
 from metadatax.acquisition.models import Deployment
+from metadatax.common.schema import ContactRelationNode
+
 from .deployment_mobile_position import DeploymentMobilePositionNode
 
 
 class DeploymentNode(ExtendedNode):
     mobile_positions = graphene.List(DeploymentMobilePositionNode)
+
+    contacts = graphene.List(ContactRelationNode)
 
     class Meta:
         model = Deployment
@@ -27,3 +31,6 @@ class DeploymentNode(ExtendedNode):
             "recovery_vessel": ["exact", "icontains"],
             "description": ["icontains"],
         }
+
+    def resolve_contacts(self: Deployment, info):
+        return self.contacts.all()

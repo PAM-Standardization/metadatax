@@ -2,7 +2,9 @@ import graphene.types
 from graphene import relay
 
 from metadatax.common.models import Person, Team, Institution
-from metadatax.common.schema import InstitutionNode, TeamNode, PersonNode
+from metadatax.common.schema.nodes.institution import InstitutionNode
+from metadatax.common.schema.nodes.team import TeamNode
+from metadatax.common.schema.nodes.person import PersonNode
 
 
 class ContactUnion(graphene.types.Union):

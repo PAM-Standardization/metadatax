@@ -24,3 +24,6 @@ class ProjectNode(ExtendedNode):
             "project_goal": ["exact", "icontains"],
             "financing": ["exact"],
         }
+
+    def resolve_contacts(self: Project, info):
+        return self.contacts.all()

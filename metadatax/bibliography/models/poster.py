@@ -1,5 +1,6 @@
 from django.db import models
 
+from . import Bibliography
 from .conference import Conference
 from .__enums__ import BibliographyType
 
@@ -10,7 +11,7 @@ class PosterManager(models.Manager):
         return super().get_queryset().filter(type=BibliographyType.POSTER)
 
 
-class Poster(Conference):
+class Poster(Conference, Bibliography):
     objects = PosterManager()
 
     class Meta:

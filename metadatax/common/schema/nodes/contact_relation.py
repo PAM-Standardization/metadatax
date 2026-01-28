@@ -1,7 +1,8 @@
 import graphene
 from django_extension.schema.types import ExtendedNode
-
 from metadatax.common.models import Person, Team, Institution, ContactRelation
+from metadatax.common.schema.unions import ContactUnion
+
 from .institution import InstitutionNode
 from .person import PersonNode
 from .team import TeamNode
@@ -13,14 +14,22 @@ class ContactRelationNode(ExtendedNode):
 
     class Meta:
         model = ContactRelation
-        exclude = ("contact_id",)
+        fields = (
+            'role',
+            'contact_type',
+            'contact'
+        )
         filter_fields = {
         }
 
     contact_type = graphene.NonNull(graphene.String)
+    contact = ContactUnion()
 
-    def resolve_content_type(self: ContactRelation, info):
+    def resolve_contact_type(self: ContactRelation, info):
         return self.contact_type.model
+
+    def resolve_contact(self: ContactRelation, info):
+        return self.contact
 
     person = PersonNode()
 

@@ -11,10 +11,14 @@ class TeamAdmin(ExtendedModelAdmin):
     list_display = [
         "name",
         "institution",
+        "mail",
+        "website",
     ]
     search_fields = [
         "name",
         "institution__name",
+        "mail",
+        "website",
     ]
     list_filter = [
         "institution"

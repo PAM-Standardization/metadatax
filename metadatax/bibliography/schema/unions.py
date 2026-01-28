@@ -2,7 +2,7 @@ import graphene
 from graphene import relay
 
 from metadatax.bibliography.models import Bibliography, Article, Poster, Software, Conference
-from metadatax.bibliography.schema import ArticleNode, SoftwareNode, ConferenceNode, PosterNode
+from .nodes import ArticleNode, SoftwareNode, ConferenceNode, PosterNode
 
 __all__ = [
     'BibliographyUnion',

@@ -1,4 +1,7 @@
+import datetime
+
 from django.db import models
+from django.db.models import Q, QuerySet
 
 from .institution import Institution
 from .person_institution_relation import PersonInstitutionRelation
@@ -26,7 +29,14 @@ class Person(models.Model):
     teams = models.ManyToManyField(Team, related_name="persons", through=PersonInstitutionRelation)
 
     @property
-    def initial_names(self):
+    def initial_names(self) -> str:
         names = self.first_name.split("-")
         initial_first_name = "-".join([f"{n[0]}." for n in names])
         return f"{self.last_name}, {initial_first_name}"
+
+    @property
+    def current_institutions(self) -> QuerySet[Institution]:
+        return Institution.objects.filter(id__in=self.institution_relations.filter(
+            (Q(from_date__lte=datetime.date.today()) | Q(from_date__isnull=True))
+            & (Q(to_date__gte=datetime.date.today()) | Q(to_date__isnull=True))
+        ).values_list('institution_id', flat=True))
