@@ -1,4 +1,4 @@
-from django_filters import FilterSet, NumberFilter
+from django_filters import FilterSet
 from graphene import ID, relay
 
 from metadatax.equipment.models import HydrophoneSpecification
@@ -7,14 +7,10 @@ from metadatax.utils.schema import MxObjectType
 
 
 class HydrophoneSpecificationFilter(FilterSet):
-    equipment__id = NumberFilter()
-
     class Meta:
         model = HydrophoneSpecification
         fields = {
             "id": ["exact", "in"],
-            "equipment__id": ["exact", "in"],
-            "sensitivity": ["exact", "lt", "lte", "gt", "gte"],
             "directivity": ["exact"],
             "operating_min_temperature": ["exact", "lt", "lte", "gt", "gte"],
             "operating_max_temperature": ["exact", "lt", "lte", "gt", "gte"],

@@ -7,13 +7,11 @@ from metadatax.utils.schema import MxObjectType
 
 class AcousticDetectorSpecificationFilter(FilterSet):
     detected_labels__id = NumberFilter()
-    equipment__id = NumberFilter()
 
     class Meta:
         model = AcousticDetectorSpecification
         fields = {
             "id": ["exact", "in"],
-            "equipment__id": ["exact", "in"],
             "detected_labels__id": ["exact", "in"],
             "min_frequency": ["exact", "lt", "lte", "gt", "gte"],
             "max_frequency": ["exact", "lt", "lte", "gt", "gte"],

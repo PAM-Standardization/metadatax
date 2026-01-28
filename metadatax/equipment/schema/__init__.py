@@ -15,6 +15,7 @@ from metadatax.equipment.models import (
 )
 from .acoustic_detector_specification import AcousticDetectorSpecificationNode
 from .equipment import EquipmentNode
+from .equipment_model import EquipmentModelNode
 from .hydrophone_specification import HydrophoneSpecificationNode
 from .maintenance import MaintenanceNode
 from .maintenance_type import MaintenanceTypeNode
@@ -33,6 +34,7 @@ class EquipmentQuery(ObjectType):
     )
 
     all_equipments = DjangoPaginationConnectionField(EquipmentNode)
+    all_equipment_models = DjangoPaginationConnectionField(EquipmentModelNode)
     equipment_by_id = Field(EquipmentNode, id=graphene.ID(required=True))
 
     all_hydrophone_specifications = DjangoPaginationConnectionField(

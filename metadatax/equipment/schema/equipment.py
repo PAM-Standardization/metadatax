@@ -16,24 +16,17 @@ class EquipmentFilter(FilterSet):
         model = Equipment
         fields = {
             "id": ["exact", "in"],
-            "model": ["exact", "icontains"],
+            "model_id": ["exact", "in"],
             "serial_number": ["exact", "icontains"],
             "owner_id": ["exact", "in"],
-            "provider_id": ["exact", "in"],
-            "storage_specification": ["isnull"],
-            "recorder_specification": ["isnull"],
-            "hydrophone_specification": ["isnull"],
-            "acoustic_detector_specification": ["isnull"],
             "purchase_date": ["exact", "lt", "lte", "gt", "gte"],
             "name": ["exact", "icontains"],
-            "battery_slots_count": ["exact", "lt", "lte", "gt", "gte"],
-            "battery_type": ["exact", "icontains"],
-            "cables": ["exact", "icontains"],
             "channel_configuration_detector_specifications__id": ["exact", "in"],
             "channel_configuration_hydrophone_specifications__id": ["exact", "in"],
             "channel_configuration_recorder_specifications__id": ["exact", "in"],
             "channel_configurations__id": ["exact", "in"],
             "maintenances__id": ["exact", "in"],
+            "sensitivity": ["exact", "lt", "lte", "gt", "gte"],
         }
 
 

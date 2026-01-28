@@ -23,7 +23,7 @@ class HydrophoneSpecification(models.Model):
         )
 
     def __str__(self):
-        info = [f"sensitivity: {self.sensitivity}"]
+        info = []
         optional_info = []
         if self.directivity:
             optional_info.append(self.directivity)
@@ -69,25 +69,25 @@ class HydrophoneSpecification(models.Model):
         null=True,
         blank=True,
         help_text="Lower limiting frequency for a more or less flat response of the hydrophone, "
-        "pre-amplification included if applicable.",
+                  "pre-amplification included if applicable.",
     )
     max_bandwidth = models.FloatField(
         null=True,
         blank=True,
         help_text="Upper limiting frequency within a more or less flat response of the hydrophone, "
-        "pre-amplification included if applicable.",
+                  "pre-amplification included if applicable.",
     )
     min_dynamic_range = models.FloatField(
         null=True,
         blank=True,
         help_text="Lowest level which the hydrophone can handle (dB SPL RMS or peak), "
-        "pre-amplification included if applicable.",
+                  "pre-amplification included if applicable.",
     )
     max_dynamic_range = models.FloatField(
         null=True,
         blank=True,
         help_text="Highest level which the hydrophone can handle (dB SPL RMS or peak), "
-        "pre-amplification included if applicable.",
+                  "pre-amplification included if applicable.",
     )
     min_operating_depth = models.FloatField(
         null=True,
@@ -105,7 +105,7 @@ class HydrophoneSpecification(models.Model):
         null=True,
         blank=True,
         help_text="Self noise of the hydrophone (dB re 1µPa^2/Hz), pre-amplification included if applicable.<br>"
-        "Average on bandwidth or a fix frequency (generally @5kHz for example). "
-        "Possibility to 'below sea-state zero' (equivalent to around 30dB @5kHz) could be nice "
-        "because it is often described like that.",
+                  "Average on bandwidth or a fix frequency (generally @5kHz for example). "
+                  "Possibility to 'below sea-state zero' (equivalent to around 30dB @5kHz) could be nice "
+                  "because it is often described like that.",
     )

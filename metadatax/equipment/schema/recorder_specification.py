@@ -1,4 +1,4 @@
-from django_filters import FilterSet, NumberFilter
+from django_filters import FilterSet
 from graphene import ID, relay
 
 from metadatax.equipment.models import RecorderSpecification
@@ -6,13 +6,10 @@ from metadatax.utils.schema import MxObjectType
 
 
 class RecorderSpecificationFilter(FilterSet):
-    equipment__id = NumberFilter()
-
     class Meta:
         model = RecorderSpecification
         fields = {
             "id": ["exact", "in"],
-            "equipment__id": ["exact", "in"],
             "channels_count": ["exact", "lt", "lte", "gt", "gte"],
             "storage_slots_count": ["exact", "lt", "lte", "gt", "gte"],
             # "storage_maximum_capacity": ["exact", "lt", "lte", "gt", "gte"], # TODO
