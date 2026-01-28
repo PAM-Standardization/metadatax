@@ -11,7 +11,7 @@ def forward_migrate_model(apps, _):
     model_spec = apps.get_model("equipment", "EquipmentModelSpecification")
     new_specs = []
 
-    for e in equipment.objects.all():
+    for e in equipment.objects.distinct():
         e.model = model.objects.get_or_create(
             name=e.model_name,
             provider=e.provider,
@@ -23,9 +23,9 @@ def forward_migrate_model(apps, _):
             new_specs.append(
                 model_spec(
                     model=e.model,
-                    specification_type=ContentType.objects.get_for_model(
+                    specification_type_id=ContentType.objects.get_for_model(
                         e.acoustic_detector_specification
-                    ),
+                    ).id,
                     specification_id=e.acoustic_detector_specification.pk,
                 )
             )
@@ -34,9 +34,9 @@ def forward_migrate_model(apps, _):
             new_specs.append(
                 model_spec(
                     model=e.model,
-                    specification_type=ContentType.objects.get_for_model(
+                    specification_type_id=ContentType.objects.get_for_model(
                         e.hydrophone_specification
-                    ),
+                    ).id,
                     specification_id=e.hydrophone_specification.pk,
                 )
             )
@@ -44,9 +44,9 @@ def forward_migrate_model(apps, _):
             new_specs.append(
                 model_spec(
                     model=e.model,
-                    specification_type=ContentType.objects.get_for_model(
+                    specification_type_id=ContentType.objects.get_for_model(
                         e.recorder_specification
-                    ),
+                    ).id,
                     specification_id=e.recorder_specification.pk,
                 )
             )
@@ -54,9 +54,9 @@ def forward_migrate_model(apps, _):
             new_specs.append(
                 model_spec(
                     model=e.model,
-                    specification_type=ContentType.objects.get_for_model(
+                    specification_type_id=ContentType.objects.get_for_model(
                         e.storage_specification
-                    ),
+                    ).id,
                     specification_id=e.storage_specification.pk,
                 )
             )
@@ -94,6 +94,7 @@ class Migration(migrations.Migration):
         ("common", "0006_clean"),
         ("contenttypes", "0002_remove_content_type_name"),
         ("equipment", "0003_clean"),
+        ('metadatax', '0027_reset_indexes')
     ]
 
     operations = [
@@ -176,10 +177,6 @@ class Migration(migrations.Migration):
                 name="equipment_e_specifi_9cc8cb_idx",
             ),
         ),
-        migrations.AlterUniqueTogether(
-            name="equipment",
-            unique_together={("serial_number",)},
-        ),
         migrations.RenameField(
             model_name="equipment",
             old_name="model",
@@ -192,6 +189,7 @@ class Migration(migrations.Migration):
                 on_delete=django.db.models.deletion.PROTECT,
                 related_name="equipments",
                 to="equipment.equipmentmodel",
+                null=True
             ),
         ),
         migrations.AddField(
@@ -201,11 +199,24 @@ class Migration(migrations.Migration):
                 blank=True, help_text="Required only for hydrophones", null=True
             ),
         ),
+        migrations.AlterUniqueTogether(
+            name="equipment",
+            unique_together=set(),
+        ),
         # Migrate
         migrations.RunPython(
             code=forward_migrate_model, reverse_code=reverse_migrate_model
         ),
         # Clean
+        migrations.AlterField(
+            model_name="equipment",
+            name="model",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="equipments",
+                to="equipment.equipmentmodel",
+            ),
+        ),
         migrations.RemoveField(
             model_name="equipment",
             name="model_name",

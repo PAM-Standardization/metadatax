@@ -16,7 +16,7 @@ from metadatax.equipment.models import (
     Platform,
     RecorderSpecification,
     Equipment,
-    HydrophoneSpecification,
+    HydrophoneSpecification, EquipmentModel,
 )
 
 
@@ -103,10 +103,12 @@ class Command(BaseCommand):
         channel = deployment.channel_configurations.create(
             recorder_specification=ChannelConfigurationRecorderSpecification.objects.create(
                 recorder=Equipment.objects.create(
-                    model="LP-440",
+                    model=EquipmentModel.objects.create(
+                        name="LP-440",
+                        provider=Institution.objects.create(name="RTSYS"),
+                    ),
                     serial_number="001",
                     owner=ensta,
-                    provider=Institution.objects.create(name="RTSYS"),
                     recorder_specification=RecorderSpecification.objects.create(
                         channels_count=1
                     ),
