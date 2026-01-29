@@ -1,11 +1,9 @@
 """Acquisition models for metadata app"""
-from datetime import timedelta
 
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import Min, ExpressionWrapper, F
 
-from metadatax.data.models import File, AudioProperties, DetectionProperties
+from metadatax.data.models import File
 from metadatax.equipment.models import Equipment
 from metadatax.utils import custom_fields
 from .channel_configuration_specifications import (
@@ -82,10 +80,22 @@ class ChannelConfiguration(models.Model):
     harvest_starting_date = custom_fields.DateTimeField(
         null=True,
         blank=True,
-        help_text="Date at which the channel configuration started to record (in UTC).",
+        help_text="Harvest start date at which the channel configuration was idle to record (in UTC).",
         verbose_name="Harvest start date (UTC)",
     )
     harvest_ending_date = custom_fields.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Harvest stop date at which the channel configuration was stopped (in UTC).",
+        verbose_name="Harvest stop date (UTC)",
+    )
+    record_start_date = custom_fields.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Date at which the channel configuration started to record (in UTC).",
+        verbose_name="Harvest start date (UTC)",
+    )
+    record_end_date = custom_fields.DateTimeField(
         null=True,
         blank=True,
         help_text="Date at which the channel configuration finished to record in (in UTC).",
@@ -97,35 +107,6 @@ class ChannelConfiguration(models.Model):
         through="ChannelConfigurationFiles",
         related_name="channel_configurations",
     )
-
-    @property
-    def recording_start_date(self):
-        audio_start = AudioProperties.objects.filter(
-            id__in=self.files.filter(property_type__model="AudioProperties".lower()).values_list("id", flat=True)
-        ).aggregate(start=Min('initial_timestamp'))['start']
-        detection_start = DetectionProperties.objects.filter(
-            id__in=self.files.filter(property_type__model="DetectionProperties".lower()).values_list("id", flat=True)
-        ).aggregate(start=Min('start'))['start']
-        if not audio_start:
-            return detection_start
-        return min(audio_start, detection_start)
-
-    @property
-    def recording_end_date(self):
-        audio_end = AudioProperties.objects.filter(
-            id__in=self.files.filter(property_type__model="AudioProperties".lower()).values_list("id", flat=True)
-        ).annotate(
-            fake_end=ExpressionWrapper(
-                F('initial_timestamp') + timedelta(seconds=1) * F('duration'),
-                output_field=models.DateTimeField()
-            )
-        ).aggregate(end=Min('fake_end'))['end']
-        detection_end = DetectionProperties.objects.filter(
-            id__in=self.files.filter(property_type__model="DetectionProperties".lower()).values_list("id", flat=True)
-        ).aggregate(end=Min('end'))['end']
-        if not audio_end:
-            return detection_end
-        return max(audio_end, detection_end)
 
 
 class ChannelConfigurationFiles(models.Model):

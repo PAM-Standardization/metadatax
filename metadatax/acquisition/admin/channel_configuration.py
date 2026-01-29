@@ -2,11 +2,7 @@
 import re
 
 from django.contrib import admin, messages
-from django.contrib.postgres.aggregates import ArrayAgg
 from django.db import transaction
-from django.db.models import F, Value
-from django.db.models.fields import CharField
-from django.db.models.functions import Concat
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -65,8 +61,8 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
         "timezone",
         "harvest_starting_date",
         "harvest_ending_date",
-        "recording_start_date",
-        "recording_end_date",
+        "record_start_date",
+        "record_end_date",
     ]
     search_fields = [
         "deployment__name",
@@ -98,6 +94,8 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
                 'timezone',
                 'harvest_starting_date',
                 'harvest_ending_date',
+                'record_start_date',
+                'record_end_date',
                 'extra_information'
             ],
         }),
@@ -222,4 +220,4 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
             "detector_specification__detector__model",
         )
 
-    actions = [duplicate_event, "export",]
+    actions = [duplicate_event, "export", ]
