@@ -7,8 +7,8 @@ from django.utils import timezone
 from metadatax.acquisition.models import (
     ProjectType,
     Project,
-    ChannelConfigurationRecorderSpecification,
 )
+from metadatax.acquisition.models.channel_configuration_specifications import ChannelConfigurationRecorderSpecification
 from metadatax.common.models import Person, Institution, Accessibility, Role, ContactRelation
 from metadatax.data.models import FileFormat
 from metadatax.equipment.models import (

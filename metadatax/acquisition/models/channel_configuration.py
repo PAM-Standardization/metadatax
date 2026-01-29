@@ -6,6 +6,7 @@ from django.db import models
 from metadatax.data.models import File
 from metadatax.equipment.models import Equipment
 from metadatax.utils import custom_fields
+from .__enums__ import ChannelConfigurationStatus
 from .channel_configuration_specifications import (
     ChannelConfigurationDetectorSpecification,
     ChannelConfigurationRecorderSpecification,
@@ -29,6 +30,14 @@ class ChannelConfiguration(models.Model):
         to=Deployment,
         on_delete=models.CASCADE,
         related_name="channel_configurations",
+    )
+
+    status = models.CharField(
+        choices=ChannelConfigurationStatus.choices,
+        max_length=1,
+        blank=True,
+        null=True,
+        default=ChannelConfigurationStatus.ACTIVE,
     )
 
     recorder_specification = models.OneToOneField(
