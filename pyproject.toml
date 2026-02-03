@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "metadatax"
-version = "0.5.0a2"
+version = "0.5.0a3"
 description = "PAM acquisition metadata"
 authors = ["Your Name <you@example.com>"]
 license = "GPL-3.0"
@@ -20,8 +20,8 @@ django-admin-multiple-choice-list-filter = "^0.1.1"
 django-better-admin-arrayfield = "^1.4.2"
 django-durationwidget = "^1.0.5"
 graphene-django-optimizer = "^0.10.0"
-#django-extension = {path = "../django-extension", develop = true}
-django-extension = { url = "https://github.com/Project-OSmOSE/django-extension/releases/download/v0.1.1/django_extension-0.1.1.tar.gz" }
+#django-extension = { path = "../django-extension", develop = true }
+django-extension = { url = "https://github.com/Project-OSmOSE/django-extension/releases/download/v0.1.2/django_extension-0.1.2.tar.gz" }
 
 [tool.poetry.group.dev.dependencies]
 drf-yasg = "^1.21.7"
