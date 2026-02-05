@@ -102,13 +102,13 @@ class ChannelConfiguration(models.Model):
         null=True,
         blank=True,
         help_text="Date at which the channel configuration started to record (in UTC).",
-        verbose_name="Harvest start date (UTC)",
+        verbose_name="Record start date (UTC)",
     )
     record_end_date = custom_fields.DateTimeField(
         null=True,
         blank=True,
         help_text="Date at which the channel configuration finished to record in (in UTC).",
-        verbose_name="Harvest stop date (UTC)",
+        verbose_name="Record stop date (UTC)",
     )
     files = models.ManyToManyField(
         File,
