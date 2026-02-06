@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Exists, OuterRef, Q
 from django.utils.translation import gettext_lazy as _
 from django_admin_multiple_choice_list_filter.list_filters import (
     MultipleChoiceListFilter,
@@ -6,7 +7,8 @@ from django_admin_multiple_choice_list_filter.list_filters import (
 from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.equipment.forms.equipment import EquipmentForm
-from metadatax.equipment.models import Equipment
+from metadatax.equipment.models import Equipment, StorageSpecification, RecorderSpecification, HydrophoneSpecification, \
+    AcousticDetectorSpecification, EquipmentModelSpecification
 from metadatax.equipment.serializers import EquipmentSerializer
 
 
@@ -16,24 +18,29 @@ class EquipmentTypeFilter(MultipleChoiceListFilter):
 
     def lookups(self, request, model_admin):
         return [
-            ("storage_specification", "Storage"),
-            ("recorder_specification", "Recorder"),
-            ("hydrophone_specification", "Hydrophone"),
-            ("acoustic_detector_specification", "Acoustic detector"),
+            (StorageSpecification.__name__.lower(), "Storage"),
+            (RecorderSpecification.__name__.lower(), "Recorder"),
+            (HydrophoneSpecification.__name__.lower(), "Hydrophone"),
+            (AcousticDetectorSpecification.__name__.lower(), "Acoustic detector"),
         ]
 
     def queryset(self, request, queryset):
         if self.value() is None:
             return queryset
-        filters = {}
-        for filter in self.value_as_list():
-            filters[filter + "__isnull"] = False
-        return queryset.filter(**filters)
+        filters = Q()
+        for model in self.value_as_list():
+            filters = filters & Exists(
+                EquipmentModelSpecification.objects.filter(
+                    model_id=OuterRef('model_id'),
+                    specification_type__model=model
+                )
+            )
+        return queryset.filter(filters)
 
 
 @admin.register(Equipment)
 class EquipmentAdmin(ExtendedModelAdmin):
-    actions = ["export",]
+    actions = ["export", ]
     serializer = EquipmentSerializer
     form = EquipmentForm
     list_display = [
@@ -54,19 +61,19 @@ class EquipmentAdmin(ExtendedModelAdmin):
         "sensitivity",
     ]
     list_filter = [
-        "model__specification_relations__specification_type__model",
+        EquipmentTypeFilter,
     ]
 
     fieldsets = [
         (
             None, {"fields": [
-                "model",
-                "serial_number",
-                "owner",
-                "purchase_date",
-                "name",
-                "sensitivity",
-            ]}
+            "model",
+            "serial_number",
+            "owner",
+            "purchase_date",
+            "name",
+            "sensitivity",
+        ]}
         )
     ]
 
