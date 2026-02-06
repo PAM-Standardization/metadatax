@@ -60,8 +60,6 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
         "instrument_depth",
         "timezone",
         "status",
-        "harvest_starting_date",
-        "harvest_ending_date",
         "record_start_date",
         "record_end_date",
     ]
@@ -95,8 +93,6 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
                 'instrument_depth',
                 'timezone',
                 "status",
-                'harvest_starting_date',
-                'harvest_ending_date',
                 'record_start_date',
                 'record_end_date',
                 'extra_information'

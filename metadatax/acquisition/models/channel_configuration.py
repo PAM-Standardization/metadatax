@@ -86,18 +86,6 @@ class ChannelConfiguration(models.Model):
     )
     timezone = models.CharField(max_length=50, null=True, blank=True)
     extra_information = models.TextField(blank=True, null=True)
-    harvest_starting_date = custom_fields.DateTimeField(
-        null=True,
-        blank=True,
-        help_text="Harvest start date at which the channel configuration was idle to record (in UTC).",
-        verbose_name="Harvest start date (UTC)",
-    )
-    harvest_ending_date = custom_fields.DateTimeField(
-        null=True,
-        blank=True,
-        help_text="Harvest stop date at which the channel configuration was stopped (in UTC).",
-        verbose_name="Harvest stop date (UTC)",
-    )
     record_start_date = custom_fields.DateTimeField(
         null=True,
         blank=True,
