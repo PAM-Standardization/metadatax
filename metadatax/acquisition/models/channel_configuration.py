@@ -84,7 +84,12 @@ class ChannelConfiguration(models.Model):
         validators=[MinValueValidator(0)],
         help_text="Immersion depth of instrument (in positive meters).",
     )
-    timezone = models.CharField(max_length=50, null=True, blank=True)
+    timezone = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        help_text="Timezone of the recording.",
+    )
     extra_information = models.TextField(blank=True, null=True)
     record_start_date = custom_fields.DateTimeField(
         null=True,

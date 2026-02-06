@@ -52,10 +52,12 @@ class Project(models.Model):
     start_date = custom_fields.DateField(
         blank=True,
         null=True,
+        help_text='Start date of the project',
     )
     end_date = custom_fields.DateField(
         blank=True,
         null=True,
+        help_text='End date of the project',
     )
     project_goal = models.TextField(
         blank=True, null=True, help_text="Description of the goal of the project."

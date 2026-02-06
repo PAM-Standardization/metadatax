@@ -27,9 +27,16 @@ class Maintenance(models.Model):
     type = models.ForeignKey(
         MaintenanceType, on_delete=models.CASCADE, related_name="maintenances"
     )
-    date = custom_fields.DateField(default=datetime.date.today)
+    date = custom_fields.DateField(
+        default=datetime.date.today,
+        help_text="Date of the maintenance operation",
+    )
 
-    description = models.TextField(blank=True, null=True)
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Description of the maintenance",
+    )
     maintainer = models.ForeignKey(
         Person,
         on_delete=models.PROTECT,

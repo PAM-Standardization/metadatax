@@ -18,7 +18,10 @@ class Equipment(models.Model):
         return f"{self.model} ({self.name or f"#{self.serial_number}"})"
 
     model = models.ForeignKey(EquipmentModel, related_name="equipments", on_delete=models.PROTECT)
-    serial_number = models.CharField(max_length=100)
+    serial_number = models.CharField(
+        max_length=100,
+        help_text="Serial number of the equipment.",
+    )
 
     owner_type = models.ForeignKey(
         ContentType,
@@ -34,7 +37,20 @@ class Equipment(models.Model):
     owner_id = models.PositiveBigIntegerField()
     owner = GenericForeignKey("owner_type", "owner_id")
 
-    purchase_date = custom_fields.DateField(null=True, blank=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
+    purchase_date = custom_fields.DateField(
+        null=True,
+        blank=True,
+        help_text="Date of purchase.",
+    )
+    name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Name of the equipment.",
+    )
 
-    sensitivity = models.FloatField(null=True, blank=True, help_text="Required only for hydrophones")
+    sensitivity = models.FloatField(
+        null=True,
+        blank=True,
+        help_text="Required only for hydrophones",
+    )

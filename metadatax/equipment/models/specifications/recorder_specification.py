@@ -28,7 +28,6 @@ class RecorderSpecification(models.Model):
             info.append(f"({', '.join(storage_info)})")
         return ", ".join(info)
 
-
     def __eq__(self, other: "RecorderSpecification") -> bool:
         return (self.channels_count == other.channels_count and
                 self.storage_slots_count == other.storage_slots_count and
@@ -40,6 +39,19 @@ class RecorderSpecification(models.Model):
         null=True,
         help_text="Number of all the channels on the recorder, even if unused.",
     )
-    storage_slots_count = models.IntegerField(blank=True, null=True)
-    storage_maximum_capacity = custom_fields.ByteField(blank=True, null=True)
-    storage_type = models.CharField(max_length=100, blank=True, null=True)
+    storage_slots_count = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="Number of all the storage slots on the recorder.",
+    )
+    storage_maximum_capacity = custom_fields.ByteField(
+        blank=True,
+        null=True,
+        help_text="Maximum storage capacity supported by the recorder.",
+    )
+    storage_type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Type of storage supported by the recorder.",
+    )

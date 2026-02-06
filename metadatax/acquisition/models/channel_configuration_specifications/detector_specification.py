@@ -64,5 +64,13 @@ class ChannelConfigurationDetectorSpecification(models.Model):
         null=True,
         blank=True,
     )
-    filter = models.TextField(blank=True, null=True)
-    configuration = models.TextField(blank=True, null=True)
+    filter = models.TextField(
+        blank=True,
+        null=True,
+        help_text='Filter applied to the configuration',
+    )
+    configuration = models.TextField(
+        blank=True,
+        null=True,
+        help_text='Description of the configuration',
+    )

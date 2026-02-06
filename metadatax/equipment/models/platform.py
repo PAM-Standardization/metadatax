@@ -43,5 +43,14 @@ class Platform(models.Model):
         PlatformType, on_delete=models.PROTECT, related_name="platforms"
     )
 
-    name = models.CharField(max_length=100, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Name of the platform",
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Description of the platform",
+    )

@@ -41,6 +41,19 @@ class AcousticDetectorSpecification(models.Model):
 
     detected_labels = models.ManyToManyField(Label, related_name="acoustic_detectors")
 
-    min_frequency = models.IntegerField(blank=True, null=True)
-    max_frequency = models.IntegerField(blank=True, null=True)
-    algorithm_name = models.CharField(max_length=100, blank=True, null=True)
+    min_frequency = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text='Minimum frequency of the detections (in Hertz).',
+    )
+    max_frequency = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text='Maximum frequency of the detections (in Hertz).',
+    )
+    algorithm_name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text='Name of the algorithm used by the detector.',
+    )
