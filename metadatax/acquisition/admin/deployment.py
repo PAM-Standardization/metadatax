@@ -74,7 +74,7 @@ class DeploymentForm(forms.ModelForm):
 @admin.register(Deployment)
 class DeploymentAdmin(ExtendedModelAdmin):
     """Deployment presentation in DjangoAdmin"""
-    actions = ["export",]
+    actions = ["export", ]
 
     serializer = DeploymentExportSerializer
     form = DeploymentForm
@@ -98,11 +98,6 @@ class DeploymentAdmin(ExtendedModelAdmin):
     search_fields = [
         "name",
         "project__name",
-        "contacts__contact__first_name",
-        "contacts__contact__last_name",
-        "contacts__contact__mail",
-        "contacts__institution__name",
-        "contacts__institution__mail",
     ]
     list_filter = [
         "project__accessibility",
