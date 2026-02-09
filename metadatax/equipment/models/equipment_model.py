@@ -33,7 +33,7 @@ class EquipmentModelSpecification(models.Model):
         ]
 
     def __str__(self):
-        return self.specification
+        return f"{self.model.__str__()} - {self.specification_type.model} [{self.specification_id}]"
 
     model = models.ForeignKey(EquipmentModel, on_delete=models.CASCADE, related_name="specification_relations")
 
@@ -42,10 +42,10 @@ class EquipmentModelSpecification(models.Model):
         on_delete=models.PROTECT,
         limit_choices_to={
             "model__in": [
-                "AcousticDetectorSpecification",
-                "HydrophoneSpecification",
-                "RecorderSpecification",
-                "StorageSpecification",
+                "AcousticDetectorSpecification".lower(),
+                "HydrophoneSpecification".lower(),
+                "RecorderSpecification".lower(),
+                "StorageSpecification".lower(),
             ]
         },
     )
