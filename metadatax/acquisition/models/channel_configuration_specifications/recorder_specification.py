@@ -56,6 +56,7 @@ class ChannelConfigurationRecorderSpecification(models.Model):
         on_delete=models.PROTECT,
         related_name="channel_configuration_hydrophone_specifications",
         validators=[validate_hydrophone],
+        help_text="If the hydrophone is integrated into the recorder, select it as hydrophone as well."
     )
     recording_formats = models.ManyToManyField(
         FileFormat, related_name="channel_configuration_recorder_specifications"

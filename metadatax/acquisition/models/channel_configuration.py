@@ -88,7 +88,7 @@ class ChannelConfiguration(models.Model):
         max_length=50,
         null=True,
         blank=True,
-        help_text="Timezone of the recording.",
+        help_text="Timezone of the recording (ISO format, eg: +00:00).",
     )
     extra_information = models.TextField(blank=True, null=True)
     record_start_date = custom_fields.DateTimeField(
