@@ -3,6 +3,8 @@ import io
 from typing import Optional
 
 from django import forms
+from django.contrib import admin
+from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 from django.core import validators
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -38,7 +40,12 @@ class ChannelConfigurationForm(forms.ModelForm):
         widget=AdminAutocompleteSelectWidget()
     )
     recording_formats = ChannelConfigurationRecorderSpecification._meta.get_field("recording_formats").formfield(
-        widget=AdminAutocompleteSelectMultipleWidget(),
+        widget=RelatedFieldWidgetWrapper(
+            widget=AdminAutocompleteSelectMultipleWidget(),
+            rel=ChannelConfigurationRecorderSpecification._meta.get_field("recording_formats").remote_field,
+            admin_site=admin.site,
+            can_add_related=True,
+        )
     )
     sampling_frequency = ChannelConfigurationRecorderSpecification._meta.get_field("sampling_frequency").formfield()
     sample_depth = ChannelConfigurationRecorderSpecification._meta.get_field("sample_depth").formfield()
@@ -53,9 +60,21 @@ class ChannelConfigurationForm(forms.ModelForm):
         widget=AdminAutocompleteSelectWidget(),
     )
     output_formats = ChannelConfigurationDetectorSpecification._meta.get_field("output_formats").formfield(
-        widget=AdminAutocompleteSelectMultipleWidget(),
+        widget=RelatedFieldWidgetWrapper(
+            widget=AdminAutocompleteSelectMultipleWidget(),
+            rel=ChannelConfigurationDetectorSpecification._meta.get_field("output_formats").remote_field,
+            admin_site=admin.site,
+            can_add_related=True,
+        )
     )
-    labels = ChannelConfigurationDetectorSpecification._meta.get_field("labels").formfield()
+    labels = ChannelConfigurationDetectorSpecification._meta.get_field("labels").formfield(
+        widget=RelatedFieldWidgetWrapper(
+            widget=AdminAutocompleteSelectMultipleWidget(),
+            rel=ChannelConfigurationDetectorSpecification._meta.get_field("labels").remote_field,
+            admin_site=admin.site,
+            can_add_related=True,
+        )
+    )
     min_frequency = ChannelConfigurationDetectorSpecification._meta.get_field("min_frequency").formfield()
     max_frequency = ChannelConfigurationDetectorSpecification._meta.get_field("max_frequency").formfield()
     filter = ChannelConfigurationDetectorSpecification._meta.get_field("filter").formfield()
