@@ -1,9 +1,12 @@
 from typing import Optional
 
 from django import forms
+from django.contrib import admin
+from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import QuerySet, Q
+from django_extension.forms.widgets import AdminAutocompleteSelectMultipleWidget
 
 from metadatax.equipment.models import EquipmentModel, StorageSpecification, RecorderSpecification, \
     EquipmentModelSpecification, HydrophoneSpecification, AcousticDetectorSpecification
@@ -40,7 +43,15 @@ class EquipmentModelForm(forms.ModelForm):
     noise_floor = HydrophoneSpecification._meta.get_field("noise_floor").formfield()
 
     # Acoustic Detector
-    detected_labels = AcousticDetectorSpecification._meta.get_field("detected_labels").formfield(required=False)
+    detected_labels = AcousticDetectorSpecification._meta.get_field("detected_labels").formfield(
+        required=False,
+        widget=RelatedFieldWidgetWrapper(
+            widget=AdminAutocompleteSelectMultipleWidget(),
+            rel=AcousticDetectorSpecification._meta.get_field("detected_labels").remote_field,
+            admin_site=admin.site,
+            can_add_related=True,
+        )
+    )
     min_frequency = AcousticDetectorSpecification._meta.get_field("min_frequency").formfield()
     max_frequency = AcousticDetectorSpecification._meta.get_field("max_frequency").formfield()
     algorithm_name = AcousticDetectorSpecification._meta.get_field("algorithm_name").formfield()
@@ -110,8 +121,8 @@ class EquipmentModelForm(forms.ModelForm):
             data = self.cleaned_data.get(field)
             if isinstance(data, QuerySet) and not data.exists():
                 continue
-            should_exists = True
-            models_fields[field] = self.cleaned_data.get(field)
+                should_exists = True
+                models_fields[field] = self.cleaned_data.get(field)
 
         rel: QuerySet[EquipmentModelSpecification] = self.instance.specification_relations.filter(
             specification_type__model=model.__name__.lower())
