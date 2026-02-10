@@ -103,9 +103,15 @@ class EquipmentModelForm(forms.ModelForm):
         should_exists = False
         models_fields = {}
         for field in self.cleaned_data:
-            if field in model.__dict__ and self.cleaned_data.get(field) is not None:
-                should_exists = True
-                models_fields[field] = self.cleaned_data.get(field)
+            if field not in model.__dict__:
+                continue
+            if self.cleaned_data.get(field) is None:
+                continue
+            data = self.cleaned_data.get(field)
+            if isinstance(data, QuerySet) and not data.exists():
+                continue
+            should_exists = True
+            models_fields[field] = self.cleaned_data.get(field)
 
         rel: QuerySet[EquipmentModelSpecification] = self.instance.specification_relations.filter(
             specification_type__model=model.__name__.lower())
