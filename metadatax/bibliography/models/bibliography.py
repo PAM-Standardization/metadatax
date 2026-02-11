@@ -1,58 +1,22 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models import Q
+from django.db.models import QuerySet, Q
 
 from metadatax.utils import custom_fields
-from .bibliography_article import BibliographyArticle
-from .bibliography_conference import BibliographyConference
-from .bibliography_poster import BibliographyPoster
-from .bibliography_software import BibliographySoftware
-from .tag import Tag
+from metadatax.common.models import Tag
+from .__enums__ import BibliographyStatus, BibliographyType
 
 
 class Bibliography(models.Model):
     """Bibliography model"""
 
-    class Status(models.TextChoices):
-        """Bibliography publication status"""
-
-        UPCOMING = ("U", "Upcoming")
-        PUBLISHED = ("P", "Published")
-
-    class Type(models.TextChoices):
-        """Type of bibliography"""
-
-        SOFTWARE = ("S", "Software")
-        ARTICLE = ("A", "Article")
-        CONFERENCE = ("C", "Conference")
-        POSTER = ("P", "Poster")
-
     class Meta:
+        db_table = 'mx_bibliography_bibliography'
         verbose_name_plural = "Bibliography"
         constraints = [
             models.CheckConstraint(
                 name="Published bibliography has a publication date",
                 check=(Q(status="P", publication_date__isnull=False) | ~Q(status="P")),
-            ),
-            models.CheckConstraint(
-                name="Article has required information",
-                check=(~Q(type="A") & Q(article_information__isnull=True))
-                | Q(type="A", article_information__isnull=False),
-            ),
-            models.CheckConstraint(
-                name="Software has required information",
-                check=(~Q(type="S") & Q(software_information__isnull=True))
-                | Q(type="S", software_information__isnull=False),
-            ),
-            models.CheckConstraint(
-                name="Conference has required information",
-                check=(~Q(type="C") & Q(conference_information__isnull=True))
-                | Q(type="C", conference_information__isnull=False)
-                | Q(type="P"),
-            ),
-            models.CheckConstraint(
-                name="Poster has required information",
-                check=(~Q(type="P") & Q(poster_information__isnull=True))
-                | Q(type="P", poster_information__isnull=False),
             ),
         ]
 
@@ -61,10 +25,9 @@ class Bibliography(models.Model):
 
     title = models.CharField(max_length=255)
     doi = models.CharField(max_length=255, null=True, blank=True, unique=True)
-    tags = models.ManyToManyField(Tag, blank=True)
 
     status = models.CharField(
-        choices=Status.choices,
+        choices=BibliographyStatus.choices,
         max_length=1,
     )
     publication_date = custom_fields.DateField(
@@ -72,46 +35,47 @@ class Bibliography(models.Model):
     )
 
     type = models.CharField(
-        choices=Type.choices,
+        choices=BibliographyType.choices,
         max_length=1,
     )
 
-    software_information = models.OneToOneField(
-        BibliographySoftware,
-        related_name="bibliography",
-        on_delete=models.PROTECT,
+    # Article
+    journal = models.CharField(max_length=255, null=True, blank=True)
+    volumes = models.CharField(max_length=255, null=True, blank=True)
+    pages_from = models.PositiveIntegerField(null=True, blank=True)
+    pages_to = models.PositiveIntegerField(null=True, blank=True)
+    issue_nb = models.PositiveIntegerField(null=True, blank=True)
+    article_nb = models.PositiveIntegerField(null=True, blank=True)
+
+    # Conference
+    conference_name = models.CharField(max_length=255, null=True, blank=True)
+    conference_location = models.CharField(
+        max_length=255,
         null=True,
         blank=True,
-        help_text="Each information is dedicated to one file.",
+        help_text="format: {City}, {Country}",
     )
-    article_information = models.OneToOneField(
-        BibliographyArticle,
-        related_name="bibliography",
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        help_text="Each information is dedicated to one file.",
-    )
-    conference_information = models.ForeignKey(
-        BibliographyConference,
-        related_name="bibliography",
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-    )
-    poster_information = models.OneToOneField(
-        BibliographyPoster,
-        related_name="bibliography",
-        on_delete=models.PROTECT,
-        null=True,
-        blank=True,
-        help_text="Each information is dedicated to one file.",
-    )
+    conference_abstract_book_url = models.URLField(null=True, blank=True)
+
+    # Poster
+    poster_url = models.URLField(null=True, blank=True)
+
+    # Software
+    publication_place = models.CharField(max_length=255, null=True, blank=True)
+    repository_url = models.URLField(null=True, blank=True)
 
     @property
     def publication(self):
         """Get publication status and date when apply"""
-        status = Bibliography.Status(self.status).label
-        if self.status == Bibliography.Status.PUBLISHED:
+        status = BibliographyStatus(self.status).label
+        if self.status == BibliographyStatus.PUBLISHED:
             return f"{status} {self.publication_date}"
         return status
+
+    @property
+    def tags(self) -> QuerySet[Tag]:
+        """Get related tags"""
+        return Tag.objects.filter(
+            tagged_items__item_type=ContentType.objects.get_for_model(Bibliography),
+            tagged_items__item_id=self.pk,
+        )

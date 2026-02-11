@@ -1,3 +1,3 @@
-from .contact import ContactViewSet
-from .contact_role import ContactRoleViewSet
 from .institution import InstitutionViewSet
+from .person import PersonViewSet
+from .team import TeamViewSet

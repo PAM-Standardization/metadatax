@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.equipment.models import Maintenance
 
 
 @admin.register(Maintenance)
-class MaintenanceAdmin(admin.ModelAdmin):
+class MaintenanceAdmin(ExtendedModelAdmin):
     list_display = [
         "type",
         "date",

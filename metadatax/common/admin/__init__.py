@@ -1,3 +1,4 @@
-from .contact import ContactAdmin
-from .contact_role import ContactRoleAdmin
 from .institution import InstitutionAdmin
+from .person import PersonAdmin
+from .tag import TagAdmin
+from .team import TeamAdmin

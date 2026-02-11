@@ -7,7 +7,7 @@ class StorageSpecification(models.Model):
     """Storage Specification model"""
 
     class Meta:
-        db_table = "metadatax_equipment_storagespecification"
+        db_table = "mx_equipment_storagespecification"
         unique_together = ("capacity", "type")
         ordering = ("-capacity",)
 
@@ -19,5 +19,16 @@ class StorageSpecification(models.Model):
             info.append(self.type)
         return ", ".join(info)
 
-    capacity = custom_fields.ByteField()
-    type = models.CharField(max_length=100, blank=True, null=True)
+    def __eq__(self, other: "StorageSpecification") -> bool:
+        return (self.capacity == other.capacity and
+                self.type == other.type)
+
+    capacity = custom_fields.ByteField(
+        help_text="Capacity of the storage.",
+    )
+    type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Type of storage.",
+    )

@@ -1,9 +1,9 @@
 from django.db import models
 
 from metadatax.bibliography.models import Bibliography
-from metadatax.common.models import Accessibility, ContactRole
+from metadatax.common.models import Accessibility, ContactRelation
 from metadatax.utils import custom_fields
-from .financing import Financing
+from .__enums__ import Financing
 from .project_type import ProjectType
 
 
@@ -12,7 +12,7 @@ class Project(models.Model):
 
     class Meta:
         ordering = ["name"]
-        db_table = "metadatax_acquisition_project"
+        db_table = "mx_acquisition_project"
 
     def __str__(self):
         return self.name
@@ -21,10 +21,10 @@ class Project(models.Model):
         max_length=255, unique=True, help_text="Name of the project"
     )
     contacts = models.ManyToManyField(
-        ContactRole,
-        help_text="Should have at least one 'Main Contact'",
+        ContactRelation,
+        help_text="Should have at least one 'Main Contact'",  # TODO: constraint
         related_name="projects",
-    )  # TODO: constraint
+    )
 
     accessibility = models.CharField(
         choices=Accessibility.choices,
@@ -32,7 +32,7 @@ class Project(models.Model):
         blank=True,
         null=True,
         help_text="Accessibility level of the data. If the availability is not sure or non-uniform within the project, "
-        "the default value is upon request.",
+                  "the default value is upon request.",
     )
     doi = models.CharField(
         max_length=255,
@@ -47,15 +47,17 @@ class Project(models.Model):
         on_delete=models.SET_NULL,
         related_name="projects",
         help_text="Description of the type of the project "
-        "(e.g., research, marine renewable energies, long monitoring,...).",
+                  "(e.g., research, marine renewable energies, long monitoring,...).",
     )
     start_date = custom_fields.DateField(
         blank=True,
         null=True,
+        help_text='Start date of the project',
     )
     end_date = custom_fields.DateField(
         blank=True,
         null=True,
+        help_text='End date of the project',
     )
     project_goal = models.TextField(
         blank=True, null=True, help_text="Description of the goal of the project."
@@ -68,5 +70,7 @@ class Project(models.Model):
     )
 
     related_bibliography = models.ManyToManyField(
-        Bibliography, related_name="related_projects"
+        Bibliography,
+        related_name="related_projects",
+        blank=True
     )

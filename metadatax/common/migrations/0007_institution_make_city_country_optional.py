@@ -4,9 +4,9 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('common', '0006_clean'),
+        ('metadatax', '0027_reset_indexes')
     ]
 
     operations = [

@@ -1,9 +1,9 @@
 """Acquisition models for metadata app"""
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from metadatax.common.models import Accessibility
-from .audio_properties import AudioProperties
-from .detection_properties import DetectionProperties
 from .file_format import FileFormat
 
 
@@ -11,7 +11,7 @@ class File(models.Model):
     """File"""
 
     class Meta:
-        db_table = "metadatax_data_file"
+        db_table = "mx_data_file"
         ordering = ("filename",)
 
     def __str__(self):
@@ -27,22 +27,6 @@ class File(models.Model):
         related_name="files",
     )
 
-    audio_properties = models.OneToOneField(
-        AudioProperties,
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-        related_name="file",
-        help_text="Each property is dedicated to one file.",
-    )
-    detection_properties = models.OneToOneField(
-        DetectionProperties,
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True,
-        related_name="file",
-        help_text="Each property is dedicated to one file.",
-    )
     storage_location = models.TextField(
         blank=True, null=True, help_text="Description of the path to access the data."
     )
@@ -57,6 +41,19 @@ class File(models.Model):
         null=True,
         default=Accessibility.REQUEST,
         help_text="Accessibility level of the data."
-        " If the availability is not sure or non-uniform within the audio file, "
-        "the default value is upon request.",
+                  " If the availability is not sure or non-uniform within the audio file, "
+                  "the default value is upon request.",
     )
+
+    property_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.PROTECT,
+        limit_choices_to={
+            "model__in": [
+                "data.AudioProperties",
+                "data.DetectionProperties",
+            ]
+        },
+    )
+    property_id = models.PositiveBigIntegerField()
+    property = GenericForeignKey("property_type", "property_id")

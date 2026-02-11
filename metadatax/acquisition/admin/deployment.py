@@ -10,10 +10,11 @@ from django.core import validators
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.utils import timezone
 from django.utils.safestring import mark_safe
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.acquisition.models import Deployment, DeploymentMobilePosition
 from metadatax.acquisition.serializers import DeploymentExportSerializer
-from metadatax.utils import JSONExportModelAdmin
+from .inlines import DeploymentContactInline
 
 
 class DeploymentForm(forms.ModelForm):
@@ -53,7 +54,7 @@ class DeploymentForm(forms.ModelForm):
             return 0
 
     def create_mobile_platform(
-        self, instance, file, headers
+            self, instance, file, headers
     ) -> DeploymentMobilePosition:
         tz = timezone.get_current_timezone()
         return DeploymentMobilePosition(
@@ -71,10 +72,10 @@ class DeploymentForm(forms.ModelForm):
 
 
 @admin.register(Deployment)
-class DeploymentAdmin(JSONExportModelAdmin):
+class DeploymentAdmin(ExtendedModelAdmin):
     """Deployment presentation in DjangoAdmin"""
+    actions = ["export", ]
 
-    model = Deployment
     serializer = DeploymentExportSerializer
     form = DeploymentForm
     list_display = [
@@ -97,11 +98,6 @@ class DeploymentAdmin(JSONExportModelAdmin):
     search_fields = [
         "name",
         "project__name",
-        "contacts__contact__first_name",
-        "contacts__contact__last_name",
-        "contacts__contact__mail",
-        "contacts__institution__name",
-        "contacts__institution__mail",
     ]
     list_filter = [
         "project__accessibility",
@@ -113,7 +109,6 @@ class DeploymentAdmin(JSONExportModelAdmin):
                 "fields": [
                     "name",
                     "project",
-                    "contacts",
                 ]
             },
         ),
@@ -156,6 +151,9 @@ class DeploymentAdmin(JSONExportModelAdmin):
         "site",
         "platform",
         "campaign",
+    ]
+    inlines = [
+        DeploymentContactInline
     ]
 
     @admin.display(description="Contacts")

@@ -1,6 +1,7 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
-from metadatax.common.models import Institution
 from metadatax.utils import custom_fields
 from .equipment_model import EquipmentModel
 
@@ -10,21 +11,46 @@ class Equipment(models.Model):
 
     class Meta:
         unique_together = ["model", "serial_number"]
-        db_table = "metadatax_equipment_equipment"
+        db_table = "mx_equipment_equipment"
         ordering = ("name", "model", "serial_number")
 
     def __str__(self):
-        if self.name is not None:
-            return f"{self.name} (owner: {self.owner})"
-        return f"{self.model} ({self.serial_number} ; owner: {self.owner})"
+        return f"{self.model} ({self.name or f"#{self.serial_number}"})"
 
     model = models.ForeignKey(EquipmentModel, related_name="equipments", on_delete=models.PROTECT)
-    serial_number = models.CharField(max_length=100)
-    owner = models.ForeignKey(
-        Institution, on_delete=models.PROTECT, related_name="owned_equipments"
+    serial_number = models.CharField(
+        max_length=100,
+        help_text="Serial number of the equipment.",
     )
 
-    purchase_date = custom_fields.DateField(null=True, blank=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
+    owner_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.PROTECT,
+        limit_choices_to={
+            "model__in": [
+                "common.Person",
+                "common.Team",
+                "common.Institution",
+            ]
+        },
+    )
+    owner_id = models.PositiveBigIntegerField()
+    owner = GenericForeignKey("owner_type", "owner_id")
 
-    sensitivity = models.FloatField(null=True, blank=True, help_text="Required only for hydrophones")
+    purchase_date = custom_fields.DateField(
+        null=True,
+        blank=True,
+        help_text="Date of purchase.",
+    )
+    name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Name of the equipment.",
+    )
+
+    sensitivity = models.FloatField(
+        null=True,
+        blank=True,
+        help_text="Required only for hydrophones",
+    )

@@ -1,16 +1,18 @@
 from typing import Optional
 
 from django import forms
+from django.contrib import admin
+from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import QuerySet, Q
+from django_extension.forms.widgets import AdminAutocompleteSelectMultipleWidget
 
 from metadatax.equipment.models import EquipmentModel, StorageSpecification, RecorderSpecification, \
     EquipmentModelSpecification, HydrophoneSpecification, AcousticDetectorSpecification
 
 
 class EquipmentModelForm(forms.ModelForm):
-
     # Additional typing
     instance: Optional[EquipmentModel]
 
@@ -41,7 +43,15 @@ class EquipmentModelForm(forms.ModelForm):
     noise_floor = HydrophoneSpecification._meta.get_field("noise_floor").formfield()
 
     # Acoustic Detector
-    detected_labels = AcousticDetectorSpecification._meta.get_field("detected_labels").formfield()
+    detected_labels = AcousticDetectorSpecification._meta.get_field("detected_labels").formfield(
+        required=False,
+        widget=RelatedFieldWidgetWrapper(
+            widget=AdminAutocompleteSelectMultipleWidget(),
+            rel=AcousticDetectorSpecification._meta.get_field("detected_labels").remote_field,
+            admin_site=admin.site,
+            can_add_related=True,
+        )
+    )
     min_frequency = AcousticDetectorSpecification._meta.get_field("min_frequency").formfield()
     max_frequency = AcousticDetectorSpecification._meta.get_field("max_frequency").formfield()
     algorithm_name = AcousticDetectorSpecification._meta.get_field("algorithm_name").formfield()
@@ -54,19 +64,22 @@ class EquipmentModelForm(forms.ModelForm):
         rels = self.instance.specification_relations.all()
 
         if rels.filter(specification_type__model=StorageSpecification.__name__.lower()).exists():
-            spec: StorageSpecification = rels.get(specification_type__model=StorageSpecification.__name__.lower()).specification
+            spec: StorageSpecification = rels.get(
+                specification_type__model=StorageSpecification.__name__.lower()).specification
             self.fields['capacity'].initial = spec.capacity
             self.fields['type'].initial = spec.type
 
         if rels.filter(specification_type__model=RecorderSpecification.__name__.lower()).exists():
-            spec: RecorderSpecification = rels.get(specification_type__model=RecorderSpecification.__name__.lower()).specification
+            spec: RecorderSpecification = rels.get(
+                specification_type__model=RecorderSpecification.__name__.lower()).specification
             self.fields['channels_count'].initial = spec.channels_count
             self.fields['storage_slots_count'].initial = spec.storage_slots_count
             self.fields['storage_maximum_capacity'].initial = spec.storage_maximum_capacity
             self.fields['storage_type'].initial = spec.storage_type
 
         if rels.filter(specification_type__model=HydrophoneSpecification.__name__.lower()).exists():
-            spec: HydrophoneSpecification = rels.get(specification_type__model=HydrophoneSpecification.__name__.lower()).specification
+            spec: HydrophoneSpecification = rels.get(
+                specification_type__model=HydrophoneSpecification.__name__.lower()).specification
             self.fields['directivity'].initial = spec.directivity
             self.fields['operating_min_temperature'].initial = spec.operating_min_temperature
             self.fields['operating_max_temperature'].initial = spec.operating_max_temperature
@@ -79,7 +92,8 @@ class EquipmentModelForm(forms.ModelForm):
             self.fields['noise_floor'].initial = spec.noise_floor
 
         if rels.filter(specification_type__model=AcousticDetectorSpecification.__name__.lower()).exists():
-            spec: AcousticDetectorSpecification = rels.get(specification_type__model=AcousticDetectorSpecification.__name__.lower()).specification
+            spec: AcousticDetectorSpecification = rels.get(
+                specification_type__model=AcousticDetectorSpecification.__name__.lower()).specification
             self.fields['detected_labels'].initial = spec.detected_labels.all()
             self.fields['min_frequency'].initial = spec.min_frequency
             self.fields['max_frequency'].initial = spec.max_frequency
@@ -96,15 +110,22 @@ class EquipmentModelForm(forms.ModelForm):
         return self.instance
 
     @transaction.atomic
-    def save_model(self, model: type):
+    def save_model(self, model: type, commit=True):
         should_exists = False
         models_fields = {}
         for field in self.cleaned_data:
-            if field in model.__dict__ and self.cleaned_data.get(field) is not None:
+            if field not in model.__dict__:
+                continue
+            if self.cleaned_data.get(field) is None:
+                continue
+            data = self.cleaned_data.get(field)
+            if isinstance(data, QuerySet) and not data.exists():
+                continue
                 should_exists = True
                 models_fields[field] = self.cleaned_data.get(field)
 
-        rel: QuerySet[EquipmentModelSpecification] = self.instance.specification_relations.filter(specification_type__model=model.__name__.lower())
+        rel: QuerySet[EquipmentModelSpecification] = self.instance.specification_relations.filter(
+            specification_type__model=model.__name__.lower())
         spec = rel.first() if rel.exists() else None
         other_rels = EquipmentModelSpecification.objects.filter(
             specification_type__model=model.__name__.lower(),
@@ -119,6 +140,7 @@ class EquipmentModelForm(forms.ModelForm):
                     specification.detected_labels.add(label)
             else:
                 specification = model.objects.create(**models_fields)
+            self.instance.save()
             EquipmentModelSpecification.objects.create(
                 model=self.instance,
                 specification_type=ContentType.objects.get_for_model(model),
@@ -129,7 +151,8 @@ class EquipmentModelForm(forms.ModelForm):
             for field in models_fields:
                 if model == AcousticDetectorSpecification and field == 'detected_labels':
                     s: AcousticDetectorSpecification
-                    for label in spec.specification.detected_labels.filter(~Q(id__in=models_fields[field].values_list('id', flat=True))):
+                    for label in spec.specification.detected_labels.filter(
+                            ~Q(id__in=models_fields[field].values_list('id', flat=True))):
                         spec.specification.detected_labels.remove(label)
                     for label in models_fields[field]:
                         if not spec.specification.detected_labels.filter(id=label.id).exists():
@@ -143,8 +166,11 @@ class EquipmentModelForm(forms.ModelForm):
             if not other_rels.exists():
                 spec.delete()
 
+        if not commit:
+            return
+
         if not should_exists:
-            if spec is None: # No changes
+            if spec is None:  # No changes
                 return
             return remove()
 

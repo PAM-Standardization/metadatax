@@ -7,7 +7,7 @@ class RecorderSpecification(models.Model):
     """Recorder Specification model"""
 
     class Meta:
-        db_table = "metadatax_equipment_recorderspecification"
+        db_table = "mx_equipment_recorderspecification"
         unique_together = (
             "channels_count",
             "storage_slots_count",
@@ -28,11 +28,30 @@ class RecorderSpecification(models.Model):
             info.append(f"({', '.join(storage_info)})")
         return ", ".join(info)
 
+    def __eq__(self, other: "RecorderSpecification") -> bool:
+        return (self.channels_count == other.channels_count and
+                self.storage_slots_count == other.storage_slots_count and
+                self.storage_maximum_capacity == other.storage_maximum_capacity and
+                self.storage_type == other.storage_type)
+
     channels_count = models.IntegerField(
         blank=True,
         null=True,
         help_text="Number of all the channels on the recorder, even if unused.",
     )
-    storage_slots_count = models.IntegerField(blank=True, null=True)
-    storage_maximum_capacity = custom_fields.ByteField(blank=True, null=True)
-    storage_type = models.CharField(max_length=100, blank=True, null=True)
+    storage_slots_count = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text="Number of all the storage slots on the recorder.",
+    )
+    storage_maximum_capacity = custom_fields.ByteField(
+        blank=True,
+        null=True,
+        help_text="Maximum storage capacity supported by the recorder.",
+    )
+    storage_type = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text="Type of storage supported by the recorder.",
+    )

@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.ontology.models import Sound
 
 
 @admin.register(Sound)
-class SoundAdmin(admin.ModelAdmin):
+class SoundAdmin(ExtendedModelAdmin):
     list_display = [
         "english_name",
         "french_name",

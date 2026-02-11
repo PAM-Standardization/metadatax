@@ -9,12 +9,7 @@ class EquipmentViewSet(
     mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.ReadOnlyModelViewSet
 ):
     queryset = Equipment.objects.select_related(
-        "owner",
-        "provider",
-        "storage_specification",
-        "recorder_specification",
-        "hydrophone_specification",
-        "acoustic_detector_specification",
+        "model",
     )
     serializer_class = EquipmentSerializer
     permission_classes = [

@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from metadatax.common.models import ContactRole
+from metadatax.common.models import ContactRelation
 from metadatax.equipment.models import Platform
 from metadatax.utils import custom_fields
 from .campaign import Campaign
@@ -16,7 +16,7 @@ class Deployment(models.Model):
     class Meta:
         unique_together = ["project", "name", "site", "campaign"]
         ordering = ["project", "name"]
-        db_table = "metadatax_acquisition_deployment"
+        db_table = "mx_acquisition_deployment"
 
     def __str__(self):
         if self.name is not None:
@@ -50,8 +50,8 @@ class Deployment(models.Model):
         blank=True,
         null=True,
         help_text="Conceptual location. "
-        "A site may group together several platforms in relatively close proximity, "
-        "or describes a location where regular deployments are carried out.",
+                  "A site may group together several platforms in relatively close proximity, "
+                  "or describes a location where regular deployments are carried out.",
     )
     campaign = models.ForeignKey(
         to=Campaign,
@@ -100,7 +100,7 @@ class Deployment(models.Model):
         help_text="Name of the vehicle associated with the recovery.",
     )
     contacts = models.ManyToManyField(
-        to=ContactRole,
+        to=ContactRelation,
         related_name="deployments",
         blank=True,
         help_text="Contacts related to the deployment.",
@@ -120,3 +120,4 @@ class Deployment(models.Model):
             raise ValidationError(
                 "Your deployment must be identified by either a name, campaign and/or site"
             )
+

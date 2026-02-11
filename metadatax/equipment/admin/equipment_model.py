@@ -1,94 +1,45 @@
-from typing import Optional, Callable
-from django import forms
-from django.db import  models
 from django.contrib import admin
-from django.contrib.contenttypes.models import ContentType
-from django.db.models import Model, QuerySet
+from django.db.models import Q, Exists, OuterRef
 from django.utils.safestring import mark_safe
-from rest_framework.reverse import reverse
-from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
+from django_admin_multiple_choice_list_filter.list_filters import MultipleChoiceListFilter
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.equipment.forms.equipment_model import EquipmentModelForm
 from metadatax.equipment.models import EquipmentModel, AcousticDetectorSpecification, HydrophoneSpecification, \
-    RecorderSpecification, StorageSpecification, EquipmentModelSpecification
+    RecorderSpecification, StorageSpecification, HydrophoneDirectivity, EquipmentModelSpecification
 from metadatax.equipment.serializers import EquipmentModelSerializer
-from metadatax.utils import JSONExportModelAdmin
 
 
-class AbstractSpecificationAdmin(admin.ModelAdmin):
-    list_display = [
-        'id',
-        '__str__',
-        'usage'
-    ]
-    readonly_fields = (
-        'usage',
-    )
+class SpecificationTypeFilter(MultipleChoiceListFilter):
+    title = _("Type")
+    parameter_name = "type__in"
 
-    class Meta:
-        abstract = True
+    def lookups(self, request, model_admin):
+        return [
+            (StorageSpecification.__name__.lower(), "Storage"),
+            (RecorderSpecification.__name__.lower(), "Recorder"),
+            (HydrophoneSpecification.__name__.lower(), "Hydrophone"),
+            (AcousticDetectorSpecification.__name__.lower(), "Acoustic detector"),
+        ]
 
-    @staticmethod
-    def _get_edit_link(obj: Model, to_str: Callable[[Model], str] = lambda x: str(x)):
-        app = obj._meta.app_label
-        model = obj._meta.model_name
-        view = f"admin:{app}_{model}_change"
-        link = reverse(view, args=[obj.pk])
-        return format_html('<a href="{}">{}</a>', link, to_str(obj))
-
-    @admin.display(description="Usages")
-    def usage(self, obj) -> Optional[str]:
-        rels = EquipmentModelSpecification.objects.filter(
-            specification_type__model=self.model.__name__.lower(),
-            specification_id=obj.id
-        )
-        if not rels.exists():
-            return None
-        return mark_safe("<br/>".join([
-            self._get_edit_link(rel)
-            for rel in rels
-        ]))
-
-
-
-@admin.register(EquipmentModelSpecification)
-class EquipmentModelSpecificationModelAdmin(admin.ModelAdmin):
-    list_display = [
-        'id',
-        'model',
-        'specification'
-    ]
-    readonly_fields = (
-        'specification',
-    )
-    list_filter = [
-        "model",
-    ]
-
-
-@admin.register(RecorderSpecification)
-class RecorderSpecificationModelAdmin(AbstractSpecificationAdmin):
-    pass
-
-
-@admin.register(StorageSpecification)
-class StorageSpecificationModelAdmin(AbstractSpecificationAdmin):
-    pass
-
-
-@admin.register(HydrophoneSpecification)
-class HydrophoneSpecificationModelAdmin(AbstractSpecificationAdmin):
-    pass
-
-
-@admin.register(AcousticDetectorSpecification)
-class AcousticDetectorSpecificationModelAdmin(AbstractSpecificationAdmin):
-    pass
+    def queryset(self, request, queryset):
+        if self.value() is None:
+            return queryset
+        filters = Q()
+        for model in self.value_as_list():
+            filters  = filters & Exists(
+                EquipmentModelSpecification.objects.filter(
+                    model_id=OuterRef('pk'),
+                    specification_type__model=model
+                )
+            )
+        return queryset.filter(filters)
 
 
 @admin.register(EquipmentModel)
-class EquipmentModelAdmin(JSONExportModelAdmin):
-    model = EquipmentModel
+class EquipmentModelAdmin(ExtendedModelAdmin):
+    actions = ["export",]
     serializer = EquipmentModelSerializer
     form = EquipmentModelForm
     list_display = [
@@ -109,7 +60,7 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         "specification_relations__specification_type__model",
     ]
     list_filter = [
-        "specification_relations__specification_type__model",
+        SpecificationTypeFilter,
     ]
     autocomplete_fields = [
         "provider",
@@ -131,6 +82,7 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         (
             "Internal Storage",
             {
+                "classes": ("collapse",),
                 "fields": [
                     "capacity",
                     "type"
@@ -140,6 +92,7 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         (
             "Recorder",
             {
+                "classes": ("collapse",),
                 "fields": [
                     "channels_count",
                     "storage_slots_count",
@@ -151,6 +104,7 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         (
             "Hydrophone",
             {
+                "classes": ("collapse",),
                 "fields": [
                     "directivity",
                     "operating_min_temperature",
@@ -168,6 +122,7 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         (
             "Acoustic Detector",
             {
+                "classes": ("collapse",),
                 "fields": [
                     "detected_labels",
                     "min_frequency",
@@ -178,80 +133,104 @@ class EquipmentModelAdmin(JSONExportModelAdmin):
         )
     ]
 
-    @staticmethod
-    def _get_edit_link(obj: Model, to_str: Callable[[Model], str] = lambda x: str(x)):
-        app = obj._meta.app_label
-        model = obj._meta.model_name
-        view = f"admin:{app}_{model}_change"
-        link = reverse(view, args=[obj.pk])
-        return format_html('<a href="{}">{}</a>', link, to_str(obj))
-
     @admin.display(description="Internal Storage")
-    def storage(self, obj: EquipmentModel) -> Optional[str]:
+    def storage(self, obj: EquipmentModel) -> str:
         """Display readable information about storage spec"""
-        rels = obj.specification_relations.filter(specification_type__model=StorageSpecification.__name__.lower())
-        if not rels.exists():
+        rels = obj.specification_relations.all()
+        if not rels.filter(specification_type__model=StorageSpecification.__name__.lower()).exists():
             return self.get_empty_value_display()
-        infos = []
-        for rel in rels:
-            spec = rel.specification
-            infos.append("<br/>".join([
-                self._get_edit_link(spec),
-                f"Capacity: {spec.capacity}",
-                f"Type: {spec.type}",
-            ]))
-        return mark_safe("<br/>--<br/>".join(infos))
+        spec: StorageSpecification = rels.get(
+            specification_type__model=StorageSpecification.__name__.lower()).specification
+
+        info  = []
+        if spec.capacity is not None:
+            info.append(f"Capacity: {spec.capacity}")
+        if spec.type is not None:
+            info.append(f"Type: {spec.type}")
+
+        if len(info) > 0:
+            return mark_safe("<br/>".join(info))
+        return mark_safe("<i>No information</i>")
 
     @admin.display(description="Recorder")
-    def recorder(self, obj: EquipmentModel) -> Optional[str]:
+    def recorder(self, obj: EquipmentModel) -> str:
         """Display readable information about recorder spec"""
-        rels = obj.specification_relations.filter(specification_type__model=RecorderSpecification.__name__.lower())
-        if not rels.exists():
+        rels = obj.specification_relations.all()
+        if not rels.filter(specification_type__model=RecorderSpecification.__name__.lower()).exists():
             return self.get_empty_value_display()
-        infos = []
-        for rel in rels:
-            spec = rel.specification
-            infos.append("<br/>".join([
-                self._get_edit_link(spec),
-                f"Channels: {spec.channels_count}",
-                f"Storage: {spec.storage_slots_count} - {spec.storage_maximum_capacity} - {spec.storage_type}",
-            ]))
-        return mark_safe("<br/>--<br/>".join(infos))
+        spec: RecorderSpecification = rels.get(
+            specification_type__model=RecorderSpecification.__name__.lower()
+        ).specification
+
+        info  = []
+        if spec.channels_count is not None:
+            info.append(f"Channels: {spec.channels_count}")
+
+        storage_info = []
+        if spec.storage_slots_count is not None:
+            storage_info.append(f"{spec.storage_slots_count} slots")
+        if spec.storage_maximum_capacity != None:
+            storage_info.append(f"max {spec.storage_maximum_capacity}")
+        if spec.storage_type is not None:
+            storage_info.append(f"{spec.storage_type}")
+        if len(storage_info) > 0:
+            info.append(f"Storage: {" - ".join(storage_info)}")
+
+        if len(info) > 0:
+            return mark_safe("<br/>".join(info))
+        return mark_safe("<i>No information</i>")
 
     @admin.display(description="Hydrophone")
-    def hydrophone(self, obj: EquipmentModel) -> Optional[str]:
+    def hydrophone(self, obj: EquipmentModel) -> str:
         """Display readable information about hydrophone spec"""
-        rels = obj.specification_relations.filter(specification_type__model=HydrophoneSpecification.__name__.lower())
-        if not rels.exists():
+        rels = obj.specification_relations.all()
+        if not rels.filter(specification_type__model=HydrophoneSpecification.__name__.lower()).exists():
             return self.get_empty_value_display()
-        infos = []
-        for rel in rels:
-            spec = rel.specification
-            infos.append("<br/>".join([
-                self._get_edit_link(spec),
-                spec.directivity or 'None',
-                f"Bandwidth: [{spec.min_bandwidth}; {spec.max_bandwidth}]Hz",
-                f"Dynamic range: [{spec.min_dynamic_range}; {spec.max_dynamic_range}] dB SPL RMS or peak",
-                f"Operating T°: [{spec.operating_min_temperature}; {spec.operating_max_temperature}]°C",
-                f"Operating Depth: [{spec.min_operating_depth}; {spec.max_operating_depth}]m",
-                f"Noise floor: [{spec.noise_floor}dB re 1µPa^2/Hz",
-            ]))
-        return mark_safe("<br/>--<br/>".join(infos))
+        spec: HydrophoneSpecification = rels.get(
+            specification_type__model=HydrophoneSpecification.__name__.lower()
+        ).specification
+
+        info  = []
+        if spec.directivity is not None:
+            info.append(HydrophoneDirectivity(spec.directivity).label)
+
+        if spec.min_bandwidth is not None or spec.max_bandwidth is not None:
+            info.append(f"Bandwidth: {spec.min_bandwidth}<{spec.max_bandwidth} Hz")
+
+        if spec.min_dynamic_range is not None or spec.max_dynamic_range is not None:
+            info.append(f"Dynamic range: {spec.min_dynamic_range}<{spec.max_dynamic_range} dB SPL RMS or peak")
+
+        if spec.operating_min_temperature is not None or spec.operating_max_temperature is not None:
+            info.append(f"Operating T°: {spec.operating_min_temperature}<{spec.operating_max_temperature} °C")
+
+        if spec.min_operating_depth is not None or spec.max_operating_depth is not None:
+            info.append(f"Operating Depth: {spec.min_operating_depth}<{spec.max_operating_depth} m")
+
+        if spec.noise_floor is not None:
+            info.append(f"Noise floor: {spec.noise_floor}dB re 1µPa^2/Hz")
+
+        if len(info) > 0:
+            return mark_safe("<br/>".join(info))
+        return mark_safe("<i>No information</i>")
 
     @admin.display(description="Acoustic Detector")
-    def acoustic_detector(self, obj: EquipmentModel) -> Optional[str]:
+    def acoustic_detector(self, obj: EquipmentModel) -> str:
         """Display readable information about acoustic detector spec"""
-        rels = obj.specification_relations.filter(
-            specification_type__model=AcousticDetectorSpecification.__name__.lower())
-        if not rels.exists():
+        rels = obj.specification_relations.all()
+        if not rels.filter(specification_type__model=AcousticDetectorSpecification.__name__.lower()).exists():
             return self.get_empty_value_display()
-        infos = []
-        for rel in rels:
-            spec = rel.specification
-            infos.append("<br/>".join([
-                self._get_edit_link(spec),
-                "Labels: " + ", ".join([str(label) for label in spec.detected_labels.all()]),
-                f"Frequency: [{spec.min_frequency}; {spec.max_frequency}]Hz",
-                f"Algorithm: {spec.algorithm_name}"
-            ]))
-        return mark_safe("<br/>--<br/>".join(infos))
+        spec: AcousticDetectorSpecification = rels.get(
+            specification_type__model=AcousticDetectorSpecification.__name__.lower()).specification
+
+        info  = []
+        if spec.detected_labels.count() > 0:
+            info.append("Labels: " + ", ".join([str(label) for label in spec.detected_labels.all()]))
+
+        if spec.min_frequency is not None or spec.max_frequency is not None:
+            info.append(f"Frequency: [{spec.min_frequency}; {spec.max_frequency}]Hz")
+        if spec.algorithm_name is not None:
+            info.append(f"Algorithm: {spec.algorithm_name}")
+
+        if len(info) > 0:
+            return mark_safe("<br/>".join(info))
+        return mark_safe("<i>No information</i>")

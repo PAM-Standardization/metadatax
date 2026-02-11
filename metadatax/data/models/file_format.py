@@ -3,7 +3,7 @@ from django.db import models
 
 class FileFormat(models.Model):
     class Meta:
-        db_table = "metadatax_data_fileformat"
+        db_table = "mx_data_fileformat"
         ordering = ("name",)
 
     def __str__(self):

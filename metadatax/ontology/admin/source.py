@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.ontology.models import Source
 
 
 @admin.register(Source)
-class SourceAdmin(admin.ModelAdmin):
+class SourceAdmin(ExtendedModelAdmin):
     list_display = [
         "english_name",
         "latin_name",

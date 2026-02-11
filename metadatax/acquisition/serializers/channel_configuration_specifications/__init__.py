@@ -1,0 +1,2 @@
+from .recorder_specification import ChannelConfigurationRecorderSpecificationSerializer
+from .detector_specification import ChannelConfigurationDetectorSpecificationSerializer

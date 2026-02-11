@@ -6,7 +6,7 @@ from metadatax.utils.custom_fields.duration import duration_to_readable_year_mon
 
 class MaintenanceType(models.Model):
     class Meta:
-        db_table = "metadatax_equipment_maintenancetype"
+        db_table = "mx_equipment_maintenancetype"
 
     def __str__(self):
         s = self.name
@@ -14,10 +14,24 @@ class MaintenanceType(models.Model):
             s += f" (every {self._interval})"
         return s
 
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(
+        max_length=255,
+        unique=True,
+        null=True,
+        blank=True,
+        help_text='Name of the maintenance type',
+    )
 
-    description = models.TextField(blank=True, null=True)
-    interval = custom_fields.DurationField(blank=True, null=True)
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text='Description of this type of maintenance',
+    )
+    interval = custom_fields.DurationField(
+        blank=True,
+        null=True,
+        help_text="Recommended interval of execution for this type of maintenance",
+    )
 
     @property
     def _interval(self):

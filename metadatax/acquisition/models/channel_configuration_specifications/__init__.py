@@ -1,0 +1,2 @@
+from .recorder_specification import ChannelConfigurationRecorderSpecification
+from .detector_specification import ChannelConfigurationDetectorSpecification

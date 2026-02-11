@@ -2,13 +2,12 @@ from django import forms
 from django.contrib import admin
 from django.forms import widgets
 from django.utils.safestring import mark_safe
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.acquisition.models import Project, Financing
 from metadatax.acquisition.serializers import ProjectExportSerializer
 from metadatax.common.models import Accessibility
-from metadatax.utils import JSONExportModelAdmin
-from .campaign import CampaignInline
-from .site import SiteInline
+from .inlines import CampaignInline, SiteInline, ProjectContactInline
 
 
 class ProjectForm(forms.ModelForm):
@@ -16,7 +15,7 @@ class ProjectForm(forms.ModelForm):
         widget=widgets.RadioSelect(choices=Accessibility.choices)
     )
 
-    financing = forms.CharField(widget=widgets.RadioSelect(choices=Financing.choices))
+    financing = forms.CharField(required=False, widget=widgets.RadioSelect(choices=Financing.choices))
 
     class Meta:
         model = Project
@@ -24,8 +23,9 @@ class ProjectForm(forms.ModelForm):
 
 
 @admin.register(Project)
-class ProjectAdmin(JSONExportModelAdmin):
+class ProjectAdmin(ExtendedModelAdmin):
     """Project presentation in DjangoAdmin"""
+    actions = ["export",]
 
     serializer = ProjectExportSerializer
     form = ProjectForm
@@ -52,10 +52,11 @@ class ProjectAdmin(JSONExportModelAdmin):
         "project_type",
     ]
     filter_horizontal = [
-        "contacts",
         "related_bibliography",
     ]
+    exclude = ("contacts",)
     inlines = [
+        ProjectContactInline,
         CampaignInline,
         SiteInline,
     ]

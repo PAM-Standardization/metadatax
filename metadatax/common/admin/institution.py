@@ -1,11 +1,11 @@
 from django.contrib import admin
+from django_extension.admin import ExtendedModelAdmin
 
 from metadatax.common.models import Institution
 
 
 @admin.register(Institution)
-class InstitutionAdmin(admin.ModelAdmin):
-
+class InstitutionAdmin(ExtendedModelAdmin):
     list_display = [
         "name",
         "location",

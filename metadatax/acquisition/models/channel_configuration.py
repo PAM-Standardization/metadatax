@@ -1,17 +1,14 @@
 """Acquisition models for metadata app"""
-from datetime import timedelta
 
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models import Min, ExpressionWrapper, Max, F
 
 from metadatax.data.models import File
 from metadatax.equipment.models import Equipment
 from metadatax.utils import custom_fields
-from .channel_configuration_detector_specification import (
+from .__enums__ import ChannelConfigurationStatus
+from .channel_configuration_specifications import (
     ChannelConfigurationDetectorSpecification,
-)
-from .channel_configuration_recorder_specification import (
     ChannelConfigurationRecorderSpecification,
 )
 from .deployment import Deployment
@@ -24,7 +21,7 @@ class ChannelConfiguration(models.Model):
         ordering = [
             "deployment",
         ]
-        db_table = "metadatax_acquisition_channelconfiguration"
+        db_table = "mx_acquisition_channelconfiguration"
 
     def __str__(self):
         return f"{self.deployment} [{self.id}]"
@@ -33,6 +30,14 @@ class ChannelConfiguration(models.Model):
         to=Deployment,
         on_delete=models.CASCADE,
         related_name="channel_configurations",
+    )
+
+    status = models.CharField(
+        choices=ChannelConfigurationStatus.choices,
+        max_length=1,
+        blank=True,
+        null=True,
+        default=ChannelConfigurationStatus.ACTIVE,
     )
 
     recorder_specification = models.OneToOneField(
@@ -79,19 +84,24 @@ class ChannelConfiguration(models.Model):
         validators=[MinValueValidator(0)],
         help_text="Immersion depth of instrument (in positive meters).",
     )
-    timezone = models.CharField(max_length=50, null=True, blank=True)
-    extra_information = models.TextField(blank=True, null=True)
-    harvest_starting_date = custom_fields.DateTimeField(
+    timezone = models.CharField(
+        max_length=50,
         null=True,
         blank=True,
-        help_text="Harvest start date at which the channel configuration was idle to record (in UTC).",
-        verbose_name="Harvest start date (UTC)",
+        help_text="Timezone of the recording (ISO format, eg: +00:00).",
     )
-    harvest_ending_date = custom_fields.DateTimeField(
+    extra_information = models.TextField(blank=True, null=True)
+    record_start_date = custom_fields.DateTimeField(
         null=True,
         blank=True,
-        help_text="Harvest stop date at which the channel configuration finished to record in (in UTC).",
-        verbose_name="Harvest stop date (UTC)",
+        help_text="Date at which the channel configuration started to record (in UTC).",
+        verbose_name="Record start date (UTC)",
+    )
+    record_end_date = custom_fields.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Date at which the channel configuration finished to record in (in UTC).",
+        verbose_name="Record stop date (UTC)",
     )
     files = models.ManyToManyField(
         File,
@@ -100,15 +110,13 @@ class ChannelConfiguration(models.Model):
         related_name="channel_configurations",
     )
 
-    @property
-    def recording_start_date(self):
-        return self.files.aggregate(start=Min('audio_properties__initial_timestamp'))['start']
 
-    @property
-    def recording_end_date(self):
-        return self.files.annotate(
-            fake_end=ExpressionWrapper(
-                F('start') + timedelta(seconds=1) * F('duration'),
-                output_field=models.DateTimeField()
-            )
-        ).aggregate(end=Max('end'))['end']
+class ChannelConfigurationFiles(models.Model):
+    class Meta:
+        unique_together = ["channel_configuration", "file"]
+        db_table = "mx_acquisition_channelconfigurationfiles"
+
+    channel_configuration = models.ForeignKey(
+        ChannelConfiguration, on_delete=models.CASCADE
+    )
+    file = models.ForeignKey(File, on_delete=models.CASCADE)

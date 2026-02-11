@@ -1,14 +1,14 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from .hydrophone_directivity import HydrophoneDirectivity
+from ..__enums__ import HydrophoneDirectivity
 
 
 class HydrophoneSpecification(models.Model):
     """Hydrophone Specification model"""
 
     class Meta:
-        db_table = "metadatax_equipment_hydrophonespecification"
+        db_table = "mx_equipment_hydrophonespecification"
         unique_together = (
             "directivity",
             "operating_min_temperature",
@@ -49,6 +49,19 @@ class HydrophoneSpecification(models.Model):
             info.append(f"({', '.join(optional_info)})")
         return ", ".join(info)
 
+
+    def __eq__(self, other: "HydrophoneSpecification") -> bool:
+        return (self.directivity == other.directivity and
+                self.operating_min_temperature == other.operating_min_temperature and
+                self.operating_max_temperature == other.operating_max_temperature and
+                self.min_bandwidth == other.min_bandwidth and
+                self.max_bandwidth == other.max_bandwidth and
+                self.min_dynamic_range == other.min_dynamic_range and
+                self.max_dynamic_range == other.max_dynamic_range and
+                self.min_operating_depth == other.min_operating_depth and
+                self.max_operating_depth == other.max_operating_depth and
+                self.noise_floor == other.noise_floor)
+
     directivity = models.TextField(
         choices=HydrophoneDirectivity.choices,
         blank=True,
@@ -68,13 +81,13 @@ class HydrophoneSpecification(models.Model):
     min_bandwidth = models.FloatField(
         null=True,
         blank=True,
-        help_text="Lower limiting frequency for a more or less flat response of the hydrophone, "
+        help_text="Lower limiting frequency (in Hz) for a more or less flat response of the hydrophone, "
                   "pre-amplification included if applicable.",
     )
     max_bandwidth = models.FloatField(
         null=True,
         blank=True,
-        help_text="Upper limiting frequency within a more or less flat response of the hydrophone, "
+        help_text="Upper limiting frequency (in Hz) within a more or less flat response of the hydrophone, "
                   "pre-amplification included if applicable.",
     )
     min_dynamic_range = models.FloatField(

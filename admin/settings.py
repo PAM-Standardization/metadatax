@@ -30,8 +30,8 @@ DEBUG = env_debug.lower() == "True".lower()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = (
-    os.environ.get("SECRET_KEY")
-    or "django-insecure-5aw47ol+qg@^43cys*-@#7en6i-)9-n=+l3vm(p1+#l+(3lma+"
+        os.environ.get("SECRET_KEY")
+        or "django-insecure-5aw47ol+qg@^43cys*-@#7en6i-)9-n=+l3vm(p1+#l+(3lma+"
 )
 
 ALLOWED_HOSTS = ["localhost"]
@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "metadatax.acquisition.apps.MetadataxAcquisitionConfig",
     "metadatax.equipment.apps.MetadataxEquipmentConfig",
     "metadatax.ontology.apps.OntologyConfig",
+    "django_extension"
 ]
 
 MIDDLEWARE = [
@@ -157,7 +158,9 @@ OAUTH2_PROVIDER = {
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_FILTER_BACKENDS": ["metadatax.utils.views.ModelFilter"],
+    "DEFAULT_FILTER_BACKENDS": ["django_extension.filters.ModelFilter"],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
 }
 
 AUTH_USER_MODEL = "meta_auth.User"
@@ -169,7 +172,7 @@ AUTHENTICATION_BACKENDS = ["meta_auth.backend.EmailBackend"]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "metadatax",
+        "NAME": os.environ.get("DB_NAME") or "metadatax",
         "USER": os.environ.get("DB_USERNAME"),
         "PASSWORD": os.environ.get("DB_PASSWORD"),
         "HOST": "127.0.0.1",

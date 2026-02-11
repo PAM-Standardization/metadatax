@@ -1,82 +1,26 @@
 """Acquisition metadata administration"""
-import csv
-import io
-from typing import Optional
+import re
 
-from django import forms
-from django.contrib import admin
-from django.core import validators
-from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.contrib import admin, messages
+from django.db import transaction
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django_admin_multiple_choice_list_filter.list_filters import (
     MultipleChoiceListFilter,
 )
+from django_extension.admin import ExtendedModelAdmin
 
+from metadatax.acquisition.forms import ChannelConfigurationForm
 from metadatax.acquisition.models import ChannelConfiguration
 from metadatax.acquisition.serializers import ChannelConfigurationSerializer
-from metadatax.data.models import FileFormat, File, AudioProperties
 from metadatax.equipment.models import Equipment
-from metadatax.utils import JSONExportModelAdmin
 
 
-class ChannelConfigurationForm(forms.ModelForm):
-    csv_audio_file = forms.FileField(
-        help_text="Conflicting files will be ignored. "
-                  "The file should contains the following columns: "
-                  "name* (file name),  "
-                  "format* (file format)," 
-                  "initial_timestamp*, "
-                  "duration*, "
-                  "sampling_frequency*, "
-                  "storage_location, "
-                  "file_size, "
-                  "accessibility (C - Confidential, R - upon Request, O - Open), "
-                  "sample_depth, "
-        ,
-        validators=[validators.FileExtensionValidator(["csv"])],
-        required=False,
-    )
-
-    class Meta:
-        model = ChannelConfiguration
-        fields = "__all__"
-
-    def save(self, commit=True):
-        instance: ChannelConfiguration = super().save(commit=commit)
-        csv_file: Optional[InMemoryUploadedFile] = self.cleaned_data.get(
-            "csv_file", None
-        )
-        if csv_file is None:
-            return instance
-        content = csv_file.read().decode("utf-8")
-        audio_properties: list[AudioProperties] = []
-        files: list[File] = []
-        file: dict
-        for file in csv.DictReader(io.StringIO(content)):
-            _format, _ = FileFormat.objects.get_or_create(
-                name=str(file["format"]).upper()
-            )
-            audio = AudioProperties(
-                sampling_frequency=file["sampling_frequency"],
-                initial_timestamp=file["initial_timestamp"],
-                duration=file["duration"],
-                sample_depth=file["sample_depth"],
-            )
-            audio_properties.append(audio)
-            files.append(
-                File(
-                    filename=file["name"],
-                    format=_format,
-                    audio_properties=audio,
-                    storage_location=file["storage_location"],
-                    file_size=file["file_size"],
-                    accessibility=file["accessibility"],
-                )
-            )
-
-        AudioProperties.objects.bulk_create(audio_properties, ignore_conflicts=True)
-        instance.files.bulk_create(files, ignore_conflicts=True)
-        return instance
+# Source - https://stackoverflow.com/a/4054256
+# Posted by Jeff Triplett
+# Retrieved 2026-01-09, License - CC BY-SA 2.5
 
 
 class ChannelConfigurationTypeFilter(MultipleChoiceListFilter):
@@ -99,27 +43,25 @@ class ChannelConfigurationTypeFilter(MultipleChoiceListFilter):
 
 
 @admin.register(ChannelConfiguration)
-class ChannelConfigurationAdmin(JSONExportModelAdmin):
+class ChannelConfigurationAdmin(ExtendedModelAdmin):
     """ChannelConfiguration presentation in DjangoAdmin"""
 
-    model = ChannelConfiguration
     form = ChannelConfigurationForm
     serializer = ChannelConfigurationSerializer
     list_display = [
         "id",
         "deployment",
-        "recorder_specification",
-        "detector_specification",
+        "display_recorder_specification",
+        "display_detector_specification",
         "list_storages",
         "continuous",
         "duty_cycle_on",
         "duty_cycle_off",
         "instrument_depth",
         "timezone",
-        "harvest_starting_date",
-        "harvest_ending_date",
-        "recording_start_date",
-        "recording_end_date",
+        "status",
+        "record_start_date",
+        "record_end_date",
     ]
     search_fields = [
         "deployment__name",
@@ -131,14 +73,82 @@ class ChannelConfigurationAdmin(JSONExportModelAdmin):
         ChannelConfigurationTypeFilter,
         "deployment__project__accessibility",
         "continuous",
+        "status",
     ]
     filter_horizontal = [
         "storages",
     ]
     autocomplete_fields = [
         "deployment",
-        "recorder_specification",
     ]
+
+    fieldsets = [
+        (None, {
+            'fields': [
+                'deployment',
+                'storages',
+                'continuous',
+                'duty_cycle_on',
+                'duty_cycle_off',
+                'instrument_depth',
+                'timezone',
+                "status",
+                'record_start_date',
+                'record_end_date',
+                'extra_information'
+            ],
+        }),
+        (
+            "Recording",
+            {
+                "classes": ("collapse",),
+                "fields": [
+                    "recorder",
+                    "hydrophone",
+                    "recording_formats",
+                    "sampling_frequency",
+                    "sample_depth",
+                    "gain",
+                    "channel_name",
+                ]
+            }
+        ),
+        (
+            "Detections",
+            {
+                "classes": ("collapse",),
+                "fields": [
+                    "detector",
+                    "output_formats",
+                    "labels",
+                    "min_frequency",
+                    "max_frequency",
+                    "filter",
+                    "configuration",
+                ]
+            }
+        ),
+        (
+            "Files",
+            {
+                "fields": [
+                    "csv_audio_file",
+                ]
+            }
+        ),
+    ]
+
+    @admin.display(description="Recorder specification")
+    def display_recorder_specification(self, obj: ChannelConfiguration):
+        if not obj.recorder_specification:
+            return None
+        return mark_safe("<br/>".join(re.split(r"\s-\s", obj.recorder_specification.__str__())))
+
+    @admin.display(description="Detector specification")
+    def display_detector_specification(self, obj: ChannelConfiguration):
+        if not obj.detector_specification:
+            return None
+        return mark_safe("<br/>".join(re.split(r"\s-\s", obj.detector_specification.__str__())))
 
     @admin.display(description="Storages")
     def list_storages(self, obj: ChannelConfiguration):
@@ -147,7 +157,7 @@ class ChannelConfigurationAdmin(JSONExportModelAdmin):
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "storages":
             kwargs["queryset"] = Equipment.objects.filter(
-                storage_specification__isnull=False
+                model__specification_relations__specification_type__model="StorageSpecification".lower()
             )
             kwargs[
                 "help_text"
@@ -156,3 +166,57 @@ class ChannelConfigurationAdmin(JSONExportModelAdmin):
                 If an instrument is missing, update one or add a new one in the Metadatax Equipment > Equipment table.
             """
         return super().formfield_for_manytomany(db_field, request, **kwargs)
+
+    @admin.action(description="Duplicate selected record")
+    @transaction.atomic()
+    def duplicate_event(self, request, queryset):
+        if queryset.count() != 1:
+            self.message_user(request, "You should select only one record to duplicate", level=messages.ERROR)
+            return
+        object: ChannelConfiguration = queryset.first()
+        object.id = None
+        if object.recorder_specification is not None:
+            rs = object.recorder_specification
+            recording_formats = rs.recording_formats.all()
+            rs.id = None
+            rs.save()
+            for ff in recording_formats:
+                rs.recording_formats.add(ff)
+            object.recorder_specification = rs
+        if object.detector_specification is not None:
+            ds = object.detector_specification
+            output_formats = ds.output_formats.all()
+            labels = ds.labels.all()
+            ds.id = None
+            ds.save()
+            for ff in output_formats:
+                ds.output_formats.add(ff)
+            for l in labels:
+                ds.labels.add(l)
+            object.detector_specification = ds
+        object.save()
+
+        return HttpResponseRedirect(
+            reverse('admin:acquisition_channelconfiguration_change', kwargs={'object_id': object.id})
+        )
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related(
+            "storages",
+            "storages__model",
+            "recorder_specification__recording_formats",
+            "detector_specification__output_formats",
+            "detector_specification__labels",
+        ).select_related(
+            "deployment",
+            "recorder_specification",
+            "recorder_specification__recorder",
+            "recorder_specification__recorder__model",
+            "recorder_specification__hydrophone",
+            "recorder_specification__hydrophone__model",
+            "detector_specification",
+            "detector_specification__detector",
+            "detector_specification__detector__model",
+        )
+
+    actions = [duplicate_event, "export", ]
