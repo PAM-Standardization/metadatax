@@ -1,10 +1,9 @@
 from django_extension.schema.types import ExtendedEnumType
 
-from metadatax.acquisition.models import Financing, ChannelConfigurationStatus
+from metadatax.acquisition.models import Financing
 
 __all__ = [
     'FinancingEnum',
-    'ChannelConfigurationStatusEnum',
 ]
 
 
@@ -16,12 +15,3 @@ class FinancingEnum(ExtendedEnumType):
     Private = 'PR'
     Mixte = 'MI'
     NotFinanced = 'NF'
-
-
-class ChannelConfigurationStatusEnum(ExtendedEnumType):
-    class Meta:
-        enum = ChannelConfigurationStatus
-
-    Active = "A"
-    Failed = "F"
-    Lost = "L"

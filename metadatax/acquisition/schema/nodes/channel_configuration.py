@@ -5,7 +5,6 @@ from metadatax.acquisition.models import ChannelConfiguration
 from metadatax.equipment.schema import EquipmentNode
 from .channel_configuration_specifications import ChannelConfigurationDetectorSpecificationNode, \
     ChannelConfigurationRecorderSpecificationNode
-from ..enums import ChannelConfigurationStatusEnum
 
 
 class ChannelConfigurationNode(ExtendedNode):
@@ -13,8 +12,6 @@ class ChannelConfigurationNode(ExtendedNode):
 
     recorder_specification = ChannelConfigurationRecorderSpecificationNode()
     detector_specification = ChannelConfigurationDetectorSpecificationNode()
-
-    status = ChannelConfigurationStatusEnum()
 
     class Meta:
         model = ChannelConfiguration

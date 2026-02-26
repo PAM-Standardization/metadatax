@@ -59,7 +59,7 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
         "duty_cycle_off",
         "instrument_depth",
         "timezone",
-        "status",
+        "is_lost",
         "record_start_date",
         "record_end_date",
     ]
@@ -73,7 +73,7 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
         ChannelConfigurationTypeFilter,
         "deployment__project__accessibility",
         "continuous",
-        "status",
+        "is_lost",
     ]
     filter_horizontal = [
         "storages",
@@ -92,7 +92,7 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
                 'duty_cycle_off',
                 'instrument_depth',
                 'timezone',
-                "status",
+                "is_lost",
                 'record_start_date',
                 'record_end_date',
                 'extra_information'
