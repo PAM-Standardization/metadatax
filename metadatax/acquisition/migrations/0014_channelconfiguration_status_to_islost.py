@@ -25,8 +25,4 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=False, help_text='If the equipment is lost.'),
         ),
         migrations.RunPython(migrate, reverse_migration),
-        migrations.RemoveField(
-            model_name='channelconfiguration',
-            name='status',
-        ),
     ]
