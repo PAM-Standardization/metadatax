@@ -9,7 +9,10 @@ from .date import DateWidget
 
 class DateTimeField(models.DateTimeField):
     def formfield(self, **kwargs):
-        return super().formfield(**{**kwargs, "widget": DateTimeWidget})
+        return super().formfield(**{
+            **kwargs,
+            "widget": kwargs.get("widget", DateTimeWidget)
+        })
 
 
 class DateTimeWidget(widgets.MultiWidget):

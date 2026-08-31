@@ -121,7 +121,6 @@ class ChannelConfigurationForm(forms.ModelForm):
             self.fields['configuration'].initial = self.instance.detector_specification.configuration
 
     def _clean_fields(self):
-        print("_clean_fields")
 
         if not self.model_fields(ChannelConfigurationRecorderSpecification)[1]:
             self.fields['detector'].required = False

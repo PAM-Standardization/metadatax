@@ -120,4 +120,3 @@ class Deployment(models.Model):
             raise ValidationError(
                 "Your deployment must be identified by either a name, campaign and/or site"
             )
-

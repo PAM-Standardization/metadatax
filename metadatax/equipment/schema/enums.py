@@ -11,6 +11,10 @@ class HydrophoneDirectivityEnum(ExtendedEnumType):
     class Meta:
         enum = HydrophoneDirectivity
 
+    def __str__(self):
+        return self.value
+        return super().__str__()
+
     OmniDirectional = 'OMNI'
     BiDirectional = 'BI'
     UniDirectional = 'UNI'

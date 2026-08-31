@@ -5,3 +5,5 @@ from .file_format import FileFormat
 
 from .audio_file import AudioFile
 from .detection_file import DetectionFile
+
+from .visual_observation import VisualObservation

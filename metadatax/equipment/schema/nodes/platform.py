@@ -1,5 +1,7 @@
 import graphene
 from django_extension.schema.types import ExtendedNode
+from graphene import String
+import graphene_django_optimizer
 
 from metadatax.common.schema import InstitutionNode
 from metadatax.common.schema.unions import ContactUnion
@@ -23,5 +25,12 @@ class PlatformNode(ExtendedNode):
 
     owner = ContactUnion()
 
+    @graphene_django_optimizer.resolver_hints()
     def resolve_owner(self: Platform, info):
         return self.owner
+
+    display_name = String(required=True)
+
+    @graphene_django_optimizer.resolver_hints()
+    def resolve_display_name(self: Platform, info):
+        return self.__str__()

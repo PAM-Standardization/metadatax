@@ -58,6 +58,7 @@ class EquipmentModelSpecification(models.Model):
         ContentType,
         on_delete=models.PROTECT,
         limit_choices_to={
+            "app_label": "equipment",
             "model__in": [
                 "AcousticDetectorSpecification".lower(),
                 "HydrophoneSpecification".lower(),
