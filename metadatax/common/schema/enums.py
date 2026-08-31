@@ -1,10 +1,12 @@
 from django_extension.schema.types import ExtendedEnumType
+import graphene
 
 from metadatax.common.models import Role, Accessibility
 
 __all__ = [
     'AccessibilityEnum',
     'RoleEnum',
+    'ContactTypeEnum',
 ]
 
 
@@ -29,3 +31,17 @@ class AccessibilityEnum(ExtendedEnumType):
     Confidential = 'C'
     UponRequest = 'R'
     OpenAccess = 'O'
+
+
+class ContactTypeEnum(graphene.Enum):
+    person = 'person'
+    team = 'team'
+    institution = 'institution'
+
+    @staticmethod
+    def choices() -> list[tuple[str, str]]:
+        return [
+            (ContactTypeEnum.person, 'person'),
+            (ContactTypeEnum.team, 'team'),
+            (ContactTypeEnum.institution, 'institution'),
+        ]

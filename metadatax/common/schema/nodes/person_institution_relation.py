@@ -7,7 +7,7 @@ from .team import TeamNode
 
 
 class PersonInstitutionRelationNode(ExtendedNode):
-    institution = graphene.NonNull(InstitutionNode())
+    institution = graphene.NonNull(InstitutionNode)
     team = TeamNode()
 
     class Meta:

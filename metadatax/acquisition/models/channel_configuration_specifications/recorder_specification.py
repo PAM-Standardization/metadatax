@@ -11,7 +11,8 @@ from metadatax.equipment.models import Equipment
 
 def validate_recorder(value: int):
     recorder: Equipment = Equipment.objects.get(id=value)
-    if not recorder.model.specification_relations.filter(specification_type__model="RecorderSpecification").exists():
+    if not recorder.model.specification_relations.filter(
+            specification_type__model="RecorderSpecification".lower()).exists():
         raise ValidationError(
             _("The selected equipment doesn't have recorder specification"),
             params={"recorder": recorder},
@@ -21,7 +22,7 @@ def validate_recorder(value: int):
 def validate_hydrophone(value: int):
     hydrophone = Equipment.objects.get(id=value)
     if not hydrophone.model.specification_relations.filter(
-            specification_type__model="HydrophoneSpecification").exists():
+            specification_type__model="HydrophoneSpecification".lower()).exists():
         raise ValidationError(
             _("The selected equipment doesn't have hydrophone specification"),
             params={"hydrophone": hydrophone},

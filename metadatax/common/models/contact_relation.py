@@ -6,7 +6,6 @@ from metadatax.common.models import Role
 
 
 class ContactRelation(models.Model):
-
     class Meta:
         db_table = "mx_common_contactrelation"
         ordering = ("role",)
@@ -20,13 +19,13 @@ class ContactRelation(models.Model):
         ContentType,
         on_delete=models.PROTECT,
         limit_choices_to={
+            "app_label": "common",
             "model__in": [
-                "common.Person",
-                "common.Team",
-                "common.Institution",
+                "person",
+                "team",
+                "institution",
             ]
         },
     )
     contact_id = models.PositiveBigIntegerField()
     contact = GenericForeignKey("contact_type", "contact_id")
-

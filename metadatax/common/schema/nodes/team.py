@@ -10,4 +10,5 @@ class TeamNode(ExtendedNode):
         filter_fields = {
             "id": ["exact", "in"],
             "name": ["exact", "icontains"],
+            "institution": ["exact", ],
         }

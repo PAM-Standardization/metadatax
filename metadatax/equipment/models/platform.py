@@ -22,10 +22,11 @@ class Platform(models.Model):
         ContentType,
         on_delete=models.PROTECT,
         limit_choices_to={
+            "app_label": "common",
             "model__in": [
-                "common.Person",
-                "common.Team",
-                "common.Institution",
+                "person",
+                "team",
+                "institution",
             ]
         },
         blank=True, null=True

@@ -1,9 +1,9 @@
 import graphene
 from django_extension.schema.types import ExtendedNode
+import graphene_django_optimizer
 
 from metadatax.acquisition.models import Deployment
 from metadatax.common.schema import ContactRelationNode
-
 from .deployment_mobile_position import DeploymentMobilePositionNode
 
 
@@ -34,3 +34,9 @@ class DeploymentNode(ExtendedNode):
 
     def resolve_contacts(self: Deployment, info):
         return self.contacts.all()
+
+    display_name = graphene.String(required=True)
+
+    @graphene_django_optimizer.resolver_hints()
+    def resolve_display_name(self: Deployment, info) -> str:
+        return self.__str__()

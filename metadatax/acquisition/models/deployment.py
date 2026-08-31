@@ -111,6 +111,8 @@ class Deployment(models.Model):
         help_text="Optional description of deployment and recovery conditions (weather, technical issues,...).",
     )
 
+    # TODO: add visual obs !!
+
     def clean(self):
         if self.campaign and self.campaign.project != self.project:
             raise ValidationError("Campaign must belong to the Deployment project")
@@ -120,4 +122,3 @@ class Deployment(models.Model):
             raise ValidationError(
                 "Your deployment must be identified by either a name, campaign and/or site"
             )
-

@@ -25,8 +25,12 @@ class Person(models.Model):
     mail = models.EmailField(max_length=255, blank=True, null=True)
     website = models.URLField(max_length=255, blank=True, null=True)
 
-    institutions = models.ManyToManyField(Institution, related_name="persons", through=PersonInstitutionRelation)
-    teams = models.ManyToManyField(Team, related_name="persons", through=PersonInstitutionRelation)
+    institutions = models.ManyToManyField(
+        Institution, related_name="persons", through=PersonInstitutionRelation
+    )
+    teams = models.ManyToManyField(
+        Team, related_name="persons", through=PersonInstitutionRelation
+    )
 
     @property
     def initial_names(self) -> str:
@@ -35,8 +39,12 @@ class Person(models.Model):
         return f"{self.last_name}, {initial_first_name}"
 
     @property
-    def current_institutions(self) -> QuerySet[Institution]:
-        return Institution.objects.filter(id__in=self.institution_relations.filter(
-            (Q(from_date__lte=datetime.date.today()) | Q(from_date__isnull=True))
-            & (Q(to_date__gte=datetime.date.today()) | Q(to_date__isnull=True))
-        ).values_list('institution_id', flat=True))
+    def current_institutions(self) -> QuerySet[PersonInstitutionRelation]:
+        return (
+            PersonInstitutionRelation.objects.filter(person=self)
+            .filter(
+                (Q(from_date__lte=datetime.date.today()) | Q(from_date__isnull=True))
+                & (Q(to_date__gte=datetime.date.today()) | Q(to_date__isnull=True))
+            )
+            .distinct()
+        )

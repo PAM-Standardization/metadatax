@@ -1,4 +1,6 @@
 from django_extension.schema.types import ExtendedNode
+import graphene
+import graphene_django_optimizer
 
 from metadatax.ontology.models import Label
 from metadatax.ontology.schema.enums import SignalShapeEnum, SignalPluralityEnum
@@ -26,3 +28,9 @@ class LabelNode(ExtendedNode):
             "max_frequency": ["exact", "lt", "lte", "gt", "gte"],
             "mean_duration": ["exact", "lt", "lte", "gt", "gte"],
         }
+
+    display_name = graphene.String(required=True)
+
+    @graphene_django_optimizer.resolver_hints()
+    def resolve_display_name(self: Label, info) -> str:
+        return self.__str__()

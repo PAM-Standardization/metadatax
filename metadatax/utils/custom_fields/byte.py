@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.forms import MultiWidget, NumberInput, Select
 from django.utils.translation import gettext_lazy as _
+from django_extension.schema.types import ExtendedEnumType
 
 
 class ByteUnit(models.TextChoices):
@@ -33,6 +34,22 @@ class ByteUnit(models.TextChoices):
 
     def __ge__(self, other):
         return ORDERED_LIST.index(self) >= ORDERED_LIST.index(other)
+
+
+class ByteUnitEnum(ExtendedEnumType):
+    """From ByteUnit"""
+
+    class Meta:
+        enum = ByteUnit
+
+    b = "b"
+    Kb = "Kb"
+    Mb = "Mb"
+    Gb = "Gb"
+    Tb = "Tb"
+    Pb = "Pb"
+    Eb = "Eb"
+    Zb = "Zb"
 
 
 ORDERED_LIST = [
@@ -196,7 +213,7 @@ class ByteFormField(SimpleArrayField):
     invalid_error_message = _("%(property)s did not validate:")
 
     def __init__(
-        self, base_field, *, delimiter=",", max_length=None, min_length=None, **kwargs
+            self, base_field, *, delimiter=",", max_length=None, min_length=None, **kwargs
     ):
         super().__init__(
             base_field,
@@ -286,7 +303,6 @@ class ByteFormField(SimpleArrayField):
             raise ValidationError(errors)
 
 
-
 class ByteWidget(MultiWidget):
     def __init__(self, attrs=None):
         _widgets = []
@@ -307,3 +323,8 @@ class ByteWidget(MultiWidget):
 
     def format_value(self, value: Optional[Byte]):
         return self.decompress(value)
+
+    def value_from_datadict(self, data, files, name):
+        return super().value_from_datadict(data, files, name) or data
+
+

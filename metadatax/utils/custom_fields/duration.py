@@ -4,7 +4,7 @@ from typing import Optional
 from django.db import models
 from django.forms import MultiWidget
 from django.utils.dateparse import parse_duration
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
 from durationwidget.widgets import LabeledNumberInput
 
 
@@ -46,11 +46,11 @@ class DurationWidget(MultiWidget):
         self.show_months = True
         self.show_days = True
         _widgets = []
-        _widgets.append(LabeledNumberInput(label=ugettext_lazy("Years"), type="years")),
+        _widgets.append(LabeledNumberInput(label=gettext_lazy("Years"), type="years")),
         _widgets.append(
-            LabeledNumberInput(label=ugettext_lazy("Months"), type="months")
+            LabeledNumberInput(label=gettext_lazy("Months"), type="months")
         ),
-        _widgets.append(LabeledNumberInput(label=ugettext_lazy("Days"), type="days")),
+        _widgets.append(LabeledNumberInput(label=gettext_lazy("Days"), type="days")),
         super().__init__(_widgets, attrs)
 
     def decompress(self, value):

@@ -1,5 +1,6 @@
 from graphene import ObjectType
 
+from .behavior import BehaviorMutation
 from .source import PostSourceMutation, DeleteSourceMutation
 from .sound import PostSoundMutation, DeleteSoundMutation
 
@@ -15,3 +16,6 @@ class OntologyMutation(ObjectType):
     # Sound
     post_sound = PostSoundMutation.Field()
     delete_sound = DeleteSoundMutation.Field()
+
+    # Behavior
+    behavior = BehaviorMutation.Field()
