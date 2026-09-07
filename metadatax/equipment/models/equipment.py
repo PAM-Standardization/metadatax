@@ -53,5 +53,10 @@ class Equipment(models.Model):
     sensitivity = models.FloatField(
         null=True,
         blank=True,
-        help_text="Required only for hydrophones",
+        help_text="""
+        Average sensitivity of the hydrophone (dB re 1V/µPa), pre-amplification included if applicable. 
+        Sensitivity Sh of the hydrophone such that : data(uPa) = data(volt)*10^((-Sh-G)/20).
+        See Recorder Gain for definition of G.
+        Required only for hydrophones
+        """,
     )

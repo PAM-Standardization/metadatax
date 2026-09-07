@@ -10,10 +10,10 @@ from ..nodes.channel_configuration_specifications import ChannelConfigurationRec
 class ChannelConfigurationRecorderSpecificationInput(graphene.InputObjectType):
     recorder = graphene.ID(required=True)
     hydrophone = graphene.ID(required=True)
-    recording_formats = graphene.List(graphene.ID, required=True)
+    recording_formats = graphene.List(graphene.ID, required=False)
     sampling_frequency = graphene.Int(required=True)
     sample_depth = graphene.Int(required=True)
-    gain = graphene.Float(required=True)
+    gain = graphene.Float(required=False)
     channel_name = graphene.String(required=False)
 
 

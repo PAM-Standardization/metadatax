@@ -60,7 +60,9 @@ class ChannelConfigurationRecorderSpecification(models.Model):
         help_text="If the hydrophone is integrated into the recorder, select it as hydrophone as well."
     )
     recording_formats = models.ManyToManyField(
-        FileFormat, related_name="channel_configuration_recorder_specifications"
+        FileFormat,
+        blank=True,
+        related_name="channel_configuration_recorder_specifications"
     )
     sampling_frequency = models.IntegerField(
         validators=[MinValueValidator(0)],
@@ -71,6 +73,7 @@ class ChannelConfigurationRecorderSpecification(models.Model):
         help_text="Number of quantization bits used to represent each sample by the recorder channel (in bits).",
     )
     gain = models.FloatField(
+        blank=True, null=True,
         help_text="Gain of the channel (recorder), with correction factors if applicable, "
                   "without hydrophone sensibility (in dB). If end-to-end calibration with hydrophone sensibility, "
                   "set it in Sensitivity and set Gain to 0 dB.<br>"
