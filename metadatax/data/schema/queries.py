@@ -36,3 +36,6 @@ class DataQuery(ObjectType):
         for qs in [AudioFile.objects.all(), DetectionFile.objects.all()]:
             if qs.filter(pk=id).exists():
                 return qs.get(pk=id)
+
+    # Visual observations
+    all_visual_observation = DjangoPaginationConnectionField(VisualObservationNode)
