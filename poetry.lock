@@ -159,24 +159,25 @@ Django = ">=1.11"
 
 [[package]]
 name = "django-extension"
-version = "0.1.4"
+version = "1.0.0"
 description = "Extended class for Django usage"
 optional = false
 python-versions = ">=3.12,<3.14"
 groups = ["main"]
-files = []
-develop = true
+files = [
+    {file = "v1.0.0.tar.gz", hash = "sha256:1544a8a74ecf74fc91b45956d340738f5e33c2e972b717e0ce968afbcbf2e899"},
+]
 
 [package.dependencies]
 Django = ">=5.2,<5.3"
-djangorestframework = "^3.16"
-graphene-django = "^3.2.3"
-graphene-django-optimizer = "^0.10.0"
+djangorestframework = ">=3.16,<4.0"
+graphene-django = ">=3.2.3,<4.0.0"
+graphene-django-optimizer = ">=0.10.0,<0.11.0"
 graphene-django-pagination = {url = "https://github.com/instruct-br/graphene-django-pagination/archive/master.zip"}
 
 [package.source]
-type = "directory"
-url = "../django-extension"
+type = "url"
+url = "https://github.com/Project-OSmOSE/django-extension/archive/refs/tags/v1.0.0.tar.gz"
 
 [[package]]
 name = "django-filter"
@@ -962,4 +963,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "aac7e8b0d1554b458177a54fe3661f7854c442826639958a615ae8cf76d862bc"
+content-hash = "3c623fd4f7002ebaeb1c898c64aa21aa14955f63a17bab401f1a3d44ced5c404"
