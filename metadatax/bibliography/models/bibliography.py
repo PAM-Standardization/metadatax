@@ -16,7 +16,7 @@ class Bibliography(models.Model):
         constraints = [
             models.CheckConstraint(
                 name="Published bibliography has a publication date",
-                check=(Q(status="P", publication_date__isnull=False) | ~Q(status="P")),
+                condition=(Q(status="P", publication_date__isnull=False) | ~Q(status="P")),
             ),
         ]
 

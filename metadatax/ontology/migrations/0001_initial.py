@@ -174,7 +174,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="source",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("parent_id", django.db.models.expressions.F("id")), _negated=True
                 ),
                 name="source_cannot_be_self_parent",
@@ -183,7 +183,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="sound",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("parent_id", django.db.models.expressions.F("id")), _negated=True
                 ),
                 name="sound_cannot_be_self_parent",

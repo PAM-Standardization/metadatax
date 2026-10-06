@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -247,7 +246,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="bibliography",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(("publication_date__isnull", False), ("status", "P")),
                     models.Q(("status", "P"), _negated=True),
                     _connector="OR",
@@ -258,7 +257,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="bibliography",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(
                         models.Q(("type", "A"), _negated=True),
                         ("article_information__isnull", True),
@@ -272,7 +271,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="bibliography",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(
                         models.Q(("type", "S"), _negated=True),
                         ("software_information__isnull", True),
@@ -286,7 +285,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="bibliography",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(
                         models.Q(("type", "C"), _negated=True),
                         models.Q(("type", "P"), _negated=True),
@@ -301,7 +300,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="bibliography",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(
                         models.Q(("type", "P"), _negated=True),
                         ("poster_information__isnull", True),

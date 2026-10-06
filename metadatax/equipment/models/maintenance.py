@@ -16,8 +16,8 @@ class Maintenance(models.Model):
         constraints = [
             models.CheckConstraint(
                 name="maintenance_concern_platform_or_equipment",
-                check=models.Q(platform__isnull=False, equipment__isnull=True)
-                      | models.Q(platform__isnull=True, equipment__isnull=False),
+                condition=models.Q(platform__isnull=False, equipment__isnull=True)
+                          | models.Q(platform__isnull=True, equipment__isnull=False),
             )
         ]
 
