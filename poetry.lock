@@ -104,20 +104,20 @@ files = [
 
 [[package]]
 name = "django"
-version = "3.2.25"
-description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
+version = "4.2.30"
+description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 groups = ["main", "dev"]
 files = [
-    {file = "Django-3.2.25-py3-none-any.whl", hash = "sha256:a52ea7fcf280b16f7b739cec38fa6d3f8953a5456986944c3ca97e79882b4e38"},
-    {file = "Django-3.2.25.tar.gz", hash = "sha256:7ca38a78654aee72378594d63e51636c04b8e28574f5505dff630895b5472777"},
+    {file = "django-4.2.30-py3-none-any.whl", hash = "sha256:4d07aaf1c62f9984842b67c2874ebbf7056a17be253860299b93ae1881faad65"},
+    {file = "django-4.2.30.tar.gz", hash = "sha256:4ebc7a434e3819db6cf4b399fb5b3f536310a30e8486f08b66886840be84b37c"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.3.2,<4"
-pytz = "*"
-sqlparse = ">=0.2.2"
+asgiref = ">=3.6.0,<4"
+sqlparse = ">=0.3.1"
+tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
 [package.extras]
 argon2 = ["argon2-cffi (>=19.1.0)"]
@@ -169,20 +169,19 @@ description = "Extended class for Django usage"
 optional = false
 python-versions = ">=3.9,<4.0"
 groups = ["main"]
-files = [
-    {file = "v0.1.4.tar.gz", hash = "sha256:f5486acde96a53684dff387b590f1021ca51a165802e9b0852d950558f1a7316"},
-]
+files = []
+develop = true
 
 [package.dependencies]
-Django = ">=3.2,<4.0"
-djangorestframework = ">=3.12.4,<4.0.0"
-graphene-django = ">=3.2.3,<4.0.0"
-graphene-django-optimizer = ">=0.10.0,<0.11.0"
+Django = ">=4.2,<4.3"
+djangorestframework = "^3.15"
+graphene-django = "^3.2.3"
+graphene-django-optimizer = "^0.10.0"
 graphene-django-pagination = {url = "https://github.com/instruct-br/graphene-django-pagination/archive/master.zip"}
 
 [package.source]
-type = "url"
-url = "https://github.com/Project-OSmOSE/django-extension/archive/refs/tags/v0.1.4.tar.gz"
+type = "directory"
+url = "../django-extension"
 
 [[package]]
 name = "django-filter"
@@ -640,7 +639,7 @@ version = "2025.2"
 description = "World timezone definitions, modern and historical"
 optional = false
 python-versions = "*"
-groups = ["main", "dev"]
+groups = ["dev"]
 files = [
     {file = "pytz-2025.2-py2.py3-none-any.whl", hash = "sha256:5ddf76296dd8c44c26eb8f4b6f35488f3ccbf6fbbd7adee0b7262d43f0ec2f00"},
     {file = "pytz-2025.2.tar.gz", hash = "sha256:360b9e3dbb49a209c21ad61809c7fb453643e048b38924c765813546746e81c3"},
@@ -988,6 +987,19 @@ files = [
 markers = {dev = "python_version < \"3.13\""}
 
 [[package]]
+name = "tzdata"
+version = "2026.5"
+description = "Provider of IANA time zone data"
+optional = false
+python-versions = ">=2"
+groups = ["main", "dev"]
+markers = "sys_platform == \"win32\""
+files = [
+    {file = "tzdata-2026.5-py2.py3-none-any.whl", hash = "sha256:b683bd1b6659ddcd810ff02ad09ba821d4bf1065072805063eb35c49617905ac"},
+    {file = "tzdata-2026.5.tar.gz", hash = "sha256:8cc73c0a0bfca7dbfa59235d60b2eff82231dee33f53d206db1acd9173cfc0a7"},
+]
+
+[[package]]
 name = "uritemplate"
 version = "4.2.0"
 description = "Implementation of RFC 6570 URI Templates"
@@ -1002,4 +1014,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "68af2f402bdf190240abfdb037d93aa00e932eda75d18901d0a79051ebfaf886"
+content-hash = "5865283bf7b8fc807bddd5b7a92f50ee843dd2d21271abafa6161ba371ca7b82"
