@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("bibliography", "0003_alter_bibliography_conference_information"),
     ]
@@ -17,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="bibliography",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(
                         models.Q(("type", "C"), _negated=True),
                         ("conference_information__isnull", True),

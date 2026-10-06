@@ -29,7 +29,7 @@ class PersonAdmin(ExtendedModelAdmin):
         "institutions"
     ]
     filter_horizontal = [
-        "institutions",
+        # "institutions", # TODO!!
     ]
     inlines = [
         PersonInstitutionRelationInline,

@@ -419,7 +419,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="maintenance",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(("equipment__isnull", True), ("platform__isnull", False)),
                     models.Q(("equipment__isnull", False), ("platform__isnull", True)),
                     _connector="OR",
@@ -434,7 +434,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="equipment",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     models.Q(
                         ("acoustic_detector_specification__isnull", True),
                         ("hydrophone_specification__isnull", True),

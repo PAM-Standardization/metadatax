@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("common", "0003_institution"),
     ]
@@ -36,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="contactrole",
             constraint=models.CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("contact__isnull", False),
                     ("institution__isnull", False),
                     _connector="OR",
