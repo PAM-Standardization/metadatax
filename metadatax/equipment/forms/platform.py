@@ -16,7 +16,7 @@ class PlatformForm(forms.ModelForm):
 
     class Meta:
         model = Platform
-        exclude = ("owner_type", "owner_id")
+        exclude = ("owner_type", "owner_id", "owner")
 
     def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None, initial=None, error_class=ErrorList,
                  label_suffix=None, empty_permitted=False, instance=None, use_required_attribute=None, renderer=None):

@@ -8,13 +8,13 @@ from metadatax.equipment.serializers.platform import PlatformSerializer
 
 @admin.register(Platform)
 class PlatformAdmin(ExtendedModelAdmin):
-    actions = ["export",]
+    actions = ["export", ]
     serializer = PlatformSerializer
     form = PlatformForm
     list_display = [
         "name",
         "type",
-        "owner",
+        "owner_display",
         "provider",
         "description",
     ]
@@ -43,8 +43,8 @@ class PlatformAdmin(ExtendedModelAdmin):
         }),
     ]
 
-    @admin.display()
-    def owner(self, platform: Platform):
+    @admin.display(description="Owner")
+    def owner_display(self, platform: Platform):
         if platform.owner is None:
             return self.get_empty_value_display()
         return f"{platform.owner.__class__.__name__}: {platform.owner}"
