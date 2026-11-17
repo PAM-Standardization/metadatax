@@ -17,8 +17,6 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
         "__str__",
         "source",
         "sound",
-        "associated_names",
-        "parent",
         "shape",
         "plurality",
         "show_frequencies",
@@ -34,9 +32,6 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
         "sound__french_name",
         "sound__code_name",
         "sound__taxon",
-        "parent__source__english_name",
-        "parent__sound__english_name",
-        "associated_names",
     ]
     list_filter = [
         "shape",
@@ -52,8 +47,6 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
                 "fields": [
                     "source",
                     "sound",
-                    "nickname",
-                    "associated_names",
                     "related_bibliography",
                 ]
             },
