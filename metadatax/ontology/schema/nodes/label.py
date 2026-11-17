@@ -2,8 +2,8 @@ from django_extension.schema.types import ExtendedNode
 import graphene
 import graphene_django_optimizer
 
-from metadatax.ontology.models import Label
-from metadatax.ontology.schema.enums import SignalShapeEnum, SignalPluralityEnum
+from metadatax.ontology.models import Label, LabelDisplay
+from ..enums import SignalShapeEnum, SignalPluralityEnum, LabelDisplayEnum
 
 
 class LabelNode(ExtendedNode):
@@ -29,8 +29,11 @@ class LabelNode(ExtendedNode):
             "mean_duration": ["exact", "lt", "lte", "gt", "gte"],
         }
 
-    display_name = graphene.String(required=True)
+    display = graphene.String(
+        required=True,
+        display=graphene.NonNull(LabelDisplayEnum)
+    )
 
     @graphene_django_optimizer.resolver_hints()
-    def resolve_display_name(self: Label, info) -> str:
-        return self.__str__()
+    def resolve_display(self: Label, info, display: LabelDisplay) -> str:
+        return self.display(display.value)

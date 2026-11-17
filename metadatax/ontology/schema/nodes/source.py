@@ -2,7 +2,8 @@ from django_extension.schema.types import ExtendedNode
 import graphene
 import graphene_django_optimizer
 
-from metadatax.ontology.models import Source
+from metadatax.ontology.models import Source, LabelDisplay
+from ..enums import LabelDisplayEnum
 
 
 class SourceNode(ExtendedNode):
@@ -19,8 +20,11 @@ class SourceNode(ExtendedNode):
             "taxon": ["exact", "icontains"],
         }
 
-    display_name = graphene.String(required=True)
+    display = graphene.String(
+        required=True,
+        display=graphene.NonNull(LabelDisplayEnum)
+    )
 
     @graphene_django_optimizer.resolver_hints()
-    def resolve_display_name(self: Source, info) -> str:
-        return self.__str__()
+    def resolve_display(self: Source, info, display: LabelDisplay) -> str:
+        return self.display(display.value)

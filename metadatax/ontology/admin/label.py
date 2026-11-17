@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 from django_extension.admin import ExtendedModelAdmin
 
-from metadatax.ontology.models import Label
+from metadatax.ontology.models import Label, LabelDisplay
 from metadatax.ontology.serializers import LabelSerializer
 
 
@@ -14,7 +14,9 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
     serializer = LabelSerializer
 
     list_display = [
-        "__str__",
+        "english_name",
+        "french_name",
+        "code_name",
         "source",
         "sound",
         "shape",
@@ -82,3 +84,15 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
     @admin.display(description="Mean duration (in s)")
     def show_mean_duration(self, label: Label):
         return label.mean_duration
+
+    @admin.display(description="English name")
+    def english_name(self, label: Label):
+        return label.display(LabelDisplay.ENGLISH)
+
+    @admin.display(description="French name")
+    def french_name(self, label: Label):
+        return label.display(LabelDisplay.FRENCH)
+
+    @admin.display(description="Code name")
+    def code_name(self, label: Label):
+        return label.display(LabelDisplay.CODE)

@@ -2,7 +2,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 from metadatax.bibliography.models import Bibliography
-from .__enums__ import SignalShape, SignalPlurality
+from .__enums__ import SignalShape, SignalPlurality, LabelDisplay
 from .sound import Sound
 from .source import Source
 
@@ -17,7 +17,7 @@ class Label(models.Model):
 
     def __str__(self):
         if not self.sound:
-            return self.source
+            return str(self.source)
         return f"{self.source} - {self.sound}"
 
     # Mandatory
@@ -49,3 +49,8 @@ class Label(models.Model):
         ],
     )
     description = models.TextField(null=True, blank=True)
+
+    def display(self, display: LabelDisplay):
+        if not self.sound:
+            return self.source.display(display)
+        return f"{self.source.display(display)} - {self.sound.display(display)}"
