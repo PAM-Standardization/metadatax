@@ -61,7 +61,7 @@ class EquipmentModelForm(forms.ModelForm):
         if self.instance is None:
             pass
 
-        rels = self.instance.specification_relations.all()
+        rels = EquipmentModelSpecification.objects.filter(model_id=self.instance.id)
 
         if rels.filter(specification_type__model=StorageSpecification.__name__.lower()).exists():
             spec: StorageSpecification = rels.get(
