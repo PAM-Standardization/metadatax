@@ -1,9 +1,8 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-from django_better_admin_arrayfield.models.fields import ArrayField
 
 from metadatax.bibliography.models import Bibliography
-from .__enums__ import SignalShape, SignalPlurality
+from .__enums__ import SignalShape, SignalPlurality, LabelDisplay
 from .sound import Sound
 from .source import Source
 
@@ -13,12 +12,12 @@ class Label(models.Model):
 
     class Meta:
         db_table = "mx_ontology_label"
-        unique_together = ("source", "sound", "nickname")
-        ordering = ("source", "sound", "nickname")
+        unique_together = ("source", "sound",)
+        ordering = ("source", "sound",)
 
     def __str__(self):
-        if self.nickname:
-            return self.nickname
+        if not self.sound:
+            return str(self.source)
         return f"{self.source} - {self.sound}"
 
     # Mandatory
@@ -28,26 +27,12 @@ class Label(models.Model):
     sound = models.ForeignKey(
         Sound, on_delete=models.PROTECT, null=True, blank=True, related_name="labels"
     )
-    nickname = models.CharField(max_length=255, null=True, blank=True)
 
-    associated_names = ArrayField(
-        models.CharField(max_length=255, blank=True, null=True),
-        help_text="Other name found in the bibliography for this label",
-        null=True,
-        blank=True,
-    )
     related_bibliography = models.ManyToManyField(
         Bibliography, related_name="related_labels", blank=True
     )
 
     # Optional
-    parent = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        related_name="children",
-        on_delete=models.SET_NULL,
-    )
     shape = models.TextField(
         choices=SignalShape.choices, max_length=2, null=True, blank=True
     )
@@ -64,3 +49,8 @@ class Label(models.Model):
         ],
     )
     description = models.TextField(null=True, blank=True)
+
+    def display(self, display: LabelDisplay):
+        if not self.sound:
+            return self.source.display(display)
+        return f"{self.source.display(display)} - {self.sound.display(display)}"

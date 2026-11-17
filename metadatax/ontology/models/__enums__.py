@@ -15,3 +15,11 @@ class SignalPlurality(ExtendedEnum):
     ONE = ("O", "One")
     SET = ("S", "Set")
     REPETITIVE_SET = ("RS", "Repetitive Set")
+
+
+class LabelDisplay(ExtendedEnum):
+    """Display of labels"""
+
+    ENGLISH = ("E", "English")
+    FRENCH = ("F", "French")
+    CODE = ("C", "Code")

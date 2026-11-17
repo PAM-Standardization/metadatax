@@ -3,23 +3,22 @@ from django.utils.html import format_html
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 from django_extension.admin import ExtendedModelAdmin
 
-from metadatax.ontology.models import Label
+from metadatax.ontology.models import Label, LabelDisplay
 from metadatax.ontology.serializers import LabelSerializer
 
 
 @admin.register(Label)
 class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
-    actions = ["export",]
+    actions = ["export", ]
     depth = 1
     serializer = LabelSerializer
 
     list_display = [
-        "__str__",
+        "english_name",
+        "french_name",
+        "code_name",
         "source",
         "sound",
-        "nickname",
-        "associated_names",
-        "parent",
         "shape",
         "plurality",
         "show_frequencies",
@@ -35,11 +34,6 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
         "sound__french_name",
         "sound__code_name",
         "sound__taxon",
-        "nickname",
-        "parent__nickname",
-        "parent__source__english_name",
-        "parent__sound__english_name",
-        "associated_names",
     ]
     list_filter = [
         "shape",
@@ -55,8 +49,6 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
                 "fields": [
                     "source",
                     "sound",
-                    "nickname",
-                    "associated_names",
                     "related_bibliography",
                 ]
             },
@@ -92,3 +84,15 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
     @admin.display(description="Mean duration (in s)")
     def show_mean_duration(self, label: Label):
         return label.mean_duration
+
+    @admin.display(description="English name")
+    def english_name(self, label: Label):
+        return label.display(LabelDisplay.ENGLISH)
+
+    @admin.display(description="French name")
+    def french_name(self, label: Label):
+        return label.display(LabelDisplay.FRENCH)
+
+    @admin.display(description="Code name")
+    def code_name(self, label: Label):
+        return label.display(LabelDisplay.CODE)

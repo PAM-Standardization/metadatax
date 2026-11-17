@@ -1,11 +1,11 @@
-import graphene
 from django_extension.schema.types import ExtendedEnumType
 
-from metadatax.ontology.models import SignalShape, SignalPlurality
+from metadatax.ontology.models import SignalShape, SignalPlurality, LabelDisplay
 
 __all__ = [
     'SignalPluralityEnum',
     'SignalShapeEnum',
+    'LabelDisplayEnum',
 ]
 
 
@@ -25,3 +25,12 @@ class SignalPluralityEnum(ExtendedEnumType):
     One = 'O'
     Set = 'S'
     RepetitiveSet = 'RS'
+
+
+class LabelDisplayEnum(ExtendedEnumType):
+    class Meta:
+        enum = LabelDisplay
+
+    English = "E"
+    French = "F"
+    Code = "C"

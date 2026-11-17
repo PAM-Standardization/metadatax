@@ -8,9 +8,9 @@ from metadatax.ontology.models import Source
 class SourceAdmin(ExtendedModelAdmin):
     list_display = [
         "english_name",
-        "latin_name",
         "french_name",
         "code_name",
+        "latin_name",
         "taxon",
         "parent",
     ]
@@ -20,7 +20,6 @@ class SourceAdmin(ExtendedModelAdmin):
         "french_name",
         "code_name",
         "taxon",
-        "parent__english_name",
     ]
     filter_horizontal = [
         "related_bibliography",

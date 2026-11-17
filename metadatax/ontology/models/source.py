@@ -2,6 +2,7 @@ from django.db import models
 from django_extension.models.constraints import NoSelfParentConstraint
 
 from metadatax.bibliography.models import Bibliography
+from .__enums__ import LabelDisplay
 
 
 class Source(models.Model):
@@ -39,3 +40,10 @@ class Source(models.Model):
     related_bibliography = models.ManyToManyField(
         Bibliography, related_name="related_sources", blank=True
     )
+
+    def display(self, display: LabelDisplay):
+        if display == LabelDisplay.FRENCH and self.french_name:
+            return self.french_name
+        if display == LabelDisplay.CODE and self.code_name:
+            return self.code_name
+        return self.english_name
