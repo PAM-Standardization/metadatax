@@ -17,11 +17,6 @@ class LabelNode(ExtendedNode):
             "id": ["exact", "in"],
             "source_id": ["exact", "in"],
             "sound_id": ["exact", "in"],
-            "parent_id": ["exact", "in"],
-            "nickname": ["exact", "icontains"],
-            # "associated_names": [
-            #     "icontains",
-            # ], # TODO
             "shape": ["exact"],
             "plurality": ["exact"],
             "min_frequency": ["exact", "lt", "lte", "gt", "gte"],
