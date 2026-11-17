@@ -9,7 +9,7 @@ from metadatax.ontology.serializers import LabelSerializer
 
 @admin.register(Label)
 class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
-    actions = ["export",]
+    actions = ["export", ]
     depth = 1
     serializer = LabelSerializer
 
@@ -17,7 +17,6 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
         "__str__",
         "source",
         "sound",
-        "nickname",
         "associated_names",
         "parent",
         "shape",
@@ -35,8 +34,6 @@ class LabelAdmin(ExtendedModelAdmin, DynamicArrayMixin):
         "sound__french_name",
         "sound__code_name",
         "sound__taxon",
-        "nickname",
-        "parent__nickname",
         "parent__source__english_name",
         "parent__sound__english_name",
         "associated_names",

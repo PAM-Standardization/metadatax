@@ -13,12 +13,12 @@ class Label(models.Model):
 
     class Meta:
         db_table = "mx_ontology_label"
-        unique_together = ("source", "sound", "nickname")
-        ordering = ("source", "sound", "nickname")
+        unique_together = ("source", "sound",)
+        ordering = ("source", "sound",)
 
     def __str__(self):
-        if self.nickname:
-            return self.nickname
+        if not self.sound:
+            return self.source
         return f"{self.source} - {self.sound}"
 
     # Mandatory
@@ -28,7 +28,6 @@ class Label(models.Model):
     sound = models.ForeignKey(
         Sound, on_delete=models.PROTECT, null=True, blank=True, related_name="labels"
     )
-    nickname = models.CharField(max_length=255, null=True, blank=True)
 
     associated_names = ArrayField(
         models.CharField(max_length=255, blank=True, null=True),
