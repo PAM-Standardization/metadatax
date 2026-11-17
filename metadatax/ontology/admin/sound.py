@@ -18,7 +18,6 @@ class SoundAdmin(ExtendedModelAdmin):
         "french_name",
         "code_name",
         "taxon",
-        "parent__english_name",
     ]
     filter_horizontal = [
         "related_bibliography",
