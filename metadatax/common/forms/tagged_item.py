@@ -32,5 +32,9 @@ class TaggedItemForm(ExtendedForm):
     def save(self, commit=True):
         tag: Tag
         for tag in self.cleaned_data['tags']:
-            TaggedItem.objects.get_or_create(tag=tag, item=self.instance)
+            TaggedItem.objects.get_or_create(
+                tag=tag,
+                item_id=self.instance.id,
+                item_type=ContentType.objects.get_for_model(self.instance)
+            )
         return super().save(commit)
