@@ -68,6 +68,15 @@ class ChannelConfigurationAdmin(ExtendedModelAdmin):
         "deployment__project__name",
         "deployment__campaign__name",
         "deployment__site__name",
+        "recorder_specification__hydrophone__serial_number",
+        "recorder_specification__hydrophone__name",
+        "recorder_specification__hydrophone__model__name",
+        "recorder_specification__recorder__serial_number",
+        "recorder_specification__recorder__name",
+        "recorder_specification__recorder__model__name",
+        "detector_specification__detector__serial_number",
+        "detector_specification__detector__name",
+        "detector_specification__detector__model__name",
     ]
     list_filter = [
         ChannelConfigurationTypeFilter,
